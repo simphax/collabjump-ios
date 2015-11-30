@@ -16,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        MosaicClient.sharedClient().APIKey = "e2b1eb2a-eb99-45d0-8ec6-895b9f7853b9"
+        MosaicClient.sharedClient().connect()
         return true
     }
 
