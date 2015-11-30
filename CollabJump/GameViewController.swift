@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, MosaicDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +28,9 @@ class GameViewController: UIViewController {
             
             skView.presentScene(scene)
         }
+        
+        MosaicClient.sharedClient().attachToView(self.view)
+        MosaicClient.sharedClient().delegate = self
     }
 
     override func shouldAutorotate() -> Bool {
@@ -49,5 +52,19 @@ class GameViewController: UIViewController {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+//MARK: MosaicDelegate
+    
+    func mosaicStateUpdated(state: NSData!) {
+        debugPrint("mosaicStateUpdated", state)
+    }
+    
+    func mosaicFrameUpdated(frame: CGRect) {
+        debugPrint("mosaicStateUpdated", frame)
+    }
+    
+    func mosaicSwipeOccurred(swipe: MosaicSwipe) {
+        debugPrint("mosaicSwipeOccurred", swipe)
     }
 }
