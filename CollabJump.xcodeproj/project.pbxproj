@@ -14,7 +14,7 @@
 		F42962B51C0D10600090E280 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42962B31C0D10600090E280 /* Main.storyboard */; };
 		F42962B71C0D10600090E280 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F42962B61C0D10600090E280 /* Assets.xcassets */; };
 		F42962BA1C0D10600090E280 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42962B81C0D10600090E280 /* LaunchScreen.storyboard */; };
-		F42962C71C0D11960090E280 /* libMosaic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F42962C61C0D11960090E280 /* libMosaic.a */; };
+		F4A46E8D1C0F04CF0032B8F1 /* libMosaic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A46E8B1C0F04CF0032B8F1 /* libMosaic.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,9 +27,9 @@
 		F42962B61C0D10600090E280 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F42962B91C0D10600090E280 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F42962BB1C0D10600090E280 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F42962C61C0D11960090E280 /* libMosaic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMosaic.a; path = "External libraries/libMosaic.a"; sourceTree = "<group>"; };
-		F42962C81C0D119C0090E280 /* MosaicClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MosaicClient.h; path = "External libraries/MosaicClient.h"; sourceTree = "<group>"; };
 		F42962CA1C0D11BF0090E280 /* CollabJump-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CollabJump-Bridging-Header.h"; sourceTree = "<group>"; };
+		F4A46E8B1C0F04CF0032B8F1 /* libMosaic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMosaic.a; path = External/libMosaic.a; sourceTree = "<group>"; };
+		F4A46E8C1C0F04CF0032B8F1 /* MosaicClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MosaicClient.h; path = External/MosaicClient.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F42962C71C0D11960090E280 /* libMosaic.a in Frameworks */,
+				F4A46E8D1C0F04CF0032B8F1 /* libMosaic.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,8 +80,8 @@
 		F42962C51C0D112F0090E280 /* External libraries */ = {
 			isa = PBXGroup;
 			children = (
-				F42962C61C0D11960090E280 /* libMosaic.a */,
-				F42962C81C0D119C0090E280 /* MosaicClient.h */,
+				F4A46E8B1C0F04CF0032B8F1 /* libMosaic.a */,
+				F4A46E8C1C0F04CF0032B8F1 /* MosaicClient.h */,
 			);
 			name = "External libraries";
 			sourceTree = "<group>";
@@ -284,6 +284,7 @@
 					"$(PROJECT_DIR)/CollabJump/External",
 					libraries,
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-framework",
@@ -322,6 +323,7 @@
 					"$(PROJECT_DIR)/CollabJump/External",
 					libraries,
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-framework",
