@@ -11,6 +11,8 @@ import SpriteKit
 
 class GameViewController: UIViewController, MosaicDelegate {
 
+    @IBOutlet weak var debugLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -54,17 +56,33 @@ class GameViewController: UIViewController, MosaicDelegate {
         return true
     }
     
+    func debugLog(msg: String) {
+        if(debugLabel.text == nil) {
+            debugLabel.text = ""
+        }
+        debugLabel.text = msg + "\n" + debugLabel.text!
+        debugPrint(msg)
+    }
+    
 //MARK: MosaicDelegate
     
+    func mosaicDidConnect() {
+        debugLog("mosaicDidConnect")
+    }
+    
+    func mosaicDidDisconnect() {
+        debugLog("mosaicDidDisconnect")
+    }
+    
     func mosaicStateUpdated(state: NSData!) {
-        debugPrint("mosaicStateUpdated", state)
+        debugLog("mosaicStateUpdated" + String(state))
     }
     
     func mosaicFrameUpdated(frame: CGRect) {
-        debugPrint("mosaicStateUpdated", frame)
+        debugLog("mosaicStateUpdated" + String(frame))
     }
     
     func mosaicSwipeOccurred(swipe: MosaicSwipe) {
-        debugPrint("mosaicSwipeOccurred", swipe)
+        debugLog("mosaicSwipeOccurred" + String(swipe))
     }
 }
