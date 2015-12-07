@@ -28,6 +28,17 @@ class GameScene: SKScene {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        /* Called when a touch begins */
+        for touch in touches {
+            let location = touch.locationInNode(self)
+            
+            let player: Player = Player()
+            
+            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = location
+            }
+            
+            entityManager.add(player)
+        }
     }
    
     override func update(currentTime: CFTimeInterval) {

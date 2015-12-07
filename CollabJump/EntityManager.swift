@@ -16,8 +16,8 @@ class EntityManager {
     var toRemove = Set<GKEntity>()
     
     lazy var componentSystems: [GKComponentSystem] = {
-        let playerSystem = GKComponentSystem(componentClass: Player.self)
-        return [playerSystem]
+        let physicsSystem = GKComponentSystem(componentClass: PhysicsComponent.self)
+        return [physicsSystem]
     }()
     
     init(scene: SKScene) {

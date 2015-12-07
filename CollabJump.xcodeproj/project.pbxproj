@@ -10,6 +10,7 @@
 		F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5C1C15A9C8001C7C92 /* Player.swift */; };
 		F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */; };
 		F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD611C15AAF1001C7C92 /* EntityManager.swift */; };
+		F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD651C15C971001C7C92 /* PhysicsComponent.swift */; };
 		F42962AC1C0D10600090E280 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42962AB1C0D10600090E280 /* AppDelegate.swift */; };
 		F42962AE1C0D10600090E280 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = F42962AD1C0D10600090E280 /* GameScene.sks */; };
 		F42962B01C0D10600090E280 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42962AF1C0D10600090E280 /* GameScene.swift */; };
@@ -23,6 +24,7 @@
 		F419DD5C1C15A9C8001C7C92 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		F419DD611C15AAF1001C7C92 /* EntityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
+		F419DD651C15C971001C7C92 /* PhysicsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsComponent.swift; sourceTree = "<group>"; };
 		F42962A81C0D10600090E280 /* CollabJump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollabJump.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F42962AB1C0D10600090E280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F42962AD1C0D10600090E280 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */,
+				F419DD651C15C971001C7C92 /* PhysicsComponent.swift */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -168,6 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */,
+				F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,
 				F42962B01C0D10600090E280 /* GameScene.swift in Sources */,

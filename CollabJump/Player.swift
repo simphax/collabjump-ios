@@ -17,6 +17,12 @@ class Player: GKEntity {
         
         let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem"))
         addComponent(spriteComponent)
+        
+        let physicsComponent = PhysicsComponent()
+        addComponent(physicsComponent)
     }
     
+    override func updateWithDeltaTime(seconds: NSTimeInterval) {
+        print("update",seconds)
+    }
 }
