@@ -21,7 +21,7 @@ class PhysicsComponent: GKComponent {
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
         if let spriteNode = self.entity?.componentForClass(SpriteComponent.self)?.node {
             var yChange: CGFloat = CGFloat(gravityVector.y * seconds * 50)
-            debugPrint(yChange)
+            //debugPrint(yChange)
             spriteNode.position.y -= yChange
         }
     }

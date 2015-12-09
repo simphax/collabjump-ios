@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "292DCFBC55B50AB1BAE80A256A241B8B1734CF24",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "0A723E052A8EB0983C2BACDA69AF9E49839F1E15" : 0,
+    "292DCFBC55B50AB1BAE80A256A241B8B1734CF24" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D3F40096-D4AA-4A04-9F4D-F76A157710F8",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "0A723E052A8EB0983C2BACDA69AF9E49839F1E15" : "collabjump-ios\/ScreenLayout\/",
+    "292DCFBC55B50AB1BAE80A256A241B8B1734CF24" : "collabjump-ios\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "CollabJump",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "CollabJump.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/simphax\/pinchcanvas.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0A723E052A8EB0983C2BACDA69AF9E49839F1E15"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/simphax\/collabjump-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "292DCFBC55B50AB1BAE80A256A241B8B1734CF24"
+    }
+  ]
+}

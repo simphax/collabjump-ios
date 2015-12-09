@@ -18,7 +18,47 @@
 		F42962B51C0D10600090E280 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42962B31C0D10600090E280 /* Main.storyboard */; };
 		F42962B71C0D10600090E280 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F42962B61C0D10600090E280 /* Assets.xcassets */; };
 		F42962BA1C0D10600090E280 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42962B81C0D10600090E280 /* LaunchScreen.storyboard */; };
+		F4B3BE711C1843ED0009DFDD /* ScreenLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; };
+		F4B3BE721C1843ED0009DFDD /* ScreenLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F4B3BE671C18431E0009DFDD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF356A681A24726800346FD0;
+			remoteInfo = ScreenLayout;
+		};
+		F4B3BE691C18431E0009DFDD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF356A731A24726800346FD0;
+			remoteInfo = ScreenLayoutTests;
+		};
+		F4B3BE731C1843ED0009DFDD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BF356A671A24726800346FD0;
+			remoteInfo = ScreenLayout;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F4B3BE751C1843ED0009DFDD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F4B3BE721C1843ED0009DFDD /* ScreenLayout.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F419DD5C1C15A9C8001C7C92 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -34,6 +74,7 @@
 		F42962B61C0D10600090E280 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F42962B91C0D10600090E280 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F42962BB1C0D10600090E280 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScreenLayout.xcodeproj; path = ScreenLayout/ScreenLayout.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4B3BE711C1843ED0009DFDD /* ScreenLayout.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +109,7 @@
 		F429629F1C0D10600090E280 = {
 			isa = PBXGroup;
 			children = (
+				F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */,
 				F42962AA1C0D10600090E280 /* CollabJump */,
 				F42962A91C0D10600090E280 /* Products */,
 			);
@@ -98,6 +141,15 @@
 			path = CollabJump;
 			sourceTree = "<group>";
 		};
+		F4B3BE631C18431E0009DFDD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */,
+				F4B3BE6A1C18431E0009DFDD /* ScreenLayoutTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -108,10 +160,12 @@
 				F42962A41C0D10600090E280 /* Sources */,
 				F42962A51C0D10600090E280 /* Frameworks */,
 				F42962A61C0D10600090E280 /* Resources */,
+				F4B3BE751C1843ED0009DFDD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F4B3BE741C1843ED0009DFDD /* PBXTargetDependency */,
 			);
 			name = CollabJump;
 			productName = CollabJump;
@@ -144,12 +198,35 @@
 			mainGroup = F429629F1C0D10600090E280;
 			productRefGroup = F42962A91C0D10600090E280 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F4B3BE631C18431E0009DFDD /* Products */;
+					ProjectRef = F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				F42962A71C0D10600090E280 /* CollabJump */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ScreenLayout.framework;
+			remoteRef = F4B3BE671C18431E0009DFDD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F4B3BE6A1C18431E0009DFDD /* ScreenLayoutTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ScreenLayoutTests.xctest;
+			remoteRef = F4B3BE691C18431E0009DFDD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		F42962A61C0D10600090E280 /* Resources */ = {
@@ -181,6 +258,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F4B3BE741C1843ED0009DFDD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ScreenLayout;
+			targetProxy = F4B3BE731C1843ED0009DFDD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F42962B31C0D10600090E280 /* Main.storyboard */ = {

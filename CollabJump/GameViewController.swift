@@ -8,8 +8,9 @@
 
 import UIKit
 import SpriteKit
+import ScreenLayout
 
-class GameViewController: UIViewController {
+class GameViewController: SCLPinchViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,5 +50,22 @@ class GameViewController: UIViewController {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+    // remote peer changed state
+    override func session(session: MCSession!, peer peerID: MCPeerID!, didChangeState state: MCSessionState) {
+        switch state {
+        case .NotConnected:
+            print("peer not connected: \(peerID)")
+        case .Connecting:
+            print("peer connecting: \(peerID)")
+        case .Connected:
+            print("peer connected: \(peerID)")
+        }
+    }
+    
+    // screen layout changed
+    override func layoutDidChangeForScreens(affectedScreens: [AnyObject]!) {
+        print("layoutDidChangeForScreens")
     }
 }
