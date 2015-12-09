@@ -30,6 +30,14 @@ class GameViewController: SCLPinchViewController {
             skView.presentScene(scene)
         }
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.sessionManager.startPeerInvitationsWithServiceType("pinchcanvas", errorHandler: { (error) -> Void in
+            print("invitations failed with error: \(error)")
+        })
+    }
 
     override func shouldAutorotate() -> Bool {
         return true
