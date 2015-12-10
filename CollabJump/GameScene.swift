@@ -7,11 +7,13 @@
 //
 
 import SpriteKit
+import ScreenLayout
 
 class GameScene: SKScene {
     
     var lastUpdateTimeInterval: CFTimeInterval = 0
     var entityManager: EntityManager!
+    var sessionManager: SCLSessionManager?
     
     override func didMoveToView(view: SKView) {
         
@@ -24,12 +26,42 @@ class GameScene: SKScene {
         }
         
         entityManager.add(player)
+        
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
+    }
+    
+    func sessionMessage(notif: NSNotification) {
+        print("session message \(notif)")
+        
+        if let dict = notif.userInfo as? [String: AnyObject] {
+            
+            if let message = dict[SCLSessionManagerMessageUserInfoKey] as? SCLSessionMessage {
+                if let positionMessage = message.object as? PositionMessage {
+                    print(" position message! \(positionMessage.position)")
+                    let location = positionMessage.position
+                    
+                    let player: Player = Player()
+                    
+                    if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                        spriteComponent.node.position = location
+                    }
+                    
+                    entityManager.add(player)
+                }
+            }
+            if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
+                print(" got a message from \(peerId)")
+            }
+        }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print("gamescene touch")
        /* Called when a touch begins */
         for touch in touches {
             let location = touch.locationInNode(self)
+            print(" touch location \(location)")
             
             let player: Player = Player()
             
@@ -38,6 +70,15 @@ class GameScene: SKScene {
             }
             
             entityManager.add(player)
+            
+            if let sessionManager = sessionManager {
+                let message: SCLSessionMessage = SCLSessionMessage(name: "ThlemPosition", object: PositionMessage(position: touch.locationInNode(self)))
+                do {
+                    try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
+                } catch _ {
+                    print("couldnt send message")
+                }
+            }
         }
     }
    

@@ -10,12 +10,37 @@ import UIKit
 import SpriteKit
 import ScreenLayout
 
+class PositionMessage: NSObject, NSSecureCoding {
+    
+    var position: CGPoint
+    
+    init(position: CGPoint) {
+        self.position = position
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        position = aDecoder.decodeCGPointForKey("position")
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeCGPoint(position, forKey: "position")
+    }
+    
+    static func supportsSecureCoding() -> Bool {
+        return true
+    }
+}
+
 class GameViewController: SCLPinchViewController {
+    
+    var lastConnectedPeerID: MCPeerID?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         if let scene = GameScene(fileNamed:"GameScene") {
+            scene.sessionManager = self.sessionManager
+            
             // Configure the view.
             let skView = self.view as! SKView
             skView.showsFPS = true
@@ -29,11 +54,13 @@ class GameViewController: SCLPinchViewController {
             
             skView.presentScene(scene)
         }
+   
     }
+    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         self.sessionManager.startPeerInvitationsWithServiceType("pinchcanvas", errorHandler: { (error) -> Void in
             print("invitations failed with error: \(error)")
         })
@@ -60,8 +87,12 @@ class GameViewController: SCLPinchViewController {
         return true
     }
     
+    override func sessionManager(manager: SCLSessionManager!, didReceiveScreen screen: SCLScreen!) {
+        
+    }
+    
     // remote peer changed state
-    override func session(session: MCSession!, peer peerID: MCPeerID!, didChangeState state: MCSessionState) {
+    override func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
         switch state {
         case .NotConnected:
             print("peer not connected: \(peerID)")
@@ -69,7 +100,20 @@ class GameViewController: SCLPinchViewController {
             print("peer connecting: \(peerID)")
         case .Connected:
             print("peer connected: \(peerID)")
+            
+            lastConnectedPeerID = peerID
+            
+            let message: SCLSessionMessage = SCLSessionMessage(name: "hello", object: nil)
+            do {
+                try self.sessionManager.sendMessage(message, toPeers: [peerID], withMode: .Reliable)
+            } catch _ {
+                print("couldnt send message")
+            }
         }
+    }
+    
+    override func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
+        print("session did receive data \(data)")
     }
     
     // screen layout changed
