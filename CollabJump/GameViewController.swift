@@ -103,7 +103,7 @@ class GameViewController: SCLPinchViewController {
             
             lastConnectedPeerID = peerID
             
-            let message: SCLSessionMessage = SCLSessionMessage(name: "hello", object: nil)
+            let message: SCLSessionMessage = SCLSessionMessage(name: "collabjump", object: nil)
             do {
                 try self.sessionManager.sendMessage(message, toPeers: [peerID], withMode: .Reliable)
             } catch _ {

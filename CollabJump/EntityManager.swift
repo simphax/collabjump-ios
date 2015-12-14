@@ -17,6 +17,7 @@ class EntityManager {
     
     lazy var componentSystems: [GKComponentSystem] = {
         let physicsSystem = GKComponentSystem(componentClass: PhysicsComponent.self)
+        let sfxSystem = GKComponentSystem(componentClass: SfxComponent.self)
         return [physicsSystem]
     }()
     

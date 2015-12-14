@@ -8,6 +8,7 @@
 
 import SpriteKit
 import ScreenLayout
+import GameKit
 
 class GameScene: SKScene {
     
@@ -26,7 +27,6 @@ class GameScene: SKScene {
         }
         
         entityManager.add(player)
-        
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
     }
@@ -67,6 +67,13 @@ class GameScene: SKScene {
             
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = location
+            }
+            
+            if let jumpSfx = player.componentForClass(JumpSfxComponent.self) {
+                jumpSfx.play()
+            }
+            if let musicSfx = player.componentForClass(MusicSfxComponent.self) {
+                musicSfx.play()
             }
             
             entityManager.add(player)
