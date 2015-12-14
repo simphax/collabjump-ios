@@ -21,11 +21,7 @@ class Player: GKEntity {
         let physicsComponent = PhysicsComponent()
         addComponent(physicsComponent)
         
-        let jumpSfxComponent = JumpSfxComponent(name: "jump", loop: false)
-        addComponent(jumpSfxComponent)
-        
-        let musicSfxComponent = MusicSfxComponent(name: "music", loop: true)
-        addComponent(musicSfxComponent)
+        spriteComponent.node.runAction(SoundManager.sharedInstance.soundJump)
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {

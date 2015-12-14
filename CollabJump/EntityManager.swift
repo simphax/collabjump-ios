@@ -17,7 +17,6 @@ class EntityManager {
     
     lazy var componentSystems: [GKComponentSystem] = {
         let physicsSystem = GKComponentSystem(componentClass: PhysicsComponent.self)
-        let sfxSystem = GKComponentSystem(componentClass: SfxComponent.self)
         return [physicsSystem]
     }()
     
@@ -59,4 +58,14 @@ class EntityManager {
         }
         toRemove.removeAll()
     }
+    
+    func getPlayer() -> GKEntity? {
+        for entity in entities {
+            if let entity = entity as? Player {
+                return entity
+            }
+        }
+        return nil
+    }
+    
 }

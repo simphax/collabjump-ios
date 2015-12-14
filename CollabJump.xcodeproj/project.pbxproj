@@ -18,11 +18,9 @@
 		F42962B51C0D10600090E280 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42962B31C0D10600090E280 /* Main.storyboard */; };
 		F42962B71C0D10600090E280 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F42962B61C0D10600090E280 /* Assets.xcassets */; };
 		F42962BA1C0D10600090E280 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42962B81C0D10600090E280 /* LaunchScreen.storyboard */; };
-		F42DFBBB1C1B17BB00067F80 /* SfxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42DFBBA1C1B17BB00067F80 /* SfxComponent.swift */; };
 		F42DFBC01C1B1A4000067F80 /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = F42DFBBF1C1B1A4000067F80 /* jump.wav */; };
 		F45B24271C1EE16E005C9BC5 /* music.wav in Resources */ = {isa = PBXBuildFile; fileRef = F45B24261C1EE16E005C9BC5 /* music.wav */; };
-		F45B24291C1EE1D4005C9BC5 /* JumpSfxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B24281C1EE1D4005C9BC5 /* JumpSfxComponent.swift */; };
-		F45B242B1C1EE249005C9BC5 /* MusicSfxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B242A1C1EE249005C9BC5 /* MusicSfxComponent.swift */; };
+		F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */; };
 		F4B3BE711C1843ED0009DFDD /* ScreenLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; };
 		F4B3BE721C1843ED0009DFDD /* ScreenLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -79,11 +77,9 @@
 		F42962B61C0D10600090E280 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F42962B91C0D10600090E280 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F42962BB1C0D10600090E280 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F42DFBBA1C1B17BB00067F80 /* SfxComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SfxComponent.swift; sourceTree = "<group>"; };
 		F42DFBBF1C1B1A4000067F80 /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = "<group>"; };
 		F45B24261C1EE16E005C9BC5 /* music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = music.wav; sourceTree = "<group>"; };
-		F45B24281C1EE1D4005C9BC5 /* JumpSfxComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JumpSfxComponent.swift; sourceTree = "<group>"; };
-		F45B242A1C1EE249005C9BC5 /* MusicSfxComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicSfxComponent.swift; sourceTree = "<group>"; };
+		F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScreenLayout.xcodeproj; path = ScreenLayout/ScreenLayout.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				F419DD5C1C15A9C8001C7C92 /* Player.swift */,
+				F419DD611C15AAF1001C7C92 /* EntityManager.swift */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -112,9 +109,6 @@
 			children = (
 				F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */,
 				F419DD651C15C971001C7C92 /* PhysicsComponent.swift */,
-				F42DFBBA1C1B17BB00067F80 /* SfxComponent.swift */,
-				F45B24281C1EE1D4005C9BC5 /* JumpSfxComponent.swift */,
-				F45B242A1C1EE249005C9BC5 /* MusicSfxComponent.swift */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -139,6 +133,7 @@
 		F42962AA1C0D10600090E280 /* CollabJump */ = {
 			isa = PBXGroup;
 			children = (
+				F45B242D1C1F0930005C9BC5 /* Helpers */,
 				F42DFBBD1C1B18D600067F80 /* Assets */,
 				F419DD5E1C15AA29001C7C92 /* Components */,
 				F419DD5B1C15A99C001C7C92 /* Entities */,
@@ -150,7 +145,6 @@
 				F42962B61C0D10600090E280 /* Assets.xcassets */,
 				F42962B81C0D10600090E280 /* LaunchScreen.storyboard */,
 				F42962BB1C0D10600090E280 /* Info.plist */,
-				F419DD611C15AAF1001C7C92 /* EntityManager.swift */,
 			);
 			path = CollabJump;
 			sourceTree = "<group>";
@@ -170,6 +164,14 @@
 				F42DFBBF1C1B1A4000067F80 /* jump.wav */,
 			);
 			name = Sfx;
+			sourceTree = "<group>";
+		};
+		F45B242D1C1F0930005C9BC5 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		F4B3BE631C18431E0009DFDD /* Products */ = {
@@ -282,14 +284,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */,
-				F45B242B1C1EE249005C9BC5 /* MusicSfxComponent.swift in Sources */,
-				F42DFBBB1C1B17BB00067F80 /* SfxComponent.swift in Sources */,
 				F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */,
-				F45B24291C1EE1D4005C9BC5 /* JumpSfxComponent.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,
 				F42962B01C0D10600090E280 /* GameScene.swift in Sources */,
 				F42962B21C0D10600090E280 /* GameViewController.swift in Sources */,
+				F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */,
 				F42962AC1C0D10600090E280 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

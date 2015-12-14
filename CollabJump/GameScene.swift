@@ -16,10 +16,12 @@ class GameScene: SKScene {
     var entityManager: EntityManager!
     var sessionManager: SCLSessionManager?
     
+    var bgMusic: SKAudioNode!
+    
     override func didMoveToView(view: SKView) {
         
         entityManager = EntityManager(scene: self)
-        
+        /*
         let player: Player = Player()
         
         if let spriteComponent = player.componentForClass(SpriteComponent.self) {
@@ -27,8 +29,21 @@ class GameScene: SKScene {
         }
         
         entityManager.add(player)
-        
+        */
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
+        
+        
+        bgMusic = SKAudioNode(fileNamed: "music")
+        bgMusic.autoplayLooped = true
+        //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+    }
+    
+    func playMusic() {
+        addChild(bgMusic)
+    }
+    
+    func pauseMusic() {
+        bgMusic.removeFromParent()
     }
     
     func sessionMessage(notif: NSNotification) {
@@ -69,14 +84,8 @@ class GameScene: SKScene {
                 spriteComponent.node.position = location
             }
             
-            if let jumpSfx = player.componentForClass(JumpSfxComponent.self) {
-                jumpSfx.play()
-            }
-            if let musicSfx = player.componentForClass(MusicSfxComponent.self) {
-                musicSfx.play()
-            }
-            
             entityManager.add(player)
+            playMusic()
             
             if let sessionManager = sessionManager {
                 let message: SCLSessionMessage = SCLSessionMessage(name: "ThlemPosition", object: PositionMessage(position: touch.locationInNode(self)))
@@ -99,5 +108,14 @@ class GameScene: SKScene {
     
     func updateDelta(deltaTime: CFTimeInterval) {
         entityManager.update(deltaTime)
+        if let player = entityManager.getPlayer() {
+            if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
+                print(spriteNode.position)
+                if spriteNode.position.y < 0 { //self.position.y + self.size.height
+                    pauseMusic()
+                    entityManager.remove(player)
+                }
+            }
+        }
     }
 }

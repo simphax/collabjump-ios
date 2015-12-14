@@ -61,7 +61,7 @@ class GameViewController: SCLPinchViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.sessionManager.startPeerInvitationsWithServiceType("pinchcanvas", errorHandler: { (error) -> Void in
+        self.sessionManager.startPeerInvitationsWithServiceType("collabjump", errorHandler: { (error) -> Void in
             print("invitations failed with error: \(error)")
         })
     }
@@ -103,7 +103,7 @@ class GameViewController: SCLPinchViewController {
             
             lastConnectedPeerID = peerID
             
-            let message: SCLSessionMessage = SCLSessionMessage(name: "collabjump", object: nil)
+            let message: SCLSessionMessage = SCLSessionMessage(name: "hello", object: nil)
             do {
                 try self.sessionManager.sendMessage(message, toPeers: [peerID], withMode: .Reliable)
             } catch _ {
