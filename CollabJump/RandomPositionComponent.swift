@@ -11,24 +11,29 @@ import GameplayKit
 import SpriteKit
 
 class RandomPositionComponent: GKComponent {
-    //var screenSize: CGFloat
+    var screenSize: CGPoint
     let componentHeight: CGFloat
     let componentWidth: CGFloat
     var screenWidth: CGFloat
     var screenHeight: CGFloat
+    let deviceWidth: CGFloat
+    let deviceHeight: CGFloat
     
     var componentHeightOffset: CGFloat
     var componentWidthOffset: CGFloat
     
-    init(height: CGFloat, width: CGFloat) {
+    init(height: CGFloat, width: CGFloat, atScreen: CGPoint) {
         //Takes in the frame (We might have to call a function for this?)
         componentHeight = height
         componentWidth = width
         
-        //screenSize = UIScreen.mainScreen().bounds.size.height
-
-        screenWidth = UIScreen.mainScreen().bounds.width
-        screenHeight = UIScreen.mainScreen().bounds.height
+        //ADD THE SCREEN SIZE ON THE SCREEN WIDTH AND SCREENHEIGHT
+        deviceWidth = UIScreen.mainScreen().bounds.size.width
+        deviceHeight = UIScreen.mainScreen().bounds.size.height
+        
+        screenSize = atScreen
+        screenWidth = screenSize.x + deviceWidth
+        screenHeight = screenSize.y + deviceHeight
         
         componentHeightOffset = componentHeight/2
         componentWidthOffset = componentWidth/2
@@ -51,20 +56,20 @@ class RandomPositionComponent: GKComponent {
         var randomX = randomPosition.origin.x
         var randomY = randomPosition.origin.y
         
-        if randomX < componentWidthOffset {
-            randomX = componentWidthOffset
+        if randomX < componentWidth {
+            randomX = componentWidth
         }
         
-        if  randomX < (randomX + componentWidthOffset){
-            randomX = randomX - componentWidthOffset
+        if  randomX < (randomX + componentWidth){
+            randomX = randomX - componentWidth
         }
         
-        if  randomY < componentHeightOffset {
-            randomY = componentHeightOffset
+        if  randomY < componentHeight {
+            randomY = componentHeight
         }
         
-        if  randomY < (randomY + componentHeightOffset){
-            randomY = randomY - componentHeightOffset
+        if  randomY < (randomY + componentHeight){
+            randomY = randomY - componentHeight
         }
         
         //print(randomX)
