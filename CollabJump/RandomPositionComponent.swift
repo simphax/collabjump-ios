@@ -11,7 +11,7 @@ import GameplayKit
 import SpriteKit
 
 class RandomPositionComponent: GKComponent {
-    var screenSize: CGRect
+    //var screenSize: CGFloat
     let componentHeight: CGFloat
     let componentWidth: CGFloat
     var screenWidth: CGFloat
@@ -25,44 +25,51 @@ class RandomPositionComponent: GKComponent {
         componentHeight = height
         componentWidth = width
         
-        screenSize = UIScreen.mainScreen().bounds
-        screenWidth = screenSize.width
-        screenHeight = screenSize.height
+        //screenSize = UIScreen.mainScreen().bounds.size.height
+
+        screenWidth = UIScreen.mainScreen().bounds.width
+        screenHeight = UIScreen.mainScreen().bounds.height
         
         componentHeightOffset = componentHeight/2
         componentWidthOffset = componentWidth/2
         
-        
-        
         //TODO: Margins, so that for instance a platform component does not end up at the top of the screen.
+        //I think this is done past self. DONE. Was not done.
+        // rotate blocks randomize as well.
     }
     
     
-    func generateAtRandomPosition () {
+    func generateAtRandomPosition () -> (randomX: CGFloat, randomY: CGFloat) {
         //generates "the most random". We might have to limit it so some part of the object don't fall outside the screen.
         //let randomPosition2 = CGRect
-        var randomPosition = CGRect(x: (CGFloat(arc4random()) % screenWidth),
+        let randomPosition = CGRect(x: (CGFloat(arc4random()) % screenWidth),
                                 y: (CGFloat(arc4random()) % screenHeight),
                                 width: componentHeight,
                                 height: componentWidth)
         
         //The component is not allowed to fall outside the screen. Therefore add the offsets.
+        var randomX = randomPosition.origin.x
+        var randomY = randomPosition.origin.y
         
-        if randomPosition.origin.x < componentWidthOffset {
-            randomPosition.origin.x = componentWidthOffset
-        }
-        if (randomPosition.origin.x + componentWidthOffset) > randomPosition.origin.x {
-            randomPosition.origin.x = randomPosition.origin.x - componentWidthOffset
-        }
-        
-        if randomPosition.origin.y < componentHeightOffset {
-            randomPosition.origin.y = componentHeightOffset
-        }
-        if (randomPosition.origin.y + componentHeightOffset) > randomPosition.origin.y {
-            randomPosition.origin.y = randomPosition.origin.y - componentHeightOffset
+        if randomX < componentWidthOffset {
+            randomX = componentWidthOffset
         }
         
+        if  randomX < (randomX + componentWidthOffset){
+            randomX = randomX - componentWidthOffset
+        }
         
+        if  randomY < componentHeightOffset {
+            randomY = componentHeightOffset
+        }
+        
+        if  randomY < (randomY + componentHeightOffset){
+            randomY = randomY - componentHeightOffset
+        }
+        
+        //print(randomX)
+        //print(randomY)
+        return (randomX, randomY)
         
         
         //let randomPosition = CGPointMake(CGFloat(arc4random()) % thisHeight, CGFloat(arc4random()) % thisWidth)

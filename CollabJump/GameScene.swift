@@ -16,12 +16,9 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         
         entityManager = EntityManager(scene: self)
-        
         let player: Player = Player()
         
-        if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-            spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
-        }
+        
         
         entityManager.add(player)
     }
@@ -30,11 +27,20 @@ class GameScene: SKScene {
        /* Called when a touch begins */
         for touch in touches {
             let location = touch.locationInNode(self)
-            
             let player: Player = Player()
+            let rpc  = RandomPositionComponent(height: 16, width: 16) //Get SKSpriteNode
             
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = location
+            }
+            
+            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = CGPoint(
+                    x:rpc.generateAtRandomPosition().randomX,
+                    y:rpc.generateAtRandomPosition().randomY
+                )
+                print(spriteComponent.node.position)
+                //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
             }
             
             entityManager.add(player)

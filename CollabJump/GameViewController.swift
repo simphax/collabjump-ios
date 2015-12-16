@@ -28,6 +28,8 @@ class GameViewController: SCLPinchViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
+            //print(skView.bounds)
+            
         }
     }
     
