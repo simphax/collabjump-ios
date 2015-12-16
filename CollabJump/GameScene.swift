@@ -46,7 +46,9 @@ class GameScene: SKScene {
     }
     
     func playMusic() {
-        addChild(bgMusic)
+        if(bgMusic.parent == nil) {
+            addChild(bgMusic)
+        }
     }
     
     func pauseMusic() {
