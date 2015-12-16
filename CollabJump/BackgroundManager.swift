@@ -23,8 +23,9 @@ class BackgroundManager {
         didSet {
             
             let node = SKSpriteNode(imageNamed: "background_01")
-            node.anchorPoint = CGPoint(x: 0, y: 0)
-            //backgroundOffset!.y += node.size.height
+            node.anchorPoint = CGPoint(x: 0, y: 1.0)
+            node.zPosition = -1
+            backgroundOffset!.y += scene.size.height
             node.position = backgroundOffset!
             scene.addChild(node)
         }
