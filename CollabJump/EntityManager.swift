@@ -58,4 +58,14 @@ class EntityManager {
         }
         toRemove.removeAll()
     }
+    
+    func getPlayer() -> GKEntity? {
+        for entity in entities {
+            if let entity = entity as? Player {
+                return entity
+            }
+        }
+        return nil
+    }
+    
 }
