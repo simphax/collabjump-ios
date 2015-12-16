@@ -10,12 +10,6 @@ import SpriteKit
 import ScreenLayout
 import GameKit
 
-
-
-func + (left: CGPoint, right: CGPoint) -> CGPoint {
-    return CGPoint(x: left.x+right.x,y: left.y+right.y)
-}
-
 class GameScene: SKScene {
     
     var lastUpdateTimeInterval: CFTimeInterval = 0
@@ -43,7 +37,7 @@ class GameScene: SKScene {
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceSize: 1024)
         
-        backgroundManager!.backgroundOffset = CGPoint(x: -920,y: 500)
+        backgroundManager!.backgroundOffset = CGPoint(x: -0,y: 0)
         
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
@@ -119,12 +113,16 @@ class GameScene: SKScene {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         let delta: CFTimeInterval = currentTime - lastUpdateTimeInterval
+
+        if(lastUpdateTimeInterval != 0) {
+            self.updateDelta(delta)
+        }
+
         lastUpdateTimeInterval = currentTime
-        
-        self.updateDelta(delta)
     }
     
     func updateDelta(deltaTime: CFTimeInterval) {
+        print("\(deltaTime)")
         entityManager!.update(deltaTime)
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
@@ -135,5 +133,6 @@ class GameScene: SKScene {
                 }
             }
         }
+        //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
     }
 }

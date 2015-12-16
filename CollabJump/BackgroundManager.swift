@@ -22,34 +22,55 @@ class BackgroundManager {
     
     private var backgroundNodes: [SKSpriteNode]
     
+    private var lastSliceCol: Int = 0
+    private var lastSliceRow: Int = 0
+    private var lastSpriteCols: Int = 1
+    private var lastSpriteRows: Int = 1
+    
     var backgroundOffset: CGPoint? {
-        didSet {
+        willSet(newOffset) {
+            if(newOffset == backgroundOffset) {
+                return;
+            }
             
-            backgroundNodes.removeAll()
-            
-            if(backgroundOffset != nil && sliceSize != nil && backgroundName != nil) {
-                let sliceCol = Int(floor(abs(backgroundOffset!.x) / CGFloat(sliceSize!)))
-                let sliceRow = Int(floor(abs(backgroundOffset!.y) / CGFloat(sliceSize!)))
+            if(newOffset != nil && sliceSize != nil && backgroundName != nil) {
+                let sliceCol = Int(floor(abs(newOffset!.x) / CGFloat(sliceSize!)))
+                let sliceRow = Int(floor(abs(newOffset!.y) / CGFloat(sliceSize!)))
                 
                 print("sliceCol: \(sliceCol), sliceRow: \(sliceRow)")
                 
-                var firstOffsetX = backgroundOffset!.x + CGFloat(sliceSize! * sliceCol);
-                var firstOffsetY = backgroundOffset!.y - CGFloat(sliceSize! * sliceRow);
+                let firstOffsetX = newOffset!.x + CGFloat(sliceSize! * sliceCol)
+                let firstOffsetY = newOffset!.y - CGFloat(sliceSize! * sliceRow)
                 
-                
-                var spriteCols = 1;
-                var spriteRows = 1;
+                var spriteCols = 1
+                var spriteRows = 1
                 
                 while(firstOffsetX + CGFloat(sliceSize! * spriteCols) < scene.size.width) {
-                    spriteCols++;
+                    spriteCols++
                 }
                 
                 while(-firstOffsetY + CGFloat(sliceSize! * spriteRows) < scene.size.height) {
-                    spriteRows++;
+                    spriteRows++
                 }
                 
                 print("Background cols: \(spriteCols), rows: \(spriteRows)")
-                print("Image 1 pos: \(firstOffsetX), \(firstOffsetY)")
+                print("First offset: \(firstOffsetX), \(firstOffsetY)")
+                
+                //If we should display the same sprites, just move them.
+                if(backgroundOffset != nil && lastSliceCol == sliceCol && lastSliceRow == sliceCol && lastSpriteCols == spriteCols && lastSpriteRows == spriteRows) {
+                    var difference: CGPoint = (newOffset! - backgroundOffset!)
+                    print("difference \(difference)")
+                    for backgroundNode in backgroundNodes {
+                        backgroundNode.position += difference
+                    }
+                    return;
+                }
+                print("WAIT!")
+                for backgroundNode in backgroundNodes {
+                    backgroundNode.removeFromParent()
+                }
+                
+                backgroundNodes.removeAll()
                 
                 for(var spriteCol=0; spriteCol<spriteCols; spriteCol++) {
                     for(var spriteRow=0; spriteRow<spriteRows; spriteRow++) {
@@ -57,10 +78,10 @@ class BackgroundManager {
                         let imageIndex = (sliceRow + spriteRow) * sliceCols! + (sliceCol + spriteCol);
                         print("Image index: \(imageIndex)")
                         
-                        var bgOffsetX = backgroundOffset!.x + CGFloat(sliceSize! * (sliceCol + spriteCol));
-                        var bgOffsetY = backgroundOffset!.y - CGFloat(sliceSize! * (sliceRow + spriteRow));
+                        let bgOffsetX = newOffset!.x + CGFloat(sliceSize! * (sliceCol + spriteCol));
+                        var bgOffsetY = newOffset!.y - CGFloat(sliceSize! * (sliceRow + spriteRow));
                         
-                        let node = SKSpriteNode(imageNamed: "\(backgroundName!)\(imageIndex)")
+                        let node = SKSpriteNode(texture: SKTexture(imageNamed: "\(backgroundName!)\(imageIndex)"))
                         node.anchorPoint = CGPoint(x: 0, y: 1.0)
                         node.zPosition = -1
                         bgOffsetY += scene.size.height
@@ -69,10 +90,14 @@ class BackgroundManager {
                         scene.addChild(node)
                     }
                 }
+                
+                lastSliceCol = sliceCol;
+                lastSliceRow = sliceRow;
+                lastSpriteCols = spriteCols;
+                lastSpriteRows = spriteRows;
             }
         }
     }
-    
     
     init(scene: GameScene) {
         self.scene = scene
@@ -84,6 +109,4 @@ class BackgroundManager {
         self.sliceCols = sliceCols
         self.sliceSize = sliceSize
     }
-    
-    
 }
