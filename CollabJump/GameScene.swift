@@ -10,13 +10,21 @@ import SpriteKit
 import ScreenLayout
 import GameKit
 
+
+
+func + (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x+right.x,y: left.y+right.y)
+}
+
 class GameScene: SKScene {
     
     var lastUpdateTimeInterval: CFTimeInterval = 0
-    var entityManager: EntityManager!
+    var entityManager: EntityManager?
+    var backgroundManager: BackgroundManager?
     var sessionManager: SCLSessionManager?
     
     var bgMusic: SKAudioNode!
+    var bgImage: SKSpriteNode!
     
     override func didMoveToView(view: SKView) {
         
@@ -32,10 +40,17 @@ class GameScene: SKScene {
         */
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
         
+        backgroundManager = BackgroundManager(scene: self)
+        
+        backgroundManager!.backgroundOffset = self.pointInVisibleSpace(CGPoint(x: 0,y: 0))
         
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+    }
+    
+    func pointInVisibleSpace(point: CGPoint) -> CGPoint {
+        return point + self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
     }
     
     func playMusic() {
@@ -62,7 +77,7 @@ class GameScene: SKScene {
                         spriteComponent.node.position = location
                     }
                     
-                    entityManager.add(player)
+                    entityManager!.add(player)
                 }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
@@ -84,7 +99,7 @@ class GameScene: SKScene {
                 spriteComponent.node.position = location
             }
             
-            entityManager.add(player)
+            entityManager!.add(player)
             playMusic()
             
             if let sessionManager = sessionManager {
@@ -107,13 +122,13 @@ class GameScene: SKScene {
     }
     
     func updateDelta(deltaTime: CFTimeInterval) {
-        entityManager.update(deltaTime)
-        if let player = entityManager.getPlayer() {
+        entityManager!.update(deltaTime)
+        if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
                 print(spriteNode.position)
                 if spriteNode.position.y < 0 { //self.position.y + self.size.height
                     pauseMusic()
-                    entityManager.remove(player)
+                    entityManager!.remove(player)
                 }
             }
         }
