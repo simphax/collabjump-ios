@@ -41,8 +41,9 @@ class GameScene: SKScene {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
         
         backgroundManager = BackgroundManager(scene: self)
+        backgroundManager?.setBackground("background", sliceCols: 6, sliceSize: 1024)
         
-        backgroundManager!.backgroundOffset = self.pointInVisibleSpace(CGPoint(x: 0,y: 0))
+        backgroundManager!.backgroundOffset = CGPoint(x: -920,y: 500)
         
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
