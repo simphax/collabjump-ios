@@ -41,6 +41,15 @@ class GameScene: SKScene {
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
     }
     
+    //Får ut offset och width och height.
+    func visibleSpaceRect() -> CGRect {
+        let topLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: 0))
+        let topRightPoint = self.convertPointFromView(CGPoint(x: self.view!.bounds.width, y: 0))
+        let bottomLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
+        let rect = CGRect(x: bottomLeftPoint.x, y: bottomLeftPoint.y, width: abs(topRightPoint.x - topLeftPoint.x), height: abs(topLeftPoint.y - bottomLeftPoint.y))
+        return rect
+    }
+    
     func pointInVisibleSpace(point: CGPoint) -> CGPoint {
         return point + self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
     }
@@ -89,7 +98,7 @@ class GameScene: SKScene {
             //let atScreen = self.pointInVisibleSpace(CGPoint(x: 0, y: 0))
             
             let player: Player = Player()
-            let rpc  = RandomPositionComponent(height: 32, width: 32, atScreen: self.pointInVisibleSpace(CGPoint(x:0,y:0)))
+            let rpc  = RandomPositionComponent(height: 32, width: 32, visibleSpace: self.visibleSpaceRect())
             
 //            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
 //                spriteComponent.node.position = location

@@ -11,32 +11,19 @@ import GameplayKit
 import SpriteKit
 
 class RandomPositionComponent: GKComponent {
-    var screenSize: CGPoint
     let componentHeight: CGFloat
     let componentWidth: CGFloat
-    var screenWidth: CGFloat
-    var screenHeight: CGFloat
     let deviceWidth: CGFloat
     let deviceHeight: CGFloat
     
-    var componentHeightOffset: CGFloat
-    var componentWidthOffset: CGFloat
-    
-    init(height: CGFloat, width: CGFloat, atScreen: CGPoint) {
+    init(height: CGFloat, width: CGFloat, visibleSpace: CGRect) {
         //Takes in the frame (We might have to call a function for this?)
         componentHeight = height
         componentWidth = width
         
         //ADD THE SCREEN SIZE ON THE SCREEN WIDTH AND SCREENHEIGHT
-        deviceWidth = UIScreen.mainScreen().bounds.size.width
-        deviceHeight = UIScreen.mainScreen().bounds.size.height
-        
-        screenSize = atScreen
-        screenWidth = screenSize.x + deviceWidth
-        screenHeight = screenSize.y + deviceHeight
-        
-        componentHeightOffset = componentHeight/2
-        componentWidthOffset = componentWidth/2
+        deviceWidth = visibleSpace.width
+        deviceHeight = visibleSpace.height //UIScreen.mainScreen().bounds.size.height
         
         //TODO: Margins, so that for instance a platform component does not end up at the top of the screen.
         //I think this is done past self. DONE. Was not done.
@@ -45,10 +32,12 @@ class RandomPositionComponent: GKComponent {
     
     
     func generateAtRandomPosition () -> (randomX: CGFloat, randomY: CGFloat) {
+        
         //generates "the most random". We might have to limit it so some part of the object don't fall outside the screen.
         //let randomPosition2 = CGRect
-        let randomPosition = CGRect(x: (CGFloat(arc4random()) % screenWidth),
-                                y: (CGFloat(arc4random()) % screenHeight),
+        
+        let randomPosition = CGRect(x: (CGFloat(arc4random()) % deviceWidth),
+                                y: (CGFloat(arc4random()) % deviceHeight),
                                 width: componentHeight,
                                 height: componentWidth)
         
@@ -57,25 +46,28 @@ class RandomPositionComponent: GKComponent {
         var randomY = randomPosition.origin.y
         
         if randomX < componentWidth {
-            randomX = componentWidth
+            randomX = 0
         }
         
-        if  randomX < (randomX + componentWidth){
-            randomX = randomX - componentWidth
+        if randomX > deviceWidth {
+            randomX = deviceWidth - (componentWidth * 2)
         }
         
         if  randomY < componentHeight {
             randomY = componentHeight
         }
         
-        if  randomY < (randomY + componentHeight){
-            randomY = randomY - componentHeight
+        if  randomY > deviceHeight {
+            randomY = componentHeight - (componentHeight * 2)
         }
         
         //print(randomX)
         //print(randomY)
-        return (randomX, randomY)
         
+        // Add the offsets
+//        randomX += sceneScreen.x
+//        randomY += sceneScreen.y
+        return (randomX, randomY)
         
         //let randomPosition = CGPointMake(CGFloat(arc4random()) % thisHeight, CGFloat(arc4random()) % thisWidth)
         //let sprite = SKSpriteNode()
