@@ -12,7 +12,7 @@ import SpriteKit
 
 class PhysicsComponent: GKComponent {
     
-    let gravityVector = vector2(0.0, 9.8)
+    let gravityVector = vector2(4.8, 0)
     
     override init() {
         super.init()
@@ -21,8 +21,11 @@ class PhysicsComponent: GKComponent {
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
         if let spriteNode = self.entity?.componentForClass(SpriteComponent.self)?.node {
             let yChange: CGFloat = CGFloat(gravityVector.y * seconds * 50)
+            let xChange: CGFloat = CGFloat(gravityVector.x * seconds * 50)
             //debugPrint(yChange)
+            spriteNode.position.x += xChange
             spriteNode.position.y -= yChange
+            
         }
     }
 }
