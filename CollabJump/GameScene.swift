@@ -20,6 +20,10 @@ class GameScene: SKScene {
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
     
+    var offsetFromLastPhone: CGPoint?
+    
+    var joinedScreen: SCLScreen?
+    
     override func didMoveToView(view: SKView) {
         
         entityManager = EntityManager(scene: self)
@@ -37,15 +41,35 @@ class GameScene: SKScene {
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceSize: 1024)
         
-        backgroundManager!.backgroundOffset = CGPoint(x: -0,y: 0)
+        backgroundManager?.backgroundOffset = CGPoint(x: -0,y: 0)
         
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+        print("Scale factor : \(scaleFactor())")
     }
     
     func pointInVisibleSpace(point: CGPoint) -> CGPoint {
         return point + self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
+    }
+    
+    func visibleSpaceRect() -> CGRect {
+        let topLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: 0))
+        let topRightPoint = self.convertPointFromView(CGPoint(x: self.view!.bounds.width, y: 0))
+        let bottomLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
+
+        let rect = CGRect(x: bottomLeftPoint.x, y: bottomLeftPoint.y, width: abs(topRightPoint.x - topLeftPoint.x), height: abs(topLeftPoint.y - bottomLeftPoint.y))
+        return rect
+    }
+    
+    func scaleFactor() -> CGFloat {
+        let visibleRect = visibleSpaceRect()
+        return self.view!.frame.height / visibleRect.height
+    }
+    
+    func inverseScaleFactor() -> CGFloat {
+        let visibleRect = visibleSpaceRect()
+        return visibleRect.height / self.view!.frame.height;
     }
     
     func playMusic() {
@@ -64,17 +88,21 @@ class GameScene: SKScene {
         if let dict = notif.userInfo as? [String: AnyObject] {
             
             if let message = dict[SCLSessionManagerMessageUserInfoKey] as? SCLSessionMessage {
-                if let positionMessage = message.object as? PositionMessage {
-                    print(" position message! \(positionMessage.position)")
-                    let location = positionMessage.position
-                    
-                    let player: Player = Player()
-                    
-                    if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                        spriteComponent.node.position = location
+                if let handoverMessage = message.object as? HandoverMessage {
+                    print("Handover message! \(handoverMessage.playerPosition)")
+                    if(offsetFromLastPhone != nil) {
+                        let location = handoverMessage.playerPosition
+                        
+                        let player: Player = Player()
+                        
+                        if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                            spriteComponent.node.position = location - offsetFromLastPhone!
+                        }
+                        
+                        entityManager!.add(player)
+                    } else {
+                        print("NO OFFSET")
                     }
-                    
-                    entityManager!.add(player)
                 }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
@@ -85,8 +113,11 @@ class GameScene: SKScene {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("gamescene touch")
+        
+        var rect = visibleSpaceRect()
+        print("Visisble rect: \(rect))")
        /* Called when a touch begins */
-        for touch in touches {
+        /*for touch in touches {
             let location = touch.locationInNode(self)
             print(" touch location \(location)")
             
@@ -99,15 +130,8 @@ class GameScene: SKScene {
             entityManager!.add(player)
             playMusic()
             
-            if let sessionManager = sessionManager {
-                let message: SCLSessionMessage = SCLSessionMessage(name: "ThlemPosition", object: PositionMessage(position: touch.locationInNode(self)))
-                do {
-                    try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
-                } catch _ {
-                    print("couldnt send message")
-                }
-            }
         }
+*/
     }
    
     override func update(currentTime: CFTimeInterval) {
@@ -122,17 +146,78 @@ class GameScene: SKScene {
     }
     
     func updateDelta(deltaTime: CFTimeInterval) {
-        print("\(deltaTime)")
+        //print("\(deltaTime)")
         entityManager!.update(deltaTime)
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
-                print(spriteNode.position)
-                if spriteNode.position.y < 0 { //self.position.y + self.size.height
+                //print(spriteNode.position)
+                if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
                     pauseMusic()
                     entityManager!.remove(player)
+                    
+                    if let sessionManager = sessionManager {
+                        let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: spriteNode.position))
+                        do {
+                            try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
+                        } catch _ {
+                            print("couldnt send message")
+                        }
+                    }
                 }
             }
         }
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
+    }
+    
+    func joinedWithScreen(screen: SCLScreen) {
+        
+        joinedScreen = screen
+        
+        let localScreen = SCLScreen.mainScreen()
+        if let layout = screen.layout {
+            let localScreen = SCLScreen.mainScreen()
+            var bgOffset = localScreen.layout.convertPoint(CGPointZero, fromScreen: screen, toScreen: localScreen)
+            var rect = localScreen.rectForScreen(screen)
+            print("Background offset : \(bgOffset)")
+            print("Other phone rect : \(rect)")
+            print("SKView size : \(self.view?.bounds.size)")
+            print("Self size : \(self.size)")
+            print("Screen size : \(localScreen.bounds.size)")
+            print("Anchor point : \(self.anchorPoint)")
+            print("Self frame : \(self.frame)")
+            print("Self position : \(self.position)")
+            
+            //bgOffset.y *= -1
+            
+            var sceneRect = self.visibleSpaceRect()
+            
+            bgOffset.x *= sceneRect.size.width / localScreen.bounds.width
+            bgOffset.y *= sceneRect.size.height / localScreen.bounds.height
+            
+            var sceneBgOffset = bgOffset//self.pointInVisibleSpace(bgOffset)
+            //sceneBgOffset.x -= sceneRect.origin.x
+            sceneBgOffset.y *= -1
+            print("Scene offset : \(sceneBgOffset)")
+            backgroundManager?.backgroundOffset? = sceneBgOffset
+        }
+
+        /*
+        print("Joined screens! -- offset: \(offset)")
+
+        if(offset.x > 0) {
+            let player: Player = Player()
+            
+            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = CGPoint(x: 100, y: 100)
+            }
+            
+            entityManager!.add(player)
+            playMusic()
+        }
+        if(offset.x < 0) {
+            offsetFromLastPhone = offset
+            
+        }
+        */
     }
 }

@@ -82,6 +82,8 @@ class BackgroundManager {
                         var bgOffsetY = newOffset!.y - CGFloat(sliceSize! * (sliceRow + spriteRow));
                         
                         let node = SKSpriteNode(texture: SKTexture(imageNamed: "\(backgroundName!)\(imageIndex)"))
+                        //node.xScale = scene.inverseScaleFactor()
+                        //node.yScale = scene.inverseScaleFactor()
                         node.anchorPoint = CGPoint(x: 0, y: 1.0)
                         node.zPosition = -1
                         bgOffsetY += scene.size.height

@@ -25,6 +25,7 @@
 		F4B3BE721C1843ED0009DFDD /* ScreenLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */; };
 		F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C661C21AD3400C60A32 /* MyUtils.swift */; };
+		F4CF9C6A1C21B4C700C60A32 /* HandoverMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScreenLayout.xcodeproj; path = ScreenLayout/ScreenLayout.xcodeproj; sourceTree = "<group>"; };
 		F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundManager.swift; sourceTree = "<group>"; };
 		F4CF9C661C21AD3400C60A32 /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
+		F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoverMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 		F42962AA1C0D10600090E280 /* CollabJump */ = {
 			isa = PBXGroup;
 			children = (
+				F4CF9C681C21B4B700C60A32 /* Messages */,
 				F45B242D1C1F0930005C9BC5 /* Helpers */,
 				F42DFBBD1C1B18D600067F80 /* Assets */,
 				F419DD5E1C15AA29001C7C92 /* Components */,
@@ -187,6 +190,14 @@
 				F4B3BE6A1C18431E0009DFDD /* ScreenLayoutTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F4CF9C681C21B4B700C60A32 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */,
+			);
+			name = Messages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +306,7 @@
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,
 				F42962B01C0D10600090E280 /* GameScene.swift in Sources */,
+				F4CF9C6A1C21B4C700C60A32 /* HandoverMessage.swift in Sources */,
 				F42962B21C0D10600090E280 /* GameViewController.swift in Sources */,
 				F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */,
 				F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */,
