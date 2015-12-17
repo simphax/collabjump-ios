@@ -24,6 +24,8 @@ class GameScene: SKScene {
     
     var joinedScreen: SCLScreen?
     
+    var lockBackground: Bool = false
+    
     override func didMoveToView(view: SKView) {
         
         entityManager = EntityManager(scene: self)
@@ -41,7 +43,7 @@ class GameScene: SKScene {
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceSize: 1024)
         
-        backgroundManager?.backgroundOffset = CGPoint(x: -0,y: 0)
+        backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
         
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
@@ -186,7 +188,8 @@ class GameScene: SKScene {
             print("Anchor point : \(self.anchorPoint)")
             print("Self frame : \(self.frame)")
             print("Self position : \(self.position)")
-            
+            var angle = screen.convertAngle(0.0, toCoordinateSpace: self.view)
+            print("Angle : \(angle)")
             //bgOffset.y *= -1
             
             var sceneRect = self.visibleSpaceRect()
@@ -198,7 +201,13 @@ class GameScene: SKScene {
             //sceneBgOffset.x -= sceneRect.origin.x
             sceneBgOffset.y *= -1
             print("Scene offset : \(sceneBgOffset)")
-            backgroundManager?.backgroundOffset? = sceneBgOffset
+            if(!lockBackground) {
+                backgroundManager?.setBackgroundOffset(sceneBgOffset, angle: angle)
+            } else {
+                backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
+            }
+        } else {
+            backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
         }
 
         /*
@@ -219,5 +228,9 @@ class GameScene: SKScene {
             
         }
         */
+    }
+    
+    func disconnected() {
+        
     }
 }
