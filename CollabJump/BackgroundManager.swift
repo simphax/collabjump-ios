@@ -16,10 +16,6 @@ class BackgroundManager {
     
     private var backgroundName: String?
     
-    private var sliceCols: Int?
-    
-    private var sliceSize: Int?
-    
     private var backgroundNodes: [SKSpriteNode]
     
     private var lastSliceCol: Int = 0
@@ -27,88 +23,62 @@ class BackgroundManager {
     private var lastSpriteCols: Int = 1
     private var lastSpriteRows: Int = 1
     
-    var backgroundOffset: CGPoint? {
-        willSet(newOffset) {
-            if(newOffset == backgroundOffset) {
-                return;
-            }
-            
-            if(newOffset != nil && sliceSize != nil && backgroundName != nil) {
-                let sliceCol = Int(floor(abs(newOffset!.x) / CGFloat(sliceSize!)))
-                let sliceRow = Int(floor(abs(newOffset!.y) / CGFloat(sliceSize!)))
-                
-                print("sliceCol: \(sliceCol), sliceRow: \(sliceRow)")
-                
-                let firstOffsetX = newOffset!.x + CGFloat(sliceSize! * sliceCol)
-                let firstOffsetY = newOffset!.y - CGFloat(sliceSize! * sliceRow)
-                
-                var spriteCols = 1
-                var spriteRows = 1
-                
-                while(firstOffsetX + CGFloat(sliceSize! * spriteCols) < scene.size.width) {
-                    spriteCols++
-                }
-                
-                while(-firstOffsetY + CGFloat(sliceSize! * spriteRows) < scene.size.height) {
-                    spriteRows++
-                }
-                
-                print("Background cols: \(spriteCols), rows: \(spriteRows)")
-                print("First offset: \(firstOffsetX), \(firstOffsetY)")
-                
-                //If we should display the same sprites, just move them.
-                if(backgroundOffset != nil && lastSliceCol == sliceCol && lastSliceRow == sliceCol && lastSpriteCols == spriteCols && lastSpriteRows == spriteRows) {
-                    var difference: CGPoint = (newOffset! - backgroundOffset!)
-                    print("difference \(difference)")
-                    for backgroundNode in backgroundNodes {
-                        backgroundNode.position += difference
-                    }
-                    return;
-                }
-                print("WAIT!")
-                for backgroundNode in backgroundNodes {
-                    backgroundNode.removeFromParent()
-                }
-                
-                backgroundNodes.removeAll()
-                
-                for(var spriteCol=0; spriteCol<spriteCols; spriteCol++) {
-                    for(var spriteRow=0; spriteRow<spriteRows; spriteRow++) {
-                        
-                        let imageIndex = (sliceRow + spriteRow) * sliceCols! + (sliceCol + spriteCol);
-                        print("Image index: \(imageIndex)")
-                        
-                        let bgOffsetX = newOffset!.x + CGFloat(sliceSize! * (sliceCol + spriteCol));
-                        var bgOffsetY = newOffset!.y - CGFloat(sliceSize! * (sliceRow + spriteRow));
-                        
-                        let node = SKSpriteNode(texture: SKTexture(imageNamed: "\(backgroundName!)\(imageIndex)"))
-                        //node.xScale = scene.inverseScaleFactor()
-                        //node.yScale = scene.inverseScaleFactor()
-                        node.anchorPoint = CGPoint(x: 0, y: 1.0)
-                        node.zPosition = -1
-                        bgOffsetY += scene.size.height
-                        node.position = scene.pointInVisibleSpace(CGPoint(x: bgOffsetX, y:bgOffsetY));
-                        backgroundNodes.append(node)
-                        scene.addChild(node)
-                    }
-                }
-                
-                lastSliceCol = sliceCol;
-                lastSliceRow = sliceRow;
-                lastSpriteCols = spriteCols;
-                lastSpriteRows = spriteRows;
-            }
-        }
-    }
+    private var backgroundOffset: CGPoint?
+    private var backgroundAngle: CGFloat?
+    
+    private var gridCalculator: GridCalculator?
     
     init(scene: GameScene) {
         self.scene = scene
         backgroundNodes = []
     }
     
-    func setBackground(name: String, sliceCols: Int, sliceSize: Int) {
+    func setBackground(name: String, sliceCols: Int, sliceRows: Int, sliceSize: Int) {
         backgroundName = name
-        self.sliceCols = sliceCols
-        self.sliceSize = sliceSize
+        self.gridCalculator = GridCalculator(cellSize: sliceSize, gridCols: sliceCols, gridRows: sliceRows)
+    }
+    
+    func setBackgroundOffset(offset: CGPoint, angle: CGFloat) {
+        print("setbgoffset!!!!")
+        if(offset != backgroundOffset) {
+            if(backgroundName != nil && gridCalculator != nil) {
+                for backgroundNode in backgroundNodes {
+                    backgroundNode.removeFromParent()
+                }
+                backgroundNodes.removeAll()
+
+                let viewportRect = self.scene.visibleSpaceRect()
+                print("viewPortRect: ",viewportRect)
+                
+                let degrees = gridCalculator!.radiansToDegrees(angle)
+                print("Degrees: \(degrees)")
+                
+                var backgroundPosition = offset
+                backgroundPosition.y += scene.size.height
+                
+                let backgrounds: [GridCell] = gridCalculator!.getCells(backgroundPosition, anchorPoint: CGPoint(x:0,y:1), angleDeg: Int(degrees), viewRect: viewportRect)
+                
+                print("backgrounds: \(backgrounds)")
+                
+                for background in backgrounds {
+                    let node = SKSpriteNode(texture: SKTexture(imageNamed: "\(backgroundName!)\(background.index)"))
+                    node.zRotation = background.angle
+                    node.anchorPoint = CGPoint(x: 0, y: 0)
+                    
+                    let scenePoint = background.rect.origin
+                    print("Scene point \(scenePoint)")
+                    node.position = scenePoint;
+                    
+                    node.zPosition = -1
+                    
+                    backgroundNodes.append(node)
+                    scene.addChild(node)
+                }
+                
+            }
+        }
+        
+        backgroundOffset = offset
+        backgroundAngle = angle
     }
 }

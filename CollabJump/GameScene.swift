@@ -23,6 +23,8 @@ class GameScene: SKScene {
     
     var joinedScreen: SCLScreen?
     
+    var lockBackground: Bool = false
+    
     override func didMoveToView(view: SKView) {
         entityManager = EntityManager(scene: self)
 
@@ -33,8 +35,9 @@ class GameScene: SKScene {
         */
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
         backgroundManager = BackgroundManager(scene: self)
-        backgroundManager?.setBackground("background", sliceCols: 6, sliceSize: 1024)
-        backgroundManager?.backgroundOffset = CGPoint(x: -0,y: 0)
+        backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
+        backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
+        
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
@@ -179,7 +182,7 @@ class GameScene: SKScene {
         if let layout = screen.layout {
             let localScreen = SCLScreen.mainScreen()
             var bgOffset = localScreen.layout.convertPoint(CGPointZero, fromScreen: screen, toScreen: localScreen)
-            var rect = localScreen.rectForScreen(screen)
+            let rect = localScreen.rectForScreen(screen)
             print("Background offset : \(bgOffset)")
             print("Other phone rect : \(rect)")
             print("SKView size : \(self.view?.bounds.size)")
@@ -188,10 +191,11 @@ class GameScene: SKScene {
             print("Anchor point : \(self.anchorPoint)")
             print("Self frame : \(self.frame)")
             print("Self position : \(self.position)")
-            
+            let angle = screen.convertAngle(0.0, toCoordinateSpace: self.view)
+            print("Angle : \(angle)")
             //bgOffset.y *= -1
             
-            var sceneRect = self.visibleSpaceRect()
+            let sceneRect = self.visibleSpaceRect()
             
             bgOffset.x *= sceneRect.size.width / localScreen.bounds.width
             bgOffset.y *= sceneRect.size.height / localScreen.bounds.height
@@ -200,7 +204,13 @@ class GameScene: SKScene {
             //sceneBgOffset.x -= sceneRect.origin.x
             sceneBgOffset.y *= -1
             print("Scene offset : \(sceneBgOffset)")
-            backgroundManager?.backgroundOffset? = sceneBgOffset
+            if(!lockBackground) {
+                backgroundManager?.setBackgroundOffset(sceneBgOffset, angle: -angle)
+            } else {
+                backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
+            }
+        } else {
+            backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
         }
 
         /*
@@ -221,5 +231,9 @@ class GameScene: SKScene {
             
         }
         */
+    }
+    
+    func disconnected() {
+        
     }
 }

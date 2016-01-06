@@ -27,6 +27,7 @@
 		F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */; };
 		F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C661C21AD3400C60A32 /* MyUtils.swift */; };
 		F4CF9C6A1C21B4C700C60A32 /* HandoverMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */; };
+		F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F4C5BF1C396079005481FB /* GridCalculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundManager.swift; sourceTree = "<group>"; };
 		F4CF9C661C21AD3400C60A32 /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
 		F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoverMessage.swift; sourceTree = "<group>"; };
+		F4F4C5BF1C396079005481FB /* GridCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridCalculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 			children = (
 				F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */,
 				F4CF9C661C21AD3400C60A32 /* MyUtils.swift */,
+				F4F4C5BF1C396079005481FB /* GridCalculator.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				842E1C041C19C39400335A48 /* RandomPositionComponent.swift in Sources */,
 				F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */,
 				F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */,
+				F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,
 				F42962B01C0D10600090E280 /* GameScene.swift in Sources */,
