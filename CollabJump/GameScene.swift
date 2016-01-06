@@ -118,7 +118,7 @@ class GameScene: SKScene {
             //let atScreen = self.pointInVisibleSpace(CGPoint(x: 0, y: 0))
             
             let player: Player = Player()
-            let rpc  = RandomPositionComponent(height: 32, width: 32, visibleSpace: self.visibleSpaceRect())
+            let rpc  = RandomPositionComponent(height: 150, width: 150, visibleSpace: self.visibleSpaceRect())
             
 //            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
 //                spriteComponent.node.position = location

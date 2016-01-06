@@ -27,7 +27,7 @@ class RandomPositionComponent: GKComponent {
         
         //TODO: Margins, so that for instance a platform component does not end up at the top of the screen.
         //I think this is done past self. DONE. Was not done.
-        // rotate blocks randomize as well.
+        // rotate blocks randomize as well. Should not be in this class
     }
     
     
@@ -38,31 +38,30 @@ class RandomPositionComponent: GKComponent {
         
         let randomPosition = CGRect(x: (CGFloat(arc4random()) % deviceWidth),
                                 y: (CGFloat(arc4random()) % deviceHeight),
-                                width: componentHeight,
-                                height: componentWidth)
+                                width: componentWidth,
+                                height: componentHeight)
         
-        //The component is not allowed to fall outside the screen. Therefore add the offsets.
+        //The component is not allowed to fall outside the screen. Therefore add the offsets (Lot of magic).
         var randomX = randomPosition.origin.x
         var randomY = randomPosition.origin.y
         
         if randomX < componentWidth {
-            randomX = 0
+            randomX = componentWidth/2
         }
         
-        if randomX > deviceWidth {
-            randomX = deviceWidth - (componentWidth * 2)
+        if randomX > deviceWidth - randomX {
+            randomX = deviceWidth - (componentWidth/2)
         }
         
         if  randomY < componentHeight {
-            randomY = componentHeight
+            randomY += componentHeight
         }
         
-        if  randomY > deviceHeight {
-            randomY = componentHeight - (componentHeight * 2)
+        if  randomY > deviceHeight - randomY {
+            randomY = deviceHeight - (componentHeight * 1.5)
         }
         
-        //print(randomX)
-        //print(randomY)
+        print("THIS IS RANDOMX: \(randomX) THIS IS RANDOM Y: \(randomY)")
         
         // Add the offsets
 //        randomX += sceneScreen.x
