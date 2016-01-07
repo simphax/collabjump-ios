@@ -24,6 +24,7 @@
 		F43B8F451C3E688000686B90 /* TitilliumWeb-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F43B8F441C3E67B500686B90 /* TitilliumWeb-Bold.ttf */; };
 		F4560DDA1C3EA57100A1EF86 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4560DD91C3EA57100A1EF86 /* HomeViewController.swift */; };
 		F4560DDC1C3EB0F700A1EF86 /* StartGameMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4560DDB1C3EB0F700A1EF86 /* StartGameMessage.swift */; };
+		F4560DDE1C3EC15000A1EF86 /* PauseGameMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4560DDD1C3EC15000A1EF86 /* PauseGameMessage.swift */; };
 		F45B24271C1EE16E005C9BC5 /* music.wav in Resources */ = {isa = PBXBuildFile; fileRef = F45B24261C1EE16E005C9BC5 /* music.wav */; };
 		F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */; };
 		F4B3BE711C1843ED0009DFDD /* ScreenLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; };
@@ -92,6 +93,7 @@
 		F43B8F441C3E67B500686B90 /* TitilliumWeb-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Bold.ttf"; sourceTree = "<group>"; };
 		F4560DD91C3EA57100A1EF86 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F4560DDB1C3EB0F700A1EF86 /* StartGameMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartGameMessage.swift; sourceTree = "<group>"; };
+		F4560DDD1C3EC15000A1EF86 /* PauseGameMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PauseGameMessage.swift; sourceTree = "<group>"; };
 		F45B24261C1EE16E005C9BC5 /* music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = music.wav; sourceTree = "<group>"; };
 		F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScreenLayout.xcodeproj; path = ScreenLayout/ScreenLayout.xcodeproj; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 			children = (
 				F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */,
 				F4560DDB1C3EB0F700A1EF86 /* StartGameMessage.swift */,
+				F4560DDD1C3EC15000A1EF86 /* PauseGameMessage.swift */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 			files = (
 				F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */,
 				F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */,
+				F4560DDE1C3EC15000A1EF86 /* PauseGameMessage.swift in Sources */,
 				F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */,
 				F42622D11C3D64640003B409 /* GameStates.swift in Sources */,
 				F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */,

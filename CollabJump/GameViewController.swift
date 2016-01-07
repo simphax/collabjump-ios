@@ -109,11 +109,13 @@ class GameViewController: SCLPinchViewController {
         switch state {
         case .NotConnected:
             print("peer not connected: \(peerID)")
+            gameScene?.peerDisconnected(peerID)
         case .Connecting:
             print("peer connecting: \(peerID)")
+            gameScene?.peerConnecting(peerID)
         case .Connected:
             print("peer connected: \(peerID)")
-            
+            gameScene?.peerConnected(peerID)
             lastConnectedPeerID = peerID
             let message: SCLSessionMessage = SCLSessionMessage(name: "hello", object: nil)
             do {
