@@ -53,7 +53,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //spriteComponent.node.physicsBody?.friction = 0.0
             spriteComponent.node.physicsBody?.dynamic = true
             spriteComponent.node.physicsBody?.mass = 1
-            spriteComponent.node.physicsBody?.affectedByGravity = true
+            //spriteComponent.node.physicsBody?.affectedByGravity = true
             
             
         }
@@ -188,6 +188,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     pauseMusic()
                     entityManager!.remove(player)
                 }
+                spriteNode.physicsBody?.velocity.dx += 10
             }
         }
     }
