@@ -41,7 +41,11 @@ class GameScene: SKScene {
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+        randomPlatform()
         print("Scale factor : \(scaleFactor())")
+        
+        
+        
     }
     
     //Får ut offset och width och height.
@@ -104,6 +108,23 @@ class GameScene: SKScene {
             }
         }
     }
+    func randomPlatform () {
+        let platform: Platform = Platform()
+        let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
+        let platformHeight = platformSpriteComponent!.node.size.height
+        let platformWidth = platformSpriteComponent!.node.size.width
+        let rpc  = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
+        
+        if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
+            spriteComponent.node.position = CGPoint(
+                x:rpc.generateAtRandomPosition().randomX,
+                y:rpc.generateAtRandomPosition().randomY
+            )
+            print(spriteComponent.node.position)
+            //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
+        }
+        entityManager!.add(platform)
+    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("gamescene touch")
@@ -115,22 +136,9 @@ class GameScene: SKScene {
             let location = touch.locationInNode(self)
 
             print(" touch location \(location)")
-            //let atScreen = self.pointInVisibleSpace(CGPoint(x: 0, y: 0))
-            
             let player: Player = Player()
-            let rpc  = RandomPositionComponent(height: 150, width: 150, visibleSpace: self.visibleSpaceRect())
-            
-//            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-//                spriteComponent.node.position = location
-//            }
-            
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                spriteComponent.node.position = CGPoint(
-                    x:rpc.generateAtRandomPosition().randomX,
-                    y:rpc.generateAtRandomPosition().randomY
-                )
-                print(spriteComponent.node.position)
-                //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
+                spriteComponent.node.position = location
             }
             
             entityManager!.add(player)

@@ -15,7 +15,7 @@ class Player: GKEntity {
     override init() {
         super.init()
         
-        let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlen"))
+        let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem"))
         addComponent(spriteComponent)
         
         let physicsComponent = PhysicsComponent()

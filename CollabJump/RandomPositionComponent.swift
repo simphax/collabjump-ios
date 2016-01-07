@@ -37,7 +37,7 @@ class RandomPositionComponent: GKComponent {
         //let randomPosition2 = CGRect
         
         let randomPosition = CGRect(x: (CGFloat(arc4random()) % deviceWidth),
-                                y: (CGFloat(arc4random()) % deviceHeight),
+                                y: (CGFloat(arc4random()) % (deviceHeight - 350)),
                                 width: componentWidth,
                                 height: componentHeight)
         
