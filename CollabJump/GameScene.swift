@@ -12,15 +12,16 @@ import GameKit
 
 
 
+
 func + (left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x+right.x,y: left.y+right.y)
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var lastUpdateTimeInterval: CFTimeInterval = 0
     var entityManager: EntityManager?
-    var backgroundManager: BackgroundManager?
+    var backgroundManager: BackgroundManager!
     var sessionManager: SCLSessionManager?
     
     var bgMusic: SKAudioNode!
@@ -28,16 +29,54 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         
-        entityManager = EntityManager(scene: self)
-        /*
-        let player: Player = Player()
+       
+        self.physicsWorld.gravity = CGVectorMake(0.0, -9.8)
+        physicsWorld.contactDelegate = self
         
+        entityManager = EntityManager(scene: self)
+        
+        
+        let player: Player = Player()
+        let platform: Platform = Platform()
+        
+        let PlatformCategory:UInt32 = 1 << 1
+        let PlayerCategory:UInt32 = 1 << 0
+        
+        // Player
         if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-            spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
+            spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame) - 100, y: CGRectGetMidY(self.frame))
+            spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
+            spriteComponent.node.physicsBody?.categoryBitMask = PlayerCategory
+            spriteComponent.node.physicsBody?.contactTestBitMask = PlatformCategory
+            spriteComponent.node.physicsBody?.collisionBitMask = PlatformCategory
+            spriteComponent.node.physicsBody?.allowsRotation = false
+            //spriteComponent.node.physicsBody?.friction = 0.0
+            spriteComponent.node.physicsBody?.dynamic = true
+            spriteComponent.node.physicsBody?.mass = 1
+            spriteComponent.node.physicsBody?.affectedByGravity = true
+            
+            
         }
         
-        entityManager.add(player)
-        */
+        // Platform
+        if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
+            spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame) - 300)
+            spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
+            spriteComponent.node.physicsBody?.categoryBitMask = PlatformCategory
+            spriteComponent.node.physicsBody?.contactTestBitMask = PlayerCategory
+            spriteComponent.node.physicsBody?.collisionBitMask = PlayerCategory
+            spriteComponent.node.physicsBody?.allowsRotation = false
+            //spriteComponent.node.physicsBody?.friction = 0.01
+            spriteComponent.node.physicsBody?.dynamic = false
+            spriteComponent.node.physicsBody?.restitution = 0.0
+            spriteComponent.node.physicsBody?.mass = 20
+            spriteComponent.node.physicsBody?.affectedByGravity = false
+        }
+        
+        
+        entityManager!.add(player)
+        entityManager!.add(platform)
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
         
         backgroundManager = BackgroundManager(scene: self)
@@ -48,6 +87,20 @@ class GameScene: SKScene {
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        
+        let player = Player()
+        let spriteComponent = player.componentForClass(SpriteComponent.self)
+        spriteComponent!.node.physicsBody?.velocity = CGVectorMake(5.0, 0.0)
+        
+        print("CONTACT")
+        
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        
     }
     
     func pointInVisibleSpace(point: CGPoint) -> CGPoint {
@@ -99,11 +152,12 @@ class GameScene: SKScene {
             let player: Player = Player()
             
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                
                 spriteComponent.node.position = location
             }
             
-            entityManager!.add(player)
-            playMusic()
+//            entityManager!.add(player)
+//            playMusic()
             
             if let sessionManager = sessionManager {
                 let message: SCLSessionMessage = SCLSessionMessage(name: "ThlemPosition", object: PositionMessage(position: touch.locationInNode(self)))
@@ -120,6 +174,7 @@ class GameScene: SKScene {
         /* Called before each frame is rendered */
         let delta: CFTimeInterval = currentTime - lastUpdateTimeInterval
         lastUpdateTimeInterval = currentTime
+        
         
         self.updateDelta(delta)
     }

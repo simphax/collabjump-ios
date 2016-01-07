@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78E12B201C3DA82B00B822ED /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E12B1F1C3DA82B00B822ED /* Platform.swift */; };
 		F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5C1C15A9C8001C7C92 /* Player.swift */; };
 		F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */; };
 		F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD611C15AAF1001C7C92 /* EntityManager.swift */; };
@@ -65,6 +66,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		78E12B1F1C3DA82B00B822ED /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		F419DD5C1C15A9C8001C7C92 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		F419DD611C15AAF1001C7C92 /* EntityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			children = (
 				F419DD5C1C15A9C8001C7C92 /* Player.swift */,
 				F419DD611C15AAF1001C7C92 /* EntityManager.swift */,
+				78E12B1F1C3DA82B00B822ED /* Platform.swift */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78E12B201C3DA82B00B822ED /* Platform.swift in Sources */,
 				F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */,
 				F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
