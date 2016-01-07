@@ -54,7 +54,7 @@ class RandomPositionComponent: GKComponent {
         }
         
         if  randomY < componentHeight {
-            randomY += componentHeight
+            randomY += componentHeight*2
         }
         
         if  randomY > deviceHeight - randomY {
