@@ -29,21 +29,30 @@ class WaitingForPlayers : GameState {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
         
         label = SKLabelNode(fontNamed: "Titillium Web")
-        label?.fontSize = 25
-        label?.text = "WAITING FOR PLAYERS"
+        label?.fontSize = 20
         label?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2)
-        
-        button = ButtonNode(color: UIColor.whiteColor(), size: CGSize(width: 200, height: 40))
-        button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2 - 80)
-        button?.buttonIdentifier = .Start
-        button?.userInteractionEnabled = true
-        
+        updateLabelText()
         gameScene.addChild(label!)
-        gameScene.addChild(button!)
+        
+        if(gameScene.hostingGame) {
+            button = ButtonNode(color: UIColor.whiteColor(), size: CGSize(width: 200, height: 40))
+            button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2 - 80)
+            button?.buttonIdentifier = .Start
+            button?.userInteractionEnabled = true
+            
+            gameScene.addChild(button!)
+        }
+    }
+    
+    func updateLabelText() {
+        if let label = label {
+            let connectedCount = gameScene.sessionManager?.session.connectedPeers.count
+            label.text = "\(Int(connectedCount!)) friends have joined your game"
+        }
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
-        
+        updateLabelText()
     }
     
     override func willExitWithNextState(nextState: GKState) {

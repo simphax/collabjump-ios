@@ -25,6 +25,7 @@ class GameScene: SKScene, ButtonNodeResponderType {
     var joinedScreen: SCLScreen?
     
     var lockBackground: Bool = false
+    var hostingGame: Bool = false
     
     var stateMachine: GKStateMachine?
     
@@ -47,21 +48,34 @@ class GameScene: SKScene, ButtonNodeResponderType {
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
         
-        
-        
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
         print("Scale factor : \(scaleFactor())")
         
         stateMachine?.enterState(WaitingForPlayers.self)
-        
+    
         backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
+        
+        if !hostingGame {
+            backgroundManager?.hideBackground()
+        }
     }
     
     func buttonTriggered(button: ButtonNode) {
+        print("button triggered")
         if button.buttonIdentifier == .Start {
-            stateMachine?.enterState(DisjoinedScreen.self)
+            print("Start!")
+            if let sessionManager = sessionManager {
+                print("Sending start game message")
+                let message: SCLSessionMessage = SCLSessionMessage(name: "StartGame", object: StartGameMessage())
+                do {
+                    try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
+                    stateMachine?.enterState(DisjoinedScreen.self)
+                } catch _ {
+                    print("couldnt send message")
+                }
+            }
         }
     }
     
@@ -108,28 +122,41 @@ class GameScene: SKScene, ButtonNodeResponderType {
         if let dict = notif.userInfo as? [String: AnyObject] {
             
             if let message = dict[SCLSessionManagerMessageUserInfoKey] as? SCLSessionMessage {
-                if let handoverMessage = message.object as? HandoverMessage {
-                    print("Handover message! \(handoverMessage.playerPosition)")
-                    if(offsetFromLastPhone != nil) {
-                        let location = handoverMessage.playerPosition
-                        
-                        let player: Player = Player()
-                        
-                        if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                            spriteComponent.node.position = location + offsetFromLastPhone!
-                        }
-                        
-                        entityManager!.add(player)
-                        
-                        playMusic()
-                    } else {
-                        print("NO OFFSET")
-                    }
+                if let message = message.object as? HandoverMessage {
+                    handoverMessage(message)
+                }
+                if let message = message.object as? StartGameMessage {
+                    startGame(message)
                 }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
                 print(" got a message from \(peerId)")
             }
+        }
+    }
+    
+    func handoverMessage(message: HandoverMessage) {
+        print("Handover message! \(message.playerPosition)")
+        if(offsetFromLastPhone != nil) {
+            let location = message.playerPosition
+            
+            let player: Player = Player()
+            
+            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = location + offsetFromLastPhone!
+            }
+            
+            entityManager!.add(player)
+            
+            playMusic()
+        } else {
+            print("NO OFFSET")
+        }
+    }
+    
+    func startGame(message: StartGameMessage) {
+        if !hostingGame {
+            stateMachine?.enterState(DisjoinedScreen.self)
         }
     }
     /*
@@ -202,8 +229,6 @@ class GameScene: SKScene, ButtonNodeResponderType {
     }
     
     func joinedWithScreen(screen: SCLScreen) {
-        
-        
         joinedScreen = screen
         
         if let layout = screen.layout {
@@ -239,6 +264,7 @@ class GameScene: SKScene, ButtonNodeResponderType {
             } else {
                 backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
             }
+            backgroundManager?.showBackground()
             /*
             if(joinedScreenOffset.x >= self.size.width) {
                 delay(2.0) {

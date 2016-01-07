@@ -17,7 +17,10 @@ class GameViewController: SCLPinchViewController {
     
     var lastConnectedPeerID: MCPeerID?
     var gameScene: GameScene?
-
+    
+    var hostingGame = false
+    var hostingGameId = "collabjump"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,9 +41,16 @@ class GameViewController: SCLPinchViewController {
             print("Scale : \(scene.xScale)")
             print("Frame : \(self.view.frame)")
             print("Size : \(scene.size)")
+           
+            if hostingGame {
+                scene.lockBackground = true
+                scene.hostingGame = true
+            } else {
+            }
             
             skView.presentScene(scene)
             gameScene = scene
+            
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enableJoinGesture", name: screenJoinEnableMessageKey, object: nil)
@@ -61,18 +71,18 @@ class GameViewController: SCLPinchViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        disableJoinGesture()
 
-        self.sessionManager.startPeerInvitationsWithServiceType("collabjump", errorHandler: { (error) -> Void in
+        self.sessionManager.startPeerInvitationsWithServiceType(hostingGameId, errorHandler: { (error) -> Void in
             print("invitations failed with error: \(error)")
         })
-        
-        disableJoinGesture()
     }
-
+/*
     override func shouldAutorotate() -> Bool {
         return true
     }
-
+*/
+/*
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             return .AllButUpsideDown
@@ -80,7 +90,7 @@ class GameViewController: SCLPinchViewController {
             return .All
         }
     }
-
+*/
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.

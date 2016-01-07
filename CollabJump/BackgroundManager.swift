@@ -16,7 +16,9 @@ class BackgroundManager {
     
     private var backgroundName: String?
     
-    private var backgroundNodes: [SKSpriteNode]
+    private var backgroundNodes: [SKNode]
+    
+    private var blackOverlay: SKShapeNode?
     
     private var lastSliceCol: Int = 0
     private var lastSliceRow: Int = 0
@@ -69,7 +71,7 @@ class BackgroundManager {
                     print("Scene point \(scenePoint)")
                     node.position = scenePoint;
                     
-                    node.zPosition = -1
+                    node.zPosition = -10
                     
                     backgroundNodes.append(node)
                     scene.addChild(node)
@@ -80,5 +82,16 @@ class BackgroundManager {
         
         backgroundOffset = offset
         backgroundAngle = angle
+    }
+    
+    func hideBackground() {
+        blackOverlay = SKShapeNode(rect: CGRectMake(0, 0, self.scene.size.width, self.scene.size.height))
+        blackOverlay?.fillColor = UIColor.blackColor()
+        blackOverlay?.zPosition = -5
+        scene.addChild(blackOverlay!)
+    }
+    
+    func showBackground() {
+        blackOverlay?.removeFromParent()
     }
 }
