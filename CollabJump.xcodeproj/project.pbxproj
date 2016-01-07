@@ -11,6 +11,7 @@
 		F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */; };
 		F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD611C15AAF1001C7C92 /* EntityManager.swift */; };
 		F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD651C15C971001C7C92 /* PhysicsComponent.swift */; };
+		F42622D11C3D64640003B409 /* GameStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42622D01C3D64640003B409 /* GameStates.swift */; };
 		F42962AC1C0D10600090E280 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42962AB1C0D10600090E280 /* AppDelegate.swift */; };
 		F42962AE1C0D10600090E280 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = F42962AD1C0D10600090E280 /* GameScene.sks */; };
 		F42962B01C0D10600090E280 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42962AF1C0D10600090E280 /* GameScene.swift */; };
@@ -19,6 +20,8 @@
 		F42962B71C0D10600090E280 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F42962B61C0D10600090E280 /* Assets.xcassets */; };
 		F42962BA1C0D10600090E280 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F42962B81C0D10600090E280 /* LaunchScreen.storyboard */; };
 		F42DFBC01C1B1A4000067F80 /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = F42DFBBF1C1B1A4000067F80 /* jump.wav */; };
+		F43B8F421C3E63F300686B90 /* ButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43B8F411C3E63F300686B90 /* ButtonNode.swift */; };
+		F43B8F451C3E688000686B90 /* TitilliumWeb-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F43B8F441C3E67B500686B90 /* TitilliumWeb-Bold.ttf */; };
 		F45B24271C1EE16E005C9BC5 /* music.wav in Resources */ = {isa = PBXBuildFile; fileRef = F45B24261C1EE16E005C9BC5 /* music.wav */; };
 		F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */; };
 		F4B3BE711C1843ED0009DFDD /* ScreenLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; };
@@ -72,6 +75,7 @@
 		F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		F419DD611C15AAF1001C7C92 /* EntityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
 		F419DD651C15C971001C7C92 /* PhysicsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsComponent.swift; sourceTree = "<group>"; };
+		F42622D01C3D64640003B409 /* GameStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStates.swift; sourceTree = "<group>"; };
 		F42962A81C0D10600090E280 /* CollabJump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollabJump.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F42962AB1C0D10600090E280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F42962AD1C0D10600090E280 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -82,6 +86,8 @@
 		F42962B91C0D10600090E280 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F42962BB1C0D10600090E280 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F42DFBBF1C1B1A4000067F80 /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = "<group>"; };
+		F43B8F411C3E63F300686B90 /* ButtonNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonNode.swift; sourceTree = "<group>"; };
+		F43B8F441C3E67B500686B90 /* TitilliumWeb-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Bold.ttf"; sourceTree = "<group>"; };
 		F45B24261C1EE16E005C9BC5 /* music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = music.wav; sourceTree = "<group>"; };
 		F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScreenLayout.xcodeproj; path = ScreenLayout/ScreenLayout.xcodeproj; sourceTree = "<group>"; };
@@ -121,6 +127,14 @@
 			name = Components;
 			sourceTree = "<group>";
 		};
+		F42622CE1C3D64540003B409 /* Game States */ = {
+			isa = PBXGroup;
+			children = (
+				F42622D01C3D64640003B409 /* GameStates.swift */,
+			);
+			name = "Game States";
+			sourceTree = "<group>";
+		};
 		F429629F1C0D10600090E280 = {
 			isa = PBXGroup;
 			children = (
@@ -141,6 +155,8 @@
 		F42962AA1C0D10600090E280 /* CollabJump */ = {
 			isa = PBXGroup;
 			children = (
+				F43B8F401C3E63E700686B90 /* Nodes */,
+				F42622CE1C3D64540003B409 /* Game States */,
 				F4CF9C681C21B4B700C60A32 /* Messages */,
 				F45B242D1C1F0930005C9BC5 /* Helpers */,
 				F42DFBBD1C1B18D600067F80 /* Assets */,
@@ -162,6 +178,7 @@
 		F42DFBBD1C1B18D600067F80 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				F43B8F431C3E671200686B90 /* Fonts */,
 				F42DFBBE1C1B1A3300067F80 /* Sfx */,
 			);
 			name = Assets;
@@ -174,6 +191,22 @@
 				F42DFBBF1C1B1A4000067F80 /* jump.wav */,
 			);
 			name = Sfx;
+			sourceTree = "<group>";
+		};
+		F43B8F401C3E63E700686B90 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				F43B8F411C3E63F300686B90 /* ButtonNode.swift */,
+			);
+			name = Nodes;
+			sourceTree = "<group>";
+		};
+		F43B8F431C3E671200686B90 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				F43B8F441C3E67B500686B90 /* TitilliumWeb-Bold.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		F45B242D1C1F0930005C9BC5 /* Helpers */ = {
@@ -290,6 +323,7 @@
 				F42DFBC01C1B1A4000067F80 /* jump.wav in Resources */,
 				F42962AE1C0D10600090E280 /* GameScene.sks in Resources */,
 				F45B24271C1EE16E005C9BC5 /* music.wav in Resources */,
+				F43B8F451C3E688000686B90 /* TitilliumWeb-Bold.ttf in Resources */,
 				F42962BA1C0D10600090E280 /* LaunchScreen.storyboard in Resources */,
 				F42962B71C0D10600090E280 /* Assets.xcassets in Resources */,
 				F42962B51C0D10600090E280 /* Main.storyboard in Resources */,
@@ -306,6 +340,7 @@
 				F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */,
 				F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */,
 				F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */,
+				F42622D11C3D64640003B409 /* GameStates.swift in Sources */,
 				F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,
@@ -315,6 +350,7 @@
 				F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */,
 				F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */,
 				F42962AC1C0D10600090E280 /* AppDelegate.swift in Sources */,
+				F43B8F421C3E63F300686B90 /* ButtonNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

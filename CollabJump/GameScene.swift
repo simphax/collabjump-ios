@@ -10,7 +10,7 @@ import SpriteKit
 import ScreenLayout
 import GameKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, ButtonNodeResponderType {
     
     var lastUpdateTimeInterval: CFTimeInterval = 0
     var entityManager: EntityManager?
@@ -26,7 +26,11 @@ class GameScene: SKScene {
     
     var lockBackground: Bool = false
     
+    var stateMachine: GKStateMachine?
+    
     override func didMoveToView(view: SKView) {
+        
+        stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(), JoinedScreen(), Paused(), GameOver()])
         
         entityManager = EntityManager(scene: self)
         /*
@@ -43,16 +47,30 @@ class GameScene: SKScene {
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
         
-        backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
+        
         
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
         print("Scale factor : \(scaleFactor())")
+        
+        stateMachine?.enterState(WaitingForPlayers.self)
+        
+        backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
     }
     
-    func pointInVisibleSpace(point: CGPoint) -> CGPoint {
-        return point + self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
+    func buttonTriggered(button: ButtonNode) {
+        if button.buttonIdentifier == .Start {
+            stateMachine?.enterState(DisjoinedScreen.self)
+        }
+    }
+    
+    func pointInVisibleSpace(point: CGPoint) -> CGPoint? {
+        if let view = self.view {
+            return point + self.convertPointFromView(CGPoint(x: 0,y: view.bounds.height))
+        } else {
+            return nil
+        }
     }
     
     func visibleSpaceRect() -> CGRect {
@@ -114,7 +132,7 @@ class GameScene: SKScene {
             }
         }
     }
-    
+    /*
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("gamescene touch")
         /*
@@ -137,7 +155,7 @@ class GameScene: SKScene {
         }
         */
     }
-   
+   */
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         let delta: CFTimeInterval = currentTime - lastUpdateTimeInterval
@@ -150,8 +168,11 @@ class GameScene: SKScene {
     }
     
     func updateDelta(deltaTime: CFTimeInterval) {
+        
+        stateMachine?.updateWithDeltaTime(deltaTime)
+        
         //print("\(deltaTime)")
-        entityManager!.update(deltaTime)
+        entityManager?.update(deltaTime)
         testPlayerHandover()
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
     }
@@ -181,6 +202,7 @@ class GameScene: SKScene {
     }
     
     func joinedWithScreen(screen: SCLScreen) {
+        
         
         joinedScreen = screen
         

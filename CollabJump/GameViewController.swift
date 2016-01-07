@@ -10,6 +10,9 @@ import UIKit
 import SpriteKit
 import ScreenLayout
 
+let screenJoinEnableMessageKey = "com.simphax.CollabJump.enableScreenJoinGesture"
+let screenJoinDisableMessageKey = "com.simphax.CollabJump.disableScreenJoinGesture"
+
 class GameViewController: SCLPinchViewController {
     
     var lastConnectedPeerID: MCPeerID?
@@ -39,7 +42,21 @@ class GameViewController: SCLPinchViewController {
             skView.presentScene(scene)
             gameScene = scene
         }
-   
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enableJoinGesture", name: screenJoinEnableMessageKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "disableJoinGesture", name: screenJoinDisableMessageKey, object: nil)
+    }
+    
+    func enableJoinGesture() {
+        print("Enabling join gesture")
+        layoutManager.enabled = true;
+        motionManager.enabled = true;
+    }
+    
+    func disableJoinGesture() {
+        print("Disabling join gesture")
+        layoutManager.enabled = false;
+        motionManager.enabled = false;
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -48,6 +65,8 @@ class GameViewController: SCLPinchViewController {
         self.sessionManager.startPeerInvitationsWithServiceType("collabjump", errorHandler: { (error) -> Void in
             print("invitations failed with error: \(error)")
         })
+        
+        disableJoinGesture()
     }
 
     override func shouldAutorotate() -> Bool {
