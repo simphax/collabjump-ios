@@ -98,10 +98,12 @@ class GameScene: SKScene {
                         let player: Player = Player()
                         
                         if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                            spriteComponent.node.position = location - offsetFromLastPhone!
+                            spriteComponent.node.position = location + offsetFromLastPhone!
                         }
                         
                         entityManager!.add(player)
+                        
+                        playMusic()
                     } else {
                         print("NO OFFSET")
                     }
@@ -115,11 +117,11 @@ class GameScene: SKScene {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("gamescene touch")
-        
+        /*
         var rect = visibleSpaceRect()
         print("Visisble rect: \(rect))")
        /* Called when a touch begins */
-        /*for touch in touches {
+        for touch in touches {
             let location = touch.locationInNode(self)
             print(" touch location \(location)")
             
@@ -133,7 +135,7 @@ class GameScene: SKScene {
             playMusic()
             
         }
-*/
+        */
     }
    
     override func update(currentTime: CFTimeInterval) {
@@ -150,38 +152,45 @@ class GameScene: SKScene {
     func updateDelta(deltaTime: CFTimeInterval) {
         //print("\(deltaTime)")
         entityManager!.update(deltaTime)
+        testPlayerHandover()
+        //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
+    }
+    
+    func testPlayerHandover() {
+        //print("Shall we hand over player the the next phone?")
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
-                //print(spriteNode.position)
                 if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
-                    pauseMusic()
-                    entityManager!.remove(player)
-                    
-                    if let sessionManager = sessionManager {
-                        let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: spriteNode.position))
-                        do {
-                            try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
-                        } catch _ {
-                            print("couldnt send message")
+                    if let joinedScreen = joinedScreen {
+                        if let sessionManager = sessionManager {
+                            print("Sending handover message")
+                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: spriteNode.position))
+                            do {
+                                try sessionManager.sendMessage(message, toPeers: [joinedScreen.peerID], withMode: .Reliable)
+                                pauseMusic()
+                                entityManager!.remove(player)
+                                lockBackground = false
+                            } catch _ {
+                                print("couldnt send message")
+                            }
                         }
                     }
                 }
             }
         }
-        //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
     }
     
     func joinedWithScreen(screen: SCLScreen) {
         
         joinedScreen = screen
         
-        let localScreen = SCLScreen.mainScreen()
         if let layout = screen.layout {
             let localScreen = SCLScreen.mainScreen()
-            var bgOffset = localScreen.layout.convertPoint(CGPointZero, fromScreen: screen, toScreen: localScreen)
-            let rect = localScreen.rectForScreen(screen)
+            let joinedScreenOffset = localScreen.layout.convertPoint(CGPointZero, fromScreen: screen, toScreen: localScreen)
+            var bgOffset = joinedScreenOffset
+            let joinedScreenRect = localScreen.rectForScreen(screen)
             print("Background offset : \(bgOffset)")
-            print("Other phone rect : \(rect)")
+            print("Other phone rect : \(joinedScreenRect)")
             print("SKView size : \(self.view?.bounds.size)")
             print("Self size : \(self.size)")
             print("Screen size : \(localScreen.bounds.size)")
@@ -191,6 +200,8 @@ class GameScene: SKScene {
             let angle = screen.convertAngle(0.0, toCoordinateSpace: self.view)
             print("Angle : \(angle)")
             //bgOffset.y *= -1
+            
+            offsetFromLastPhone = joinedScreenOffset
             
             let sceneRect = self.visibleSpaceRect()
             
@@ -206,10 +217,28 @@ class GameScene: SKScene {
             } else {
                 backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
             }
+            /*
+            if(joinedScreenOffset.x >= self.size.width) {
+                delay(2.0) {
+                    let location = CGPoint(x: self.size.width/2, y: self.size.height/2)
+                    
+                    let player: Player = Player()
+                    
+                    if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                        spriteComponent.node.position = location
+                    }
+                    
+                    self.entityManager!.add(player)
+                    self.playMusic()
+                }
+            }
+            */
         } else {
             backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
         }
-
+        
+        testPlayerHandover()
+        
         /*
         print("Joined screens! -- offset: \(offset)")
 
@@ -232,5 +261,14 @@ class GameScene: SKScene {
     
     func disconnected() {
         
+    }
+    
+    func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
     }
 }
