@@ -65,9 +65,14 @@ class GameScene: SKScene, ButtonNodeResponderType {
                 print("Sending start game message")
                 let startGameMessage = StartGameMessage()
                 let message: SCLSessionMessage = SCLSessionMessage(name: "StartGame", object: startGameMessage)
+                
+                //Thlen Starts running
+                
                 do {
                     try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
                     startGame(startGameMessage)
+                    stateMachine?.enterState(PlayerRunning.self)
+                    
                 } catch _ {
                     print("couldnt send message")
                 }
