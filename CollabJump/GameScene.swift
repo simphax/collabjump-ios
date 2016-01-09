@@ -39,47 +39,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let player: Player = Player()
         let platform: Platform = Platform()
         
-        let PlatformCategory:UInt32 = 1 << 1
-        let PlayerCategory:UInt32 = 1 << 0
         
         // Player
         if let spriteComponent = player.componentForClass(SpriteComponent.self) {
             spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame) - 100, y: CGRectGetMidY(self.frame))
-            spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
-            spriteComponent.node.physicsBody?.categoryBitMask = PlayerCategory
-            spriteComponent.node.physicsBody?.contactTestBitMask = PlatformCategory
-            spriteComponent.node.physicsBody?.collisionBitMask = PlatformCategory
-            spriteComponent.node.physicsBody?.allowsRotation = false
-            //spriteComponent.node.physicsBody?.friction = 0.0
-            spriteComponent.node.physicsBody?.dynamic = true
-            spriteComponent.node.physicsBody?.mass = 1
-            //spriteComponent.node.physicsBody?.affectedByGravity = true
-            
             
         }
         
         // Platform
         if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
             spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame) - 300)
-//            spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
-//            spriteComponent.node.physicsBody?.categoryBitMask = PlatformCategory
-//            spriteComponent.node.physicsBody?.contactTestBitMask = PlayerCategory
-//            spriteComponent.node.physicsBody?.collisionBitMask = PlayerCategory
-//            spriteComponent.node.physicsBody?.allowsRotation = false
-//            //spriteComponent.node.physicsBody?.friction = 0.01
-//            spriteComponent.node.physicsBody?.dynamic = false
-//            spriteComponent.node.physicsBody?.restitution = 0.0
-//            spriteComponent.node.physicsBody?.mass = 20
-//            spriteComponent.node.physicsBody?.affectedByGravity = false
         }
         
-        
-        
-        
-        
         entityManager!.add(player)
-        //entityManager!.add(platform)
-        //entityManager = EntityManager(scene: self)
 
         /*
         origin/background
@@ -112,21 +84,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-        
-//        let player = Player()
-//        let spriteComponent = player.componentForClass(SpriteComponent.self)
-//        spriteComponent!.node.physicsBody?.velocity = CGVectorMake(5.0, 0.0)
-        
+   
         print("CONTACT")
         
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-        
-//        let player = Player()
-//        let spriteComponent = player.componentForClass(SpriteComponent.self)
-//        spriteComponent?.node.physicsBody?.applyImpulse(CGVectorMake(spriteComponent!.node.physicsBody!.velocity.dx, 100.0))
-        
+
         print("END CONTACT")
         
     }
@@ -217,7 +181,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 spriteComponent.node.position = location
             }
             
-//            entityManager!.add(player)
 //            playMusic()
             
         }
@@ -259,11 +222,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         }
                     }
                 }
-                if spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - spriteNode.size.width{
+                if spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
                     print("*****JUMP!*****")
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 100.0))
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 50.0))
                 }
-                spriteNode.physicsBody!.velocity.dx += 8
+                spriteNode.physicsBody!.velocity.dx += 6
             }
         }
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)

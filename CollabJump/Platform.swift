@@ -23,11 +23,7 @@ class Platform: GKEntity {
 //            spriteComponent.node.zRotation = CGFloat(M_PI_2)
 //        }
         spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
-//        spriteComponent.node.physicsBody?.categoryBitMask = PlatformCategory
-//        spriteComponent.node.physicsBody?.contactTestBitMask = PlayerCategory
-//        spriteComponent.node.physicsBody?.collisionBitMask = PlayerCategory
         spriteComponent.node.physicsBody?.allowsRotation = false
-        //spriteComponent.node.physicsBody?.friction = 0.01
         spriteComponent.node.physicsBody?.dynamic = false
         spriteComponent.node.physicsBody?.restitution = 0.0
         spriteComponent.node.physicsBody?.mass = 20
