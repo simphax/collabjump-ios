@@ -274,6 +274,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         self.updateDelta(delta)
     }
     
+    var hasJumped = false
+    
     func updateDelta(deltaTime: CFTimeInterval) {
         
         stateMachine?.updateWithDeltaTime(deltaTime)
@@ -284,14 +286,19 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         testPlayerHandover()
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
         
+        
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
                 let platform = entityManager!.getPlatform()
                 let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
                 
-                if spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
+                if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
                     
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, CGFloat(50.0)))
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, CGFloat(500.0)))
+                    //spriteNode.physicsBody?.velocity.dx = 5.0
+                    self.hasJumped = true
+                    print("***JUMP***")
+                    
                     
                 }
                 spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed

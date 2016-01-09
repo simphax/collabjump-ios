@@ -25,7 +25,6 @@ class Platform: GKEntity {
         spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
         spriteComponent.node.physicsBody?.allowsRotation = false
         spriteComponent.node.physicsBody?.dynamic = false
-        spriteComponent.node.physicsBody?.restitution = 0.0
         spriteComponent.node.physicsBody?.mass = 20
         spriteComponent.node.physicsBody?.affectedByGravity = false
         addComponent(spriteComponent)
