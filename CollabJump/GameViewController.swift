@@ -10,30 +10,10 @@ import UIKit
 import SpriteKit
 import ScreenLayout
 
-class PositionMessage: NSObject, NSSecureCoding {
-    
-    var position: CGPoint
-    
-    init(position: CGPoint) {
-        self.position = position
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        position = aDecoder.decodeCGPointForKey("position")
-    }
-    
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeCGPoint(position, forKey: "position")
-    }
-    
-    static func supportsSecureCoding() -> Bool {
-        return true
-    }
-}
-
 class GameViewController: SCLPinchViewController {
     
     var lastConnectedPeerID: MCPeerID?
+    var gameScene: GameScene?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,12 +31,16 @@ class GameViewController: SCLPinchViewController {
             
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
+            scene.size = self.view.frame.size
+            print("Scale : \(scene.xScale)")
+            print("Frame : \(self.view.frame)")
+            print("Size : \(scene.size)")
             
             skView.presentScene(scene)
+            gameScene = scene
         }
    
     }
-    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -102,7 +86,6 @@ class GameViewController: SCLPinchViewController {
             print("peer connected: \(peerID)")
             
             lastConnectedPeerID = peerID
-            
             let message: SCLSessionMessage = SCLSessionMessage(name: "hello", object: nil)
             do {
                 try self.sessionManager.sendMessage(message, toPeers: [peerID], withMode: .Reliable)
@@ -118,6 +101,36 @@ class GameViewController: SCLPinchViewController {
     
     // screen layout changed
     override func layoutDidChangeForScreens(affectedScreens: [AnyObject]!) {
-        print("layoutDidChangeForScreens")
+        print("layoutDidChangeForScreens-----------------------------")
+        print("\(affectedScreens)")
+        
+        let localScreen = SCLScreen.mainScreen()
+        if (localScreen.layout != nil) {
+            if let screens = localScreen.layout.screens as? [SCLScreen] {
+                var i = 0
+                var closestScreen: SCLScreen?
+                var minOffset: CGPoint?
+                for screen in screens {
+                    let offset = localScreen.layout.convertPoint(CGPointZero, fromScreen: localScreen, toScreen: screen)
+                    if(offset != CGPointZero) {
+                        if(minOffset == nil || (abs(offset.x) + abs(offset.y)) < (abs(minOffset!.x) + abs(minOffset!.y))) {
+                            minOffset = offset
+                            closestScreen = screen
+                        }
+                    }
+                    
+                    print("Offset to \(i): \(offset)")
+                    i++
+                }
+                
+                if(closestScreen != nil && minOffset != nil) {
+                    //minOffset!.y += localScreen.bounds.height
+                    //var sceneSpaceOffset = gameScene!.convertPointFromView(minOffset!)
+                    //sceneSpaceOffset.y *= -1
+                    gameScene?.joinedWithScreen(closestScreen!)
+                }
+            }
+        }
+        print("-----------------------------")
     }
 }
