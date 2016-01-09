@@ -26,8 +26,6 @@ class Player: GKEntity {
 //        let physicsComponent = PhysicsComponent()
 //        addComponent(physicsComponent)
         
-        
-        spriteComponent.node.runAction(SoundManager.sharedInstance.soundJump)
         addComponent(spriteComponent)
     }
     

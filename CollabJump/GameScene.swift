@@ -298,7 +298,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     //spriteNode.physicsBody?.velocity.dx = 5.0
                     self.hasJumped = true
                     print("***JUMP***")
-                    
+                    spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                     
                 }
                 spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed
