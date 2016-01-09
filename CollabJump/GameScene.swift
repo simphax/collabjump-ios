@@ -201,13 +201,10 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
         let platformHeight = platformSpriteComponent!.node.size.height
         let platformWidth = platformSpriteComponent!.node.size.width
-        let rpc  = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
+        let rpc = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
         
         if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
-            spriteComponent.node.position = CGPoint(
-                x:rpc.generateAtRandomPosition().randomX,
-                y:rpc.generateAtRandomPosition().randomY
-            )
+            spriteComponent.node.position = rpc.generateAtRandomPosition()
             print(spriteComponent.node.position)
             //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
         }
@@ -237,7 +234,11 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     }
     
     func startGame(message: StartGameMessage) {
-        stateMachine?.enterState(DisjoinedScreen.self)
+        if joinedScreen == nil {
+            stateMachine?.enterState(DisjoinedScreen.self)
+        } else {
+            stateMachine?.enterState(JoinedScreen.self)
+        }
         print("start game")
         if let sessionManager = sessionManager {
             gameSessionPeers = sessionManager.session.connectedPeers
@@ -311,7 +312,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     print("***JUMP***")
                     spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }
-                spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed
+                spriteNode.physicsBody!.velocity.dx = 40 * physicsWorld.speed
             }
         }
     }

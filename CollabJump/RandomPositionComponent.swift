@@ -15,45 +15,28 @@ class RandomPositionComponent: GKComponent {
     let componentWidth: CGFloat
     let deviceWidth: CGFloat
     let deviceHeight: CGFloat
+    let marginLeft: CGFloat = 50
+    let marginRight: CGFloat = 50
+    let marginTop: CGFloat = 200
+    let marginBottom: CGFloat = 50
     
     init(height: CGFloat, width: CGFloat, visibleSpace: CGRect) {
         componentHeight = height
         componentWidth = width
         
         deviceWidth = visibleSpace.width
-        deviceHeight = visibleSpace.height //UIScreen.mainScreen().bounds.size.height
+        deviceHeight = visibleSpace.height
     }
     
     
-    func generateAtRandomPosition () -> (randomX: CGFloat, randomY: CGFloat) {
+    func generateAtRandomPosition () -> CGPoint {
         
-        let randomPosition = CGRect(x: (CGFloat(arc4random()) % deviceWidth),
-                                y: (CGFloat(arc4random()) % (deviceHeight - 350)),
-                                width: componentWidth,
-                                height: componentHeight)
-       
-        var randomX = randomPosition.origin.x
-        var randomY = randomPosition.origin.y
-        
-        if randomX < componentWidth {
-            randomX = componentWidth/2
-        }
-        
-        if randomX > deviceWidth - randomX {
-            randomX = deviceWidth - (componentWidth/2)
-        }
-        
-        if  randomY < componentHeight {
-            randomY += componentHeight*2
-        }
-        
-        if  randomY > deviceHeight - randomY {
-            randomY = deviceHeight - (componentHeight * 1.5)
-        }
-        
+        let randomX = (CGFloat(arc4random()) % (deviceWidth - componentWidth - marginLeft - marginRight)) + marginLeft + componentWidth/2
+        let randomY = (CGFloat(arc4random()) % (deviceHeight - componentHeight - marginTop - marginBottom)) + marginBottom + componentHeight/2
+
         print("THIS IS RANDOMX: \(randomX) THIS IS RANDOM Y: \(randomY)")
         
-        return (randomX, randomY)
+        return CGPointMake(randomX,randomY)
 
     }
 }
