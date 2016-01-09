@@ -12,12 +12,19 @@ import SpriteKit
 
 class GameState : GKState {
     
+    unowned let gameScene: GameScene
+    
+    init(gameScene: GameScene) {
+        self.gameScene = gameScene
+    }
 }
 
 class DisjoinedScreen : GameState {
     
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinEnableMessageKey, object: self)
+        
+        gameScene.pauseButton.hidden = false
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
@@ -31,6 +38,7 @@ class DisjoinedScreen : GameState {
 class JoinedScreen : GameState {
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinEnableMessageKey, object: self)
+        gameScene.pauseButton.hidden = false
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
@@ -45,5 +53,6 @@ class JoinedScreen : GameState {
 class GameOver : GameState {
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
+        gameScene.pauseButton.hidden = true
     }
 }

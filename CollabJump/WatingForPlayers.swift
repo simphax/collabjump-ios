@@ -13,14 +13,9 @@ import SpriteKit
 
 class WaitingForPlayers : GameState {
     
-    unowned let gameScene: GameScene
-    
     var label: SKLabelNode?
     var button: ButtonNode?
     
-    init(gameScene: GameScene) {
-        self.gameScene = gameScene
-    }
     
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
@@ -39,6 +34,8 @@ class WaitingForPlayers : GameState {
             
             gameScene.addChild(button!)
         }
+        
+        gameScene.pauseButton.hidden = true
     }
     
     func updateLabelText() {

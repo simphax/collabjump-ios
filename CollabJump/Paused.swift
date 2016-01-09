@@ -12,14 +12,8 @@ import SpriteKit
 
 class Paused : GameState {
     
-    unowned let gameScene: GameScene
-    
     var label: SKLabelNode?
     var button: ButtonNode?
-    
-    init(gameScene: GameScene) {
-        self.gameScene = gameScene
-    }
     
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
@@ -36,6 +30,8 @@ class Paused : GameState {
         button?.userInteractionEnabled = true
         
         gameScene.addChild(button!)
+        
+        gameScene.pauseButton.hidden = true
     }
     
     override func willExitWithNextState(nextState: GKState) {

@@ -181,7 +181,7 @@ class ButtonNode: SKSpriteNode {
     /// UIResponder touch handling.
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
     super.touchesBegan(touches, withEvent: event)
-    
+    print("touches began!")
     isHighlighted = true
     }
     

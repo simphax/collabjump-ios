@@ -19,6 +19,8 @@ class GameScene: SKScene, ButtonNodeResponderType {
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
     
+    var pauseButton: ButtonNode!
+    
     var offsetFromLastPhone: CGPoint?
     
     var joinedScreen: SCLScreen?
@@ -28,9 +30,11 @@ class GameScene: SKScene, ButtonNodeResponderType {
     
     var stateMachine: GKStateMachine?
     
+    var gameSessionPeers: [MCPeerID]?
+    
     override func didMoveToView(view: SKView) {
         
-        stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(), JoinedScreen(), Paused(gameScene: self), GameOver()])
+        stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(gameScene: self), JoinedScreen(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
         
         entityManager = EntityManager(scene: self)
 
@@ -39,6 +43,13 @@ class GameScene: SKScene, ButtonNodeResponderType {
         let player: Player = Player()
         entityManager.add(player)
         */
+        
+        pauseButton = ButtonNode(color: UIColor.whiteColor(), size: CGSizeMake(30, 30))
+        pauseButton.position = CGPoint(x: self.size.width - 40, y: self.size.height - 40)
+        pauseButton.buttonIdentifier = .Pause
+        pauseButton.userInteractionEnabled = true
+        addChild(pauseButton)
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
@@ -67,6 +78,7 @@ class GameScene: SKScene, ButtonNodeResponderType {
                 let message: SCLSessionMessage = SCLSessionMessage(name: "StartGame", object: startGameMessage)
                 do {
                     try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
+                    gameSessionPeers = sessionManager.session.connectedPeers
                     startGame(startGameMessage)
                 } catch _ {
                     print("couldnt send message")
@@ -77,9 +89,11 @@ class GameScene: SKScene, ButtonNodeResponderType {
             print("Pause!")
             if let sessionManager = sessionManager {
                 print("Sending pause game message")
-                let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: PauseGameMessage())
+                let pauseGameMessage = PauseGameMessage()
+                let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
                 do {
-                    try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
+                    try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                    pauseGame(pauseGameMessage)
                     stateMachine?.enterState(DisjoinedScreen.self)
                 } catch _ {
                     print("couldnt send message")
@@ -190,11 +204,13 @@ class GameScene: SKScene, ButtonNodeResponderType {
     
     func startGame(message: StartGameMessage) {
         stateMachine?.enterState(DisjoinedScreen.self)
+        
     }
+    
     func pauseGame(message: PauseGameMessage) {
         stateMachine?.enterState(Paused.self)
     }
-    
+    /*
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("gamescene touch")
         /*
@@ -216,6 +232,7 @@ class GameScene: SKScene, ButtonNodeResponderType {
         }
         */
     }
+*/
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         let delta: CFTimeInterval = currentTime - lastUpdateTimeInterval
@@ -341,17 +358,22 @@ class GameScene: SKScene, ButtonNodeResponderType {
     }
     
     func peerDisconnected(peerID: MCPeerID) {
-        if let sessionManager = sessionManager {
-            let pauseGameMessage = PauseGameMessage()
-            let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
-            do {
-                pauseGame(pauseGameMessage)
-                try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
-            } catch _ {
-                print("couldnt send message")
+        if hostingGame && (stateMachine?.currentState is DisjoinedScreen || stateMachine?.currentState is JoinedScreen) {
+            if let gameSessionPeers = gameSessionPeers {
+                if gameSessionPeers.contains(peerID) {
+                    if let sessionManager = sessionManager {
+                        let pauseGameMessage = PauseGameMessage()
+                        let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
+                        do {
+                            pauseGame(pauseGameMessage)
+                            try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                        } catch _ {
+                            print("couldnt send message")
+                        }
+                    }
+                }
             }
         }
-        
     }
     
     func peerConnecting(peerID: MCPeerID) {
