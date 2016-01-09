@@ -32,6 +32,9 @@ class Paused : GameState {
         gameScene.addChild(button!)
         
         gameScene.pauseButton.hidden = true
+        
+        
+        gameScene.physicsWorld.speed = 0.0
     }
     
     override func willExitWithNextState(nextState: GKState) {

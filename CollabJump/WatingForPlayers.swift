@@ -36,6 +36,8 @@ class WaitingForPlayers : GameState {
         }
         
         gameScene.pauseButton.hidden = true
+        
+        gameScene.physicsWorld.speed = 0.0
     }
     
     func updateLabelText() {

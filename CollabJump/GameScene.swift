@@ -10,11 +10,11 @@ import SpriteKit
 import ScreenLayout
 import GameKit
 
-class GameScene: SKScene, ButtonNodeResponderType {
-    
+class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
+
     var lastUpdateTimeInterval: CFTimeInterval = 0
     var entityManager: EntityManager?
-    var backgroundManager: BackgroundManager?
+    var backgroundManager: BackgroundManager!
     var sessionManager: SCLSessionManager?
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
@@ -35,15 +35,28 @@ class GameScene: SKScene, ButtonNodeResponderType {
     override func didMoveToView(view: SKView) {
         
         stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(gameScene: self), JoinedScreen(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
+       
+        self.physicsWorld.gravity = CGVectorMake(0.0, -9.8)
+        physicsWorld.contactDelegate = self
+        physicsWorld.speed = 0
         
         entityManager = EntityManager(scene: self)
-
-        /*
-        origin/background
-        let player: Player = Player()
-        entityManager.add(player)
-        */
         
+        
+        if hostingGame {
+            let player: Player = Player()
+            
+            // Player
+            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame) - 100, y: CGRectGetMidY(self.frame))
+                
+            }
+            
+            entityManager!.add(player)
+        }
+        
+        randomPlatform()
+
         pauseButton = ButtonNode(color: UIColor.whiteColor(), size: CGSizeMake(30, 30))
         pauseButton.position = CGPoint(x: self.size.width - 40, y: self.size.height - 40)
         pauseButton.buttonIdentifier = .Pause
@@ -58,7 +71,7 @@ class GameScene: SKScene, ButtonNodeResponderType {
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
-        randomPlatform()
+        
         print("Scale factor : \(scaleFactor())")
 
         stateMachine?.enterState(WaitingForPlayers.self)
@@ -118,6 +131,18 @@ class GameScene: SKScene, ButtonNodeResponderType {
         let bottomLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
         let rect = CGRect(x: bottomLeftPoint.x, y: bottomLeftPoint.y, width: abs(topRightPoint.x - topLeftPoint.x), height: abs(topLeftPoint.y - bottomLeftPoint.y))
         return rect
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+   
+        print("CONTACT")
+        
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+
+        print("END CONTACT")
+        
     }
     
     func pointInVisibleSpace(point: CGPoint) -> CGPoint {
@@ -223,11 +248,11 @@ class GameScene: SKScene, ButtonNodeResponderType {
             print(" touch location \(location)")
             let player: Player = Player()
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                
                 spriteComponent.node.position = location
             }
             
-            entityManager!.add(player)
-            playMusic()
+//            playMusic()
             
         }
         */
@@ -242,6 +267,8 @@ class GameScene: SKScene, ButtonNodeResponderType {
         }
 
         lastUpdateTimeInterval = currentTime
+  
+        self.updateDelta(delta)
     }
     
     func updateDelta(deltaTime: CFTimeInterval) {
@@ -250,8 +277,22 @@ class GameScene: SKScene, ButtonNodeResponderType {
         
         //print("\(deltaTime)")
         entityManager?.update(deltaTime)
+        
         testPlayerHandover()
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
+        
+        if let player = entityManager!.getPlayer() {
+            if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
+                let platform = entityManager!.getPlatform()
+                let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
+                
+                if spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
+                    print("*****JUMP!*****")
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 50.0))
+                }
+                spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed
+            }
+        }
     }
     
     func testPlayerHandover() {

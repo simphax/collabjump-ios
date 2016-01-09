@@ -15,16 +15,24 @@ class Player: GKEntity {
     override init() {
         super.init()
         
-        let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem"))
-        addComponent(spriteComponent)
+        let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem small"))
         
-        let physicsComponent = PhysicsComponent()
-        addComponent(physicsComponent)
+        spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
+        spriteComponent.node.physicsBody?.allowsRotation = false
+        spriteComponent.node.physicsBody?.dynamic = true
+        spriteComponent.node.physicsBody?.mass = 1
+
+//        let physicsComponent = PhysicsComponent()
+//        addComponent(physicsComponent)
+        
         
         spriteComponent.node.runAction(SoundManager.sharedInstance.soundJump)
+        addComponent(spriteComponent)
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
+        
+       
         print("update",seconds)
     }
 }

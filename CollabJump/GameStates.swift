@@ -25,6 +25,7 @@ class DisjoinedScreen : GameState {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinEnableMessageKey, object: self)
         
         gameScene.pauseButton.hidden = false
+        gameScene.physicsWorld.speed = 1.0
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
@@ -39,6 +40,7 @@ class JoinedScreen : GameState {
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinEnableMessageKey, object: self)
         gameScene.pauseButton.hidden = false
+        gameScene.physicsWorld.speed = 1.0
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
@@ -54,5 +56,7 @@ class GameOver : GameState {
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
         gameScene.pauseButton.hidden = true
+        
+        gameScene.physicsWorld.speed = 0.0
     }
 }
