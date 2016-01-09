@@ -11,6 +11,8 @@ import ScreenLayout
 import GameKit
 
 class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
+    
+    let gameOverDistance: CGFloat = 200
 
     var lastUpdateTimeInterval: CFTimeInterval = 0
     var entityManager: EntityManager?
@@ -93,7 +95,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     //TODO: Don't start if we have no one connected
                     startGame(startGameMessage)
                     try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
-                    gameSessionPeers = sessionManager.session.connectedPeers
                     
                 } catch _ {
                     print("couldnt send message")
@@ -135,13 +136,14 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-   
+        
+        playMusic()
         print("CONTACT")
         
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-
+        pauseMusic()
         print("END CONTACT")
         
     }
@@ -184,6 +186,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 if let message = message.object as? PauseGameMessage {
                     pauseGame(message)
                 }
+                if let message = message.object as? GameOverMessage {
+                    gameOver(message)
+                }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
                 print(" got a message from \(peerId)")
@@ -211,7 +216,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     
     func handoverMessage(message: HandoverMessage) {
         print("Handover message! \(message.playerPosition)")
-        if(offsetFromLastPhone != nil) {
+        if(joinedScreen != nil) {
             let localScreen = SCLScreen.mainScreen()
             let localLocation = convertPointFromView(localScreen.layout.convertPoint(message.playerPosition, fromScreen: joinedScreen, toScreen: localScreen))
             
@@ -223,20 +228,28 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             
             entityManager!.add(player)
             
-            playMusic()
+            self.joinedScreen = nil
+            self.lockBackground = true
+            stateMachine?.enterState(DisjoinedScreen.self)
         } else {
-            print("NO OFFSET")
+            print("NO joinedScreen")
         }
     }
     
     func startGame(message: StartGameMessage) {
         stateMachine?.enterState(DisjoinedScreen.self)
         print("start game")
+        if let sessionManager = sessionManager {
+            gameSessionPeers = sessionManager.session.connectedPeers
+        }
     }
     
     func pauseGame(message: PauseGameMessage) {
         stateMachine?.enterState(Paused.self)
         print("pause game")
+    }
+    func gameOver(message: GameOverMessage) {
+        stateMachine?.enterState(GameOver.self)
     }
     /*
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -293,7 +306,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     print("*****JUMP!*****")
                     spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 10.0))
                 }
-                spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed
+                spriteNode.physicsBody!.velocity.dx = 20 * physicsWorld.speed
             }
         }
     }
@@ -302,7 +315,21 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         //print("Shall we hand over player the the next phone?")
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
-                if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
+                if spriteNode.position.y < -gameOverDistance || spriteNode.position.x > self.size.width + gameOverDistance {
+                    
+                    if let sessionManager = sessionManager {
+                        print("Sending gameover message")
+                        let gameOverMessage = GameOverMessage()
+                        let message: SCLSessionMessage = SCLSessionMessage(name: "GameOver", object: gameOverMessage)
+                        do {
+                            try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                            gameOver(gameOverMessage)
+                            entityManager!.remove(player)
+                        } catch _ {
+                            print("couldnt send message")
+                        }
+                    }
+                } else if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
                     if let joinedScreen = joinedScreen {
                         if let sessionManager = sessionManager {
                             print("Sending handover message")
@@ -312,10 +339,14 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                                 pauseMusic()
                                 entityManager!.remove(player)
                                 lockBackground = false
+                                self.joinedScreen = nil
+                                self.lockBackground = false
+                                stateMachine?.enterState(DisjoinedScreen.self)
                             } catch _ {
                                 print("couldnt send message")
                             }
                         }
+                    //Is it game over?
                     }
                 }
             }
