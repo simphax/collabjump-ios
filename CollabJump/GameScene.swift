@@ -331,7 +331,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
 
                     
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(250.0, CGFloat(600.0)))
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(200.0, CGFloat(600.0)))
                     
                     //spriteNode.physicsBody?.velocity.dx = 500.0
 
@@ -344,7 +344,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     // do nothing to affect speed in x
                 }
                 else {
-                spriteNode.physicsBody!.velocity.dx = 60 * physicsWorld.speed
+                spriteNode.physicsBody!.velocity.dx = 50 * physicsWorld.speed
                 }
             }
         }
