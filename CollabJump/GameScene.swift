@@ -16,7 +16,6 @@ class GameScene: SKScene, ButtonNodeResponderType {
     var entityManager: EntityManager?
     var backgroundManager: BackgroundManager?
     var sessionManager: SCLSessionManager?
-    
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
     
@@ -34,29 +33,25 @@ class GameScene: SKScene, ButtonNodeResponderType {
         stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(), JoinedScreen(), Paused(gameScene: self), GameOver()])
         
         entityManager = EntityManager(scene: self)
+
         /*
+        origin/background
         let player: Player = Player()
-        
-        if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-            spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
-        }
-        
         entityManager.add(player)
         */
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
-        
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
-        
+
+        backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+        randomPlatform()
         print("Scale factor : \(scaleFactor())")
-        
+
         stateMachine?.enterState(WaitingForPlayers.self)
     
-        backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
-        
         if !hostingGame {
             backgroundManager?.hideBackground()
         }
@@ -101,13 +96,18 @@ class GameScene: SKScene, ButtonNodeResponderType {
         }
     }
     
+    
+    //Får ut offset och width och height.
     func visibleSpaceRect() -> CGRect {
         let topLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: 0))
         let topRightPoint = self.convertPointFromView(CGPoint(x: self.view!.bounds.width, y: 0))
         let bottomLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
-
         let rect = CGRect(x: bottomLeftPoint.x, y: bottomLeftPoint.y, width: abs(topRightPoint.x - topLeftPoint.x), height: abs(topLeftPoint.y - bottomLeftPoint.y))
         return rect
+    }
+    
+    func pointInVisibleSpace(point: CGPoint) -> CGPoint {
+        return point + self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
     }
     
     func scaleFactor() -> CGFloat {
@@ -134,7 +134,6 @@ class GameScene: SKScene, ButtonNodeResponderType {
         print("session message \(notif)")
         
         if let dict = notif.userInfo as? [String: AnyObject] {
-            
             if let message = dict[SCLSessionManagerMessageUserInfoKey] as? SCLSessionMessage {
                 if let message = message.object as? HandoverMessage {
                     handoverMessage(message)
@@ -150,6 +149,24 @@ class GameScene: SKScene, ButtonNodeResponderType {
                 print(" got a message from \(peerId)")
             }
         }
+    }
+    //Calls on Platform and gets the size height and width, then gets a random position for the platform which gets placed.
+    func randomPlatform () {
+        let platform: Platform = Platform()
+        let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
+        let platformHeight = platformSpriteComponent!.node.size.height
+        let platformWidth = platformSpriteComponent!.node.size.width
+        let rpc  = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
+        
+        if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
+            spriteComponent.node.position = CGPoint(
+                x:rpc.generateAtRandomPosition().randomX,
+                y:rpc.generateAtRandomPosition().randomY
+            )
+            print(spriteComponent.node.position)
+            //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
+        }
+        entityManager!.add(platform)
     }
     
     func handoverMessage(message: HandoverMessage) {
@@ -177,7 +194,7 @@ class GameScene: SKScene, ButtonNodeResponderType {
     func pauseGame(message: PauseGameMessage) {
         stateMachine?.enterState(Paused.self)
     }
-    /*
+    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("gamescene touch")
         /*
@@ -186,10 +203,9 @@ class GameScene: SKScene, ButtonNodeResponderType {
        /* Called when a touch begins */
         for touch in touches {
             let location = touch.locationInNode(self)
+
             print(" touch location \(location)")
-            
             let player: Player = Player()
-            
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = location
             }
@@ -200,7 +216,6 @@ class GameScene: SKScene, ButtonNodeResponderType {
         }
         */
     }
-   */
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         let delta: CFTimeInterval = currentTime - lastUpdateTimeInterval
