@@ -61,16 +61,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Platform
         if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
             spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame) - 300)
-            spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
-            spriteComponent.node.physicsBody?.categoryBitMask = PlatformCategory
-            spriteComponent.node.physicsBody?.contactTestBitMask = PlayerCategory
-            spriteComponent.node.physicsBody?.collisionBitMask = PlayerCategory
-            spriteComponent.node.physicsBody?.allowsRotation = false
-            //spriteComponent.node.physicsBody?.friction = 0.01
-            spriteComponent.node.physicsBody?.dynamic = false
-            spriteComponent.node.physicsBody?.restitution = 0.0
-            spriteComponent.node.physicsBody?.mass = 20
-            spriteComponent.node.physicsBody?.affectedByGravity = false
+//            spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
+//            spriteComponent.node.physicsBody?.categoryBitMask = PlatformCategory
+//            spriteComponent.node.physicsBody?.contactTestBitMask = PlayerCategory
+//            spriteComponent.node.physicsBody?.collisionBitMask = PlayerCategory
+//            spriteComponent.node.physicsBody?.allowsRotation = false
+//            //spriteComponent.node.physicsBody?.friction = 0.01
+//            spriteComponent.node.physicsBody?.dynamic = false
+//            spriteComponent.node.physicsBody?.restitution = 0.0
+//            spriteComponent.node.physicsBody?.mass = 20
+//            spriteComponent.node.physicsBody?.affectedByGravity = false
         }
         
         
@@ -78,8 +78,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         entityManager!.add(player)
-        entityManager!.add(platform)
-        entityManager = EntityManager(scene: self)
+        //entityManager!.add(platform)
+        //entityManager = EntityManager(scene: self)
 
         /*
         origin/background
@@ -239,14 +239,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func updateDelta(deltaTime: CFTimeInterval) {
         //print("\(deltaTime)")
         entityManager!.update(deltaTime)
-        let platform: Platform = Platform()
-        let platformNode = platform.componentForClass(SpriteComponent.self)?.node
-        let edge = (platformNode?.position.x)! + (platformNode?.size.width)!
-        
+        let platform = entityManager!.getPlatform()
+        let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
+    
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
-                //print(spriteNode.position)
-                print(platformNode!.position.x)
+                print(spriteNode.position)
+                //print(platformNode!.position)
                 if spriteNode.position.y < 0 { //self.position.y + self.size.height
                     pauseMusic()
                     entityManager!.remove(player)
@@ -260,12 +259,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         }
                     }
                 }
-                if spriteNode.position.x == platformNode?.position.x {
-                    print("JUMP!")
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 200.0))
+                if spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - spriteNode.size.width{
+                    print("*****JUMP!*****")
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 100.0))
                 }
-                
-                spriteNode.physicsBody!.velocity.dx += 10
+                spriteNode.physicsBody!.velocity.dx += 8
             }
         }
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)

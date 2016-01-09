@@ -16,19 +16,18 @@ class Player: GKEntity {
         super.init()
         
         let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem small"))
-        addComponent(spriteComponent)
         
 //        let physicsComponent = PhysicsComponent()
 //        addComponent(physicsComponent)
         
         
         spriteComponent.node.runAction(SoundManager.sharedInstance.soundJump)
+        addComponent(spriteComponent)
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
         
-        
-        
+       
         print("update",seconds)
     }
 }

@@ -67,5 +67,13 @@ class EntityManager {
         }
         return nil
     }
+    func getPlatform() -> GKEntity? {
+        for entity in entities {
+            if let entity = entity as? Platform {
+                return entity
+            }
+        }
+        return nil
+    }
     
 }
