@@ -19,6 +19,10 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
     
+    // For the collisionbitmasks
+    let PlayerCategory:UInt32 = 0 << 1
+    let PlatformCategory:UInt32 = 1 << 1
+    
     var pauseButton: ButtonNode!
     
     var offsetFromLastPhone: CGPoint?
@@ -45,13 +49,20 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         let platform = entityManager!.getPlatform()
         let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
         
+        
         if hostingGame {
             let player: Player = Player()
             
             // Player
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
-                        y: (platformNode?.position.y)! * 1.5 )
+                        y: (platformNode?.position.y)! + 100 )
+                spriteComponent.node.physicsBody?.categoryBitMask = PlayerCategory
+                spriteComponent.node.physicsBody?.collisionBitMask = PlatformCategory
+                spriteComponent.node.physicsBody?.contactTestBitMask = PlatformCategory
+                platformNode!.physicsBody?.categoryBitMask = PlatformCategory
+                platformNode!.physicsBody?.collisionBitMask = PlayerCategory
+                platformNode!.physicsBody?.contactTestBitMask = PlayerCategory
                 
             }
             
@@ -135,14 +146,23 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         return rect
     }
     
+    
     func didBeginContact(contact: SKPhysicsContact) {
    
+//        let player = entityManager?.getPlayer()
+//        let spriteComponent = player!.componentForClass(SpriteComponent.self)
+//        spriteComponent?.node.physicsBody?.velocity.dx = 60 * physicsWorld.speed
+        
         print("CONTACT")
         
     }
     
     func didEndContact(contact: SKPhysicsContact) {
 
+//        let player = entityManager?.getPlayer()
+//        let spriteComponent = player!.componentForClass(SpriteComponent.self)
+//        spriteComponent?.node.physicsBody?.velocity.dx = 600 * physicsWorld.speed
+        
         print("END CONTACT")
         
     }
@@ -294,14 +314,20 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 
                 if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
                     
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, CGFloat(500.0)))
-                    //spriteNode.physicsBody?.velocity.dx = 5.0
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(250.0, CGFloat(600.0)))
+                    
+                    //spriteNode.physicsBody?.velocity.dx = 500.0
                     self.hasJumped = true
                     print("***JUMP***")
                     spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                     
                 }
-                spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed
+                if hasJumped == true {
+                    // do nothing to affect speed in x
+                }
+                else {
+                spriteNode.physicsBody!.velocity.dx = 60 * physicsWorld.speed
+                }
             }
         }
     }
