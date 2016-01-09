@@ -90,9 +90,11 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 let startGameMessage = StartGameMessage()
                 let message: SCLSessionMessage = SCLSessionMessage(name: "StartGame", object: startGameMessage)
                 do {
+                    //TODO: Don't start if we have no one connected
+                    startGame(startGameMessage)
                     try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
                     gameSessionPeers = sessionManager.session.connectedPeers
-                    startGame(startGameMessage)
+                    
                 } catch _ {
                     print("couldnt send message")
                 }
@@ -105,9 +107,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 let pauseGameMessage = PauseGameMessage()
                 let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
                 do {
-                    try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
                     pauseGame(pauseGameMessage)
-                    stateMachine?.enterState(DisjoinedScreen.self)
+                    try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
                 } catch _ {
                     print("couldnt send message")
                 }
@@ -230,11 +231,12 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     
     func startGame(message: StartGameMessage) {
         stateMachine?.enterState(DisjoinedScreen.self)
-        
+        print("start game")
     }
     
     func pauseGame(message: PauseGameMessage) {
         stateMachine?.enterState(Paused.self)
+        print("pause game")
     }
     /*
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -289,7 +291,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 
                 if spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
                     print("*****JUMP!*****")
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 50.0))
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 10.0))
                 }
                 spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed
             }
