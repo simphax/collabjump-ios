@@ -10,14 +10,19 @@ import SpriteKit
 import ScreenLayout
 import GameKit
 
-class GameScene: SKScene, ButtonNodeResponderType {
+class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     
+    let gameOverDistance: CGFloat = 200
+
     var lastUpdateTimeInterval: CFTimeInterval = 0
     var entityManager: EntityManager?
-    var backgroundManager: BackgroundManager?
+    var backgroundManager: BackgroundManager!
     var sessionManager: SCLSessionManager?
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
+    
+    
+    var pauseButton: ButtonNode!
     
     var offsetFromLastPhone: CGPoint?
     
@@ -28,17 +33,40 @@ class GameScene: SKScene, ButtonNodeResponderType {
     
     var stateMachine: GKStateMachine?
     
+    var gameSessionPeers: [MCPeerID]?
+    
     override func didMoveToView(view: SKView) {
         
-        stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(), JoinedScreen(), Paused(gameScene: self), GameOver()])
+        stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(gameScene: self), JoinedScreen(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
+       
+        self.physicsWorld.gravity = CGVectorMake(0.0, -9.8)
+        physicsWorld.contactDelegate = self
+        physicsWorld.speed = 0
         
         entityManager = EntityManager(scene: self)
-
-        /*
-        origin/background
-        let player: Player = Player()
-        entityManager.add(player)
-        */
+        randomPlatform()
+        let platform = entityManager!.getPlatform()
+        let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
+        
+        if hostingGame {
+            let player: Player = Player()
+            
+            // Player
+            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
+                        y: (platformNode?.position.y)! * 1.5 )
+                
+            }
+            
+            entityManager!.add(player)
+        }
+        
+        pauseButton = ButtonNode(color: UIColor.whiteColor(), size: CGSizeMake(30, 30))
+        pauseButton.position = CGPoint(x: self.size.width - 40, y: self.size.height - 40)
+        pauseButton.buttonIdentifier = .Pause
+        pauseButton.userInteractionEnabled = true
+        addChild(pauseButton)
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
@@ -47,7 +75,7 @@ class GameScene: SKScene, ButtonNodeResponderType {
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
-        randomPlatform()
+        
         print("Scale factor : \(scaleFactor())")
 
         stateMachine?.enterState(WaitingForPlayers.self)
@@ -66,13 +94,19 @@ class GameScene: SKScene, ButtonNodeResponderType {
                 let startGameMessage = StartGameMessage()
                 let message: SCLSessionMessage = SCLSessionMessage(name: "StartGame", object: startGameMessage)
                 
-                //Thlen Starts running
                 
                 do {
-                    try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
+                    //TODO: Don't start if we have no one connected
                     startGame(startGameMessage)
-                    stateMachine?.enterState(PlayerRunning.self)
-                    
+                    if let player = entityManager!.getPlayer() {
+                        if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                            print("bajskorvar")
+                            animationComponent.stateMachine?.enterState(PlayerRunning.self)
+                            print("BAJSKORVAR2")
+                        }
+                    }                    
+                    // Player. ?.enterState(PlayerRunning.self)
+                    try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
                 } catch _ {
                     print("couldnt send message")
                 }
@@ -82,10 +116,11 @@ class GameScene: SKScene, ButtonNodeResponderType {
             print("Pause!")
             if let sessionManager = sessionManager {
                 print("Sending pause game message")
-                let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: PauseGameMessage())
+                let pauseGameMessage = PauseGameMessage()
+                let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
                 do {
-                    try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
-                    stateMachine?.enterState(DisjoinedScreen.self)
+                    pauseGame(pauseGameMessage)
+                    try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
                 } catch _ {
                     print("couldnt send message")
                 }
@@ -109,6 +144,19 @@ class GameScene: SKScene, ButtonNodeResponderType {
         let bottomLeftPoint = self.convertPointFromView(CGPoint(x: 0,y: self.view!.bounds.height))
         let rect = CGRect(x: bottomLeftPoint.x, y: bottomLeftPoint.y, width: abs(topRightPoint.x - topLeftPoint.x), height: abs(topLeftPoint.y - bottomLeftPoint.y))
         return rect
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        
+        playMusic()
+        print("CONTACT")
+        
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        pauseMusic()
+        print("END CONTACT")
+        
     }
     
     func pointInVisibleSpace(point: CGPoint) -> CGPoint {
@@ -149,6 +197,9 @@ class GameScene: SKScene, ButtonNodeResponderType {
                 if let message = message.object as? PauseGameMessage {
                     pauseGame(message)
                 }
+                if let message = message.object as? GameOverMessage {
+                    gameOver(message)
+                }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
                 print(" got a message from \(peerId)")
@@ -161,13 +212,10 @@ class GameScene: SKScene, ButtonNodeResponderType {
         let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
         let platformHeight = platformSpriteComponent!.node.size.height
         let platformWidth = platformSpriteComponent!.node.size.width
-        let rpc  = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
+        let rpc = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
         
         if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
-            spriteComponent.node.position = CGPoint(
-                x:rpc.generateAtRandomPosition().randomX,
-                y:rpc.generateAtRandomPosition().randomY
-            )
+            spriteComponent.node.position = rpc.generateAtRandomPosition()
             print(spriteComponent.node.position)
             //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
         }
@@ -176,30 +224,46 @@ class GameScene: SKScene, ButtonNodeResponderType {
     
     func handoverMessage(message: HandoverMessage) {
         print("Handover message! \(message.playerPosition)")
-        if(offsetFromLastPhone != nil) {
-            let location = message.playerPosition
+        if(joinedScreen != nil) {
+            let localScreen = SCLScreen.mainScreen()
+            let localLocation = convertPointFromView(localScreen.layout.convertPoint(message.playerPosition, fromScreen: joinedScreen, toScreen: localScreen))
             
             let player: Player = Player()
             
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                spriteComponent.node.position = location + offsetFromLastPhone!
+                spriteComponent.node.position = localLocation
             }
             
             entityManager!.add(player)
             
-            playMusic()
+            self.joinedScreen = nil
+            self.lockBackground = true
+            stateMachine?.enterState(DisjoinedScreen.self)
         } else {
-            print("NO OFFSET")
+            print("NO joinedScreen")
         }
     }
     
     func startGame(message: StartGameMessage) {
-        stateMachine?.enterState(DisjoinedScreen.self)
-    }
-    func pauseGame(message: PauseGameMessage) {
-        stateMachine?.enterState(Paused.self)
+        if joinedScreen == nil {
+            stateMachine?.enterState(DisjoinedScreen.self)
+        } else {
+            stateMachine?.enterState(JoinedScreen.self)
+        }
+        print("start game")
+        if let sessionManager = sessionManager {
+            gameSessionPeers = sessionManager.session.connectedPeers
+        }
     }
     
+    func pauseGame(message: PauseGameMessage) {
+        stateMachine?.enterState(Paused.self)
+        print("pause game")
+    }
+    func gameOver(message: GameOverMessage) {
+        stateMachine?.enterState(GameOver.self)
+    }
+    /*
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("gamescene touch")
         /*
@@ -212,15 +276,16 @@ class GameScene: SKScene, ButtonNodeResponderType {
             print(" touch location \(location)")
             let player: Player = Player()
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                
                 spriteComponent.node.position = location
             }
             
-            entityManager!.add(player)
-            playMusic()
+//            playMusic()
             
         }
         */
     }
+*/
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         let delta: CFTimeInterval = currentTime - lastUpdateTimeInterval
@@ -230,7 +295,11 @@ class GameScene: SKScene, ButtonNodeResponderType {
         }
 
         lastUpdateTimeInterval = currentTime
+  
+        self.updateDelta(delta)
     }
+    
+    var hasJumped = false
     
     func updateDelta(deltaTime: CFTimeInterval) {
         
@@ -238,28 +307,63 @@ class GameScene: SKScene, ButtonNodeResponderType {
         
         //print("\(deltaTime)")
         entityManager?.update(deltaTime)
+        
         testPlayerHandover()
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
+        
+        
+        if let player = entityManager!.getPlayer() {
+            if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
+                let platform = entityManager!.getPlatform()
+                let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
+                if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, CGFloat(500.0)))
+                    //spriteNode.physicsBody?.velocity.dx = 5.0
+                    self.hasJumped = true
+                    print("***JUMP***")
+                    spriteNode.runAction(SoundManager.sharedInstance.soundJump)
+                }
+                spriteNode.physicsBody!.velocity.dx = 40 * physicsWorld.speed
+            }
+        }
     }
     
     func testPlayerHandover() {
         //print("Shall we hand over player the the next phone?")
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
-                if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
+                if spriteNode.position.y < -gameOverDistance || spriteNode.position.x > self.size.width + gameOverDistance {
+                    
+                    if let sessionManager = sessionManager {
+                        print("Sending gameover message")
+                        let gameOverMessage = GameOverMessage()
+                        let message: SCLSessionMessage = SCLSessionMessage(name: "GameOver", object: gameOverMessage)
+                        do {
+                            try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                            gameOver(gameOverMessage)
+                            entityManager!.remove(player)
+                        } catch _ {
+                            print("couldnt send message")
+                        }
+                    }
+                } else if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
                     if let joinedScreen = joinedScreen {
                         if let sessionManager = sessionManager {
                             print("Sending handover message")
-                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: spriteNode.position))
+                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position)))
                             do {
                                 try sessionManager.sendMessage(message, toPeers: [joinedScreen.peerID], withMode: .Reliable)
                                 pauseMusic()
                                 entityManager!.remove(player)
                                 lockBackground = false
+                                self.joinedScreen = nil
+                                self.lockBackground = false
+                                stateMachine?.enterState(DisjoinedScreen.self)
                             } catch _ {
                                 print("couldnt send message")
                             }
                         }
+                    //Is it game over?
                     }
                 }
             }
@@ -346,17 +450,22 @@ class GameScene: SKScene, ButtonNodeResponderType {
     }
     
     func peerDisconnected(peerID: MCPeerID) {
-        if let sessionManager = sessionManager {
-            let pauseGameMessage = PauseGameMessage()
-            let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
-            do {
-                pauseGame(pauseGameMessage)
-                try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
-            } catch _ {
-                print("couldnt send message")
+        if hostingGame && (stateMachine?.currentState is DisjoinedScreen || stateMachine?.currentState is JoinedScreen) {
+            if let gameSessionPeers = gameSessionPeers {
+                if gameSessionPeers.contains(peerID) {
+                    if let sessionManager = sessionManager {
+                        let pauseGameMessage = PauseGameMessage()
+                        let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
+                        do {
+                            pauseGame(pauseGameMessage)
+                            try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                        } catch _ {
+                            print("couldnt send message")
+                        }
+                    }
+                }
             }
         }
-        
     }
     
     func peerConnecting(peerID: MCPeerID) {

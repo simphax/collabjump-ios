@@ -13,17 +13,12 @@ import SpriteKit
 
 class WaitingForPlayers : GameState {
     
-    unowned let gameScene: GameScene
-    
     var label: SKLabelNode?
     var button: ButtonNode?
     
-    init(gameScene: GameScene) {
-        self.gameScene = gameScene
-    }
     
     override func didEnterWithPreviousState(previousState: GKState?) {
-        NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
+        NSNotificationCenter.defaultCenter().postNotificationName(screenJoinEnableMessageKey, object: self)
         
         label = SKLabelNode(fontNamed: "Titillium Web")
         label?.fontSize = 20
@@ -39,12 +34,25 @@ class WaitingForPlayers : GameState {
             
             gameScene.addChild(button!)
         }
+        
+        gameScene.pauseButton.hidden = true
+        
+        gameScene.physicsWorld.speed = 0.0
     }
     
     func updateLabelText() {
         if let label = label {
             let connectedCount = gameScene.sessionManager?.session.connectedPeers.count
-            label.text = "\(Int(connectedCount!)) friends have joined your game"
+            
+            if(gameScene.hostingGame) {
+                label.text = "\(Int(connectedCount!)) friends have joined your game"
+            } else {
+                if(connectedCount == 0) {
+                    label.text = "Connecting animation..."
+                } else {
+                    label.text = "Screen join animation"
+                }
+            }
         }
     }
     

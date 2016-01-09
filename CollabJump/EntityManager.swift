@@ -17,8 +17,10 @@ class EntityManager {
     
     lazy var componentSystems: [GKComponentSystem] = {
         let physicsSystem = GKComponentSystem(componentClass: PhysicsComponent.self)
-        return [physicsSystem]
+        let animationSystem = GKComponentSystem(componentClass: AnimationComponent.self)
+        return [physicsSystem, animationSystem]
     }()
+    
     
     init(scene: SKScene) {
         self.scene = scene
@@ -62,6 +64,14 @@ class EntityManager {
     func getPlayer() -> GKEntity? {
         for entity in entities {
             if let entity = entity as? Player {
+                return entity
+            }
+        }
+        return nil
+    }
+    func getPlatform() -> GKEntity? {
+        for entity in entities {
+            if let entity = entity as? Platform {
                 return entity
             }
         }

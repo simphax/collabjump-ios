@@ -71,7 +71,8 @@ class GameViewController: SCLPinchViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        disableJoinGesture()
+        
+        layoutManager.gestureRecognizer.cancelsTouchesInView = false
 
         self.sessionManager.startPeerInvitationsWithServiceType(hostingGameId, errorHandler: { (error) -> Void in
             print("invitations failed with error: \(error)")

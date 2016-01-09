@@ -14,13 +14,13 @@ class PlayerAnimation: GKEntity {
     
 }
 
-class PlayerStanding : GameState {
+class PlayerStanding : GKState {
     let playerStandingAnimation = SKTextureAtlas(named: "ThlenStanding")
     //perhaps set time so he goes to idle after a while?
 }
 
 class PlayerRunning : GKState {
-    
+
     var sprite: SKSpriteNode
     var thlenRunningFrames: [SKTexture]!
     init(sprite: SKSpriteNode) {
@@ -30,11 +30,13 @@ class PlayerRunning : GKState {
         var runningFrames = [SKTexture]()
         
         let numImages = thlenAnimatedAtlas.textureNames.count
-        
+        print("THLEN IS RUNNING")
         //remove the 2
-        for var i=1; i<=numImages; i++ {
-            let thlenTextureName = "ThlenRunning_\(i)"
-            runningFrames.append(thlenAnimatedAtlas.textureNamed(thlenTextureName))
+        for var i=0; i<numImages; i++ {
+            //let thlenTextureName = "ThlenRunning_\(i)"
+            print("ThlenRunning_\(i)")
+            runningFrames.append(thlenAnimatedAtlas.textureNamed(thlenAnimatedAtlas.textureNames[i]))
+            print(runningFrames)
         }
         
         thlenRunningFrames = runningFrames
@@ -51,16 +53,16 @@ class PlayerRunning : GKState {
 }
 
 
-class PlayerJumping : GameState {
+class PlayerJumping : GKState {
     let playerJumpingAnimation = SKTextureAtlas(named: "ThlenJumping")
     //play jumpSong
 }
 
-class PlayerFalling : GameState {
+class PlayerFalling : GKState {
     let playerFallingAnimation = SKTextureAtlas(named: "ThlenFalling")
     //play landingSong
 }
 
-class PlayerIdle : GameState {
+class PlayerIdle : GKState {
     let playerIdleAnimation = SKTextureAtlas(named: "ThlenIdle")
 }

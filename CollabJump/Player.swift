@@ -13,10 +13,28 @@ import SpriteKit
 class Player: GKEntity {
     override init() {
         super.init()
-        let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem"))
+        
+        
+        
+        let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem small"))
+        
+        spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
+        spriteComponent.node.physicsBody?.allowsRotation = false
+        spriteComponent.node.physicsBody?.dynamic = true
+        spriteComponent.node.physicsBody?.mass = 1
+        spriteComponent.node.physicsBody?.affectedByGravity = true
+
+//        let physicsComponent = PhysicsComponent()
+//        addComponent(physicsComponent)
+        
+        
         addComponent(spriteComponent)
-        let physicsComponent = PhysicsComponent()
-        addComponent(physicsComponent)
-        spriteComponent.node.runAction(SoundManager.sharedInstance.soundJump)
+        
+        let animationComponent = AnimationComponent()
+        addComponent(animationComponent)
+    }
+    
+    override func updateWithDeltaTime(seconds: NSTimeInterval) {
+        print("update",seconds)
     }
 }

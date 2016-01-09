@@ -15,14 +15,18 @@ class AnimationComponent: GKComponent {
     
     override init() {
         super.init()
+        
+        
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
+        
         if stateMachine == nil {
             if let spriteNode = self.entity?.componentForClass(SpriteComponent.self)?.node {
                 stateMachine = GKStateMachine(states: [PlayerStanding(), PlayerRunning(sprite: spriteNode), PlayerJumping(), PlayerFalling(), PlayerIdle()])
             }
         }
+        
         stateMachine?.updateWithDeltaTime(seconds)
     }
 }
