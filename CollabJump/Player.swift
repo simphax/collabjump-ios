@@ -20,7 +20,7 @@ class Player: GKEntity {
         spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOfSize: spriteComponent.node.size)
         spriteComponent.node.physicsBody?.allowsRotation = false
         spriteComponent.node.physicsBody?.dynamic = true
-        spriteComponent.node.physicsBody?.mass = 1
+        spriteComponent.node.physicsBody?.mass = 2
 
 //        let physicsComponent = PhysicsComponent()
 //        addComponent(physicsComponent)
