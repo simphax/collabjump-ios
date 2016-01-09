@@ -74,6 +74,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         
+        
+        
+        
         entityManager!.add(player)
         entityManager!.add(platform)
 
@@ -91,15 +94,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         
-        let player = Player()
-        let spriteComponent = player.componentForClass(SpriteComponent.self)
-        spriteComponent!.node.physicsBody?.velocity = CGVectorMake(5.0, 0.0)
+//        let player = Player()
+//        let spriteComponent = player.componentForClass(SpriteComponent.self)
+//        spriteComponent!.node.physicsBody?.velocity = CGVectorMake(5.0, 0.0)
         
         print("CONTACT")
         
     }
     
     func didEndContact(contact: SKPhysicsContact) {
+        
+//        let player = Player()
+//        let spriteComponent = player.componentForClass(SpriteComponent.self)
+//        spriteComponent?.node.physicsBody?.applyImpulse(CGVectorMake(spriteComponent!.node.physicsBody!.velocity.dx, 100.0))
+        
+        print("END CONTACT")
         
     }
     
@@ -181,13 +190,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func updateDelta(deltaTime: CFTimeInterval) {
         entityManager!.update(deltaTime)
+        let platform: Platform = Platform()
+        let platformNode = platform.componentForClass(SpriteComponent.self)?.node
+        let edge = (platformNode?.position.x)! + (platformNode?.size.width)!
+        
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
-                print(spriteNode.position)
+                //print(spriteNode.position)
+                print(platformNode!.position.x)
                 if spriteNode.position.y < 0 { //self.position.y + self.size.height
                     pauseMusic()
                     entityManager!.remove(player)
                 }
+                if spriteNode.position.x == platformNode?.position.x {
+                    print("JUMP!")
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 200.0))
+                }
+                
                 spriteNode.physicsBody?.velocity.dx += 10
             }
         }
