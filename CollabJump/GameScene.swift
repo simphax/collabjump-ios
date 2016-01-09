@@ -108,6 +108,7 @@ class GameScene: SKScene {
             }
         }
     }
+    //Calls on Platform and gets the size height and width, then gets a random position for the platform which gets placed.
     func randomPlatform () {
         let platform: Platform = Platform()
         let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
