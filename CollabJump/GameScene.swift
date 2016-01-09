@@ -211,12 +211,13 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     func handoverMessage(message: HandoverMessage) {
         print("Handover message! \(message.playerPosition)")
         if(offsetFromLastPhone != nil) {
-            let location = message.playerPosition
+            let localScreen = SCLScreen.mainScreen()
+            let localLocation = convertPointFromView(localScreen.layout.convertPoint(message.playerPosition, fromScreen: joinedScreen, toScreen: localScreen))
             
             let player: Player = Player()
             
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                spriteComponent.node.position = location + offsetFromLastPhone!
+                spriteComponent.node.position = localLocation
             }
             
             entityManager!.add(player)
@@ -303,7 +304,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     if let joinedScreen = joinedScreen {
                         if let sessionManager = sessionManager {
                             print("Sending handover message")
-                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: spriteNode.position))
+                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position)))
                             do {
                                 try sessionManager.sendMessage(message, toPeers: [joinedScreen.peerID], withMode: .Reliable)
                                 pauseMusic()
