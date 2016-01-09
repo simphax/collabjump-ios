@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		78E12B201C3DA82B00B822ED /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E12B1F1C3DA82B00B822ED /* Platform.swift */; };
+		842E1C041C19C39400335A48 /* RandomPositionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842E1C031C19C39400335A48 /* RandomPositionComponent.swift */; };
+		84CA25D81C3EAB50000AD6BE /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CA25D71C3EAB50000AD6BE /* Platform.swift */; };
 		F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5C1C15A9C8001C7C92 /* Player.swift */; };
 		F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */; };
 		F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD611C15AAF1001C7C92 /* EntityManager.swift */; };
@@ -25,6 +26,9 @@
 		F4B3BE711C1843ED0009DFDD /* ScreenLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; };
 		F4B3BE721C1843ED0009DFDD /* ScreenLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */; };
+		F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C661C21AD3400C60A32 /* MyUtils.swift */; };
+		F4CF9C6A1C21B4C700C60A32 /* HandoverMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */; };
+		F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F4C5BF1C396079005481FB /* GridCalculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +70,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		78E12B1F1C3DA82B00B822ED /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
+		842E1C031C19C39400335A48 /* RandomPositionComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPositionComponent.swift; sourceTree = "<group>"; };
+		84CA25D71C3EAB50000AD6BE /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		F419DD5C1C15A9C8001C7C92 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		F419DD611C15AAF1001C7C92 /* EntityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
@@ -85,6 +90,9 @@
 		F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScreenLayout.xcodeproj; path = ScreenLayout/ScreenLayout.xcodeproj; sourceTree = "<group>"; };
 		F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundManager.swift; sourceTree = "<group>"; };
+		F4CF9C661C21AD3400C60A32 /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
+		F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoverMessage.swift; sourceTree = "<group>"; };
+		F4F4C5BF1C396079005481FB /* GridCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridCalculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +112,7 @@
 			children = (
 				F419DD5C1C15A9C8001C7C92 /* Player.swift */,
 				F419DD611C15AAF1001C7C92 /* EntityManager.swift */,
-				78E12B1F1C3DA82B00B822ED /* Platform.swift */,
+				84CA25D71C3EAB50000AD6BE /* Platform.swift */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -114,6 +122,7 @@
 			children = (
 				F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */,
 				F419DD651C15C971001C7C92 /* PhysicsComponent.swift */,
+				842E1C031C19C39400335A48 /* RandomPositionComponent.swift */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -138,6 +147,7 @@
 		F42962AA1C0D10600090E280 /* CollabJump */ = {
 			isa = PBXGroup;
 			children = (
+				F4CF9C681C21B4B700C60A32 /* Messages */,
 				F45B242D1C1F0930005C9BC5 /* Helpers */,
 				F42DFBBD1C1B18D600067F80 /* Assets */,
 				F419DD5E1C15AA29001C7C92 /* Components */,
@@ -176,6 +186,8 @@
 			isa = PBXGroup;
 			children = (
 				F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */,
+				F4CF9C661C21AD3400C60A32 /* MyUtils.swift */,
+				F4F4C5BF1C396079005481FB /* GridCalculator.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -187,6 +199,14 @@
 				F4B3BE6A1C18431E0009DFDD /* ScreenLayoutTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F4CF9C681C21B4B700C60A32 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */,
+			);
+			name = Messages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,7 +243,7 @@
 				TargetAttributes = {
 					F42962A71C0D10600090E280 = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = 8F732M5KXK;
+						DevelopmentTeam = HQPW5Z8959;
 					};
 				};
 			};
@@ -289,12 +309,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78E12B201C3DA82B00B822ED /* Platform.swift in Sources */,
+				84CA25D81C3EAB50000AD6BE /* Platform.swift in Sources */,
 				F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */,
+				842E1C041C19C39400335A48 /* RandomPositionComponent.swift in Sources */,
+				F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */,
 				F419DD661C15C971001C7C92 /* PhysicsComponent.swift in Sources */,
+				F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,
 				F42962B01C0D10600090E280 /* GameScene.swift in Sources */,
+				F4CF9C6A1C21B4C700C60A32 /* HandoverMessage.swift in Sources */,
 				F42962B21C0D10600090E280 /* GameViewController.swift in Sources */,
 				F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */,
 				F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */,
@@ -418,10 +442,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CollabJump/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.simphax.CollabJump;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AlexYeh.CollabJump;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -430,10 +456,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CollabJump/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.simphax.CollabJump;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AlexYeh.CollabJump;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
