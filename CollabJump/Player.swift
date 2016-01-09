@@ -21,12 +21,11 @@ class Player: GKEntity {
         spriteComponent.node.physicsBody?.allowsRotation = false
         spriteComponent.node.physicsBody?.dynamic = true
         spriteComponent.node.physicsBody?.mass = 1
+        spriteComponent.node.physicsBody?.affectedByGravity = true
 
 //        let physicsComponent = PhysicsComponent()
 //        addComponent(physicsComponent)
         
-        
-        spriteComponent.node.runAction(SoundManager.sharedInstance.soundJump)
         addComponent(spriteComponent)
     }
     

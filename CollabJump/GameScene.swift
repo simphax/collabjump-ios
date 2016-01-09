@@ -43,22 +43,23 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         physicsWorld.speed = 0
         
         entityManager = EntityManager(scene: self)
-        
+        randomPlatform()
+        let platform = entityManager!.getPlatform()
+        let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
         
         if hostingGame {
             let player: Player = Player()
             
             // Player
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                spriteComponent.node.position = CGPoint(x: CGRectGetMidX(self.frame) - 100, y: CGRectGetMidY(self.frame))
+                spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
+                        y: (platformNode?.position.y)! * 1.5 )
                 
             }
             
             entityManager!.add(player)
         }
         
-        randomPlatform()
-
         pauseButton = ButtonNode(color: UIColor.whiteColor(), size: CGSizeMake(30, 30))
         pauseButton.position = CGPoint(x: self.size.width - 40, y: self.size.height - 40)
         pauseButton.buttonIdentifier = .Pause
@@ -95,7 +96,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     //TODO: Don't start if we have no one connected
                     startGame(startGameMessage)
                     try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
-                    
                 } catch _ {
                     print("couldnt send message")
                 }
@@ -287,6 +287,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         self.updateDelta(delta)
     }
     
+    var hasJumped = false
+    
     func updateDelta(deltaTime: CFTimeInterval) {
         
         stateMachine?.updateWithDeltaTime(deltaTime)
@@ -297,16 +299,19 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         testPlayerHandover()
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
         
+        
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
                 let platform = entityManager!.getPlatform()
                 let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
-                
-                if spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
-                    print("*****JUMP!*****")
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, 10.0))
+                if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(0.0, CGFloat(500.0)))
+                    //spriteNode.physicsBody?.velocity.dx = 5.0
+                    self.hasJumped = true
+                    print("***JUMP***")
+                    spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }
-                spriteNode.physicsBody!.velocity.dx = 20 * physicsWorld.speed
+                spriteNode.physicsBody!.velocity.dx += 6 * physicsWorld.speed
             }
         }
     }
