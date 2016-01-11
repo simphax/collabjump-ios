@@ -93,19 +93,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 print("Sending start game message")
                 let startGameMessage = StartGameMessage()
                 let message: SCLSessionMessage = SCLSessionMessage(name: "StartGame", object: startGameMessage)
-                
-                
                 do {
                     //TODO: Don't start if we have no one connected
                     startGame(startGameMessage)
-                    if let player = entityManager!.getPlayer() {
-                        if let animationComponent = player.componentForClass(AnimationComponent.self) {
-                            print("bajskorvar")
-                            animationComponent.stateMachine?.enterState(PlayerRunning.self)
-                            print("BAJSKORVAR2")
-                        }
-                    }                    
-                    // Player. ?.enterState(PlayerRunning.self)
                     try sessionManager.sendMessage(message, toPeers: sessionManager.session.connectedPeers, withMode: .Reliable)
                 } catch _ {
                     print("couldnt send message")
@@ -120,6 +110,11 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
                 do {
                     pauseGame(pauseGameMessage)
+                    if let player = entityManager!.getPlayer() {
+                        if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                            animationComponent.stateMachine?.enterState(PlayerStanding.self)
+                        }
+                    }
                     try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
                 } catch _ {
                     print("couldnt send message")
@@ -146,14 +141,25 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         return rect
     }
     
+    //landed
     func didBeginContact(contact: SKPhysicsContact) {
-        
+        if let player = entityManager!.getPlayer() {
+            if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                animationComponent.stateMachine?.enterState(PlayerRunning.self)
+            }
+        }
         playMusic()
         print("CONTACT")
         
     }
     
+    //jumped
     func didEndContact(contact: SKPhysicsContact) {
+        if let player = entityManager!.getPlayer() {
+            if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                animationComponent.stateMachine?.enterState(PlayerJumping.self)
+            }
+        }
         pauseMusic()
         print("END CONTACT")
         
@@ -263,29 +269,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     func gameOver(message: GameOverMessage) {
         stateMachine?.enterState(GameOver.self)
     }
-    /*
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("gamescene touch")
-        /*
-        var rect = visibleSpaceRect()
-        print("Visisble rect: \(rect))")
-       /* Called when a touch begins */
-        for touch in touches {
-            let location = touch.locationInNode(self)
-
-            print(" touch location \(location)")
-            let player: Player = Player()
-            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                
-                spriteComponent.node.position = location
-            }
-            
-//            playMusic()
-            
-        }
-        */
-    }
-*/
+   
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         let delta: CFTimeInterval = currentTime - lastUpdateTimeInterval
@@ -407,46 +392,12 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
             }
             backgroundManager?.showBackground()
-            /*
-            if(joinedScreenOffset.x >= self.size.width) {
-                delay(2.0) {
-                    let location = CGPoint(x: self.size.width/2, y: self.size.height/2)
-                    
-                    let player: Player = Player()
-                    
-                    if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                        spriteComponent.node.position = location
-                    }
-                    
-                    self.entityManager!.add(player)
-                    self.playMusic()
-                }
-            }
-            */
+            
         } else {
             backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
         }
         
         testPlayerHandover()
-        
-        /*
-        print("Joined screens! -- offset: \(offset)")
-
-        if(offset.x > 0) {
-            let player: Player = Player()
-            
-            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                spriteComponent.node.position = CGPoint(x: 100, y: 100)
-            }
-            
-            entityManager!.add(player)
-            playMusic()
-        }
-        if(offset.x < 0) {
-            offsetFromLastPhone = offset
-            
-        }
-        */
     }
     
     func peerDisconnected(peerID: MCPeerID) {
