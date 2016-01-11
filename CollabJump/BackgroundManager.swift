@@ -30,6 +30,8 @@ class BackgroundManager {
     
     private var gridCalculator: GridCalculator?
     
+    private var hidden = true
+    
     init(scene: GameScene) {
         self.scene = scene
         backgroundNodes = []
@@ -92,12 +94,14 @@ class BackgroundManager {
     }
     
     func hideBackground() {
+        hidden = true
         let fadeIn = SKAction.fadeInWithDuration(0.3)
         blackOverlay?.runAction(fadeIn)
         
     }
     
     func showBackground() {
+        hidden = false
         let fadeOut = SKAction.fadeOutWithDuration(0.3)
         blackOverlay?.runAction(fadeOut)
         
@@ -116,5 +120,9 @@ class BackgroundManager {
             let sequence = SKAction.sequence([scaleStart, moveStart, group])
             backgroundNode.runAction(sequence)
         }
+    }
+    
+    func isHidden() -> Bool {
+        return hidden
     }
 }

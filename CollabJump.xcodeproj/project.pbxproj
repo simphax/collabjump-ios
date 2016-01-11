@@ -15,6 +15,7 @@
 		F406B13E1C417A6C00C3BF9D /* GameOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B13D1C417A6C00C3BF9D /* GameOver.swift */; };
 		F406B1401C417B9C00C3BF9D /* DisjoinedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B13F1C417B9C00C3BF9D /* DisjoinedScreen.swift */; };
 		F406B1421C417BA500C3BF9D /* JoinedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1411C417BA500C3BF9D /* JoinedScreen.swift */; };
+		F406B1441C41B9D700C3BF9D /* BgOffsetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1431C41B9D700C3BF9D /* BgOffsetMessage.swift */; };
 		F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5C1C15A9C8001C7C92 /* Player.swift */; };
 		F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */; };
 		F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD611C15AAF1001C7C92 /* EntityManager.swift */; };
@@ -90,6 +91,7 @@
 		F406B13D1C417A6C00C3BF9D /* GameOver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOver.swift; sourceTree = "<group>"; };
 		F406B13F1C417B9C00C3BF9D /* DisjoinedScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisjoinedScreen.swift; sourceTree = "<group>"; };
 		F406B1411C417BA500C3BF9D /* JoinedScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinedScreen.swift; sourceTree = "<group>"; };
+		F406B1431C41B9D700C3BF9D /* BgOffsetMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BgOffsetMessage.swift; sourceTree = "<group>"; };
 		F419DD5C1C15A9C8001C7C92 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		F419DD611C15AAF1001C7C92 /* EntityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 				F4560DDB1C3EB0F700A1EF86 /* StartGameMessage.swift */,
 				F4560DDD1C3EC15000A1EF86 /* PauseGameMessage.swift */,
 				F406B13B1C4178BF00C3BF9D /* GameOverMessage.swift */,
+				F406B1431C41B9D700C3BF9D /* BgOffsetMessage.swift */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */,
 				F4560DDA1C3EA57100A1EF86 /* HomeViewController.swift in Sources */,
 				F406B1421C417BA500C3BF9D /* JoinedScreen.swift in Sources */,
+				F406B1441C41B9D700C3BF9D /* BgOffsetMessage.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,
 				F42962B01C0D10600090E280 /* GameScene.swift in Sources */,
