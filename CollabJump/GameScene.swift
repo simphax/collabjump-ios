@@ -35,8 +35,18 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var stateMachine: GKStateMachine?
     
     var gameSessionPeers: [MCPeerID]?
+    var scoreManager: Score?
+    var scoreLabel: SKLabelNode?
+    var scoreCount: Int = 0
     
     override func didMoveToView(view: SKView) {
+        
+        //var scoreLabel: SKLabelNode?
+        scoreLabel = SKLabelNode(fontNamed: "Titillium Web")
+        scoreLabel?.fontSize = 20
+        scoreLabel?.position = CGPoint(x: 50, y: self.size.height - (30))
+        scoreLabel?.text = "Score: \(scoreCount)"
+        self.addChild(scoreLabel!)
         
         stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), DisjoinedScreen(gameScene: self), JoinedScreen(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
        
@@ -87,6 +97,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         } else {
             backgroundManager.showBackground()
         }
+        
     }
     
     func buttonTriggered(button: ButtonNode) {
@@ -286,6 +297,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     animationComponent.stateMachine?.enterState(PlayerLanding.self)
                 }
             }
+            //scoreCount = scoreManager?.updateScore()
+            //scoreLabel = Score.updateScore()
+            scoreLabel?.text = "Score: \(scoreCount)"
             
         } else {
             print("NO joinedScreen")
@@ -341,6 +355,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         entityManager?.update(deltaTime)
         
         testPlayerHandover()
+        scoreLabel?.text = "Score: \(scoreCount)"
+        //self.addChild(scoreLabel!)
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
         
         
@@ -363,6 +379,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     
 
                     self.hasJumped = true
+                    scoreCount++
+                    scoreLabel?.text = "Score: \(scoreCount)"
                     print("***JUMP***")
                     spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }

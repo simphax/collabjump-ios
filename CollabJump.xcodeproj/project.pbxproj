@@ -15,6 +15,7 @@
 		84BEC11E1C43B73A00BBC111 /* ThlenJumping.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC11D1C43B73A00BBC111 /* ThlenJumping.atlas */; };
 		84BEC1201C43ED2400BBC111 /* ThlenIdle.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC11F1C43ED2400BBC111 /* ThlenIdle.atlas */; };
 		84BEC1221C43ED2B00BBC111 /* ThlenLanding.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC1211C43ED2B00BBC111 /* ThlenLanding.atlas */; };
+		84BEC1281C4415C000BBC111 /* Score.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BEC1271C4415C000BBC111 /* Score.swift */; };
 		84CA25D81C3EAB50000AD6BE /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CA25D71C3EAB50000AD6BE /* Platform.swift */; };
 		F406B1351C4116E400C3BF9D /* WatingForPlayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1341C4116E400C3BF9D /* WatingForPlayers.swift */; };
 		F406B1381C41170900C3BF9D /* Paused.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1371C41170900C3BF9D /* Paused.swift */; };
@@ -98,6 +99,7 @@
 		84BEC11D1C43B73A00BBC111 /* ThlenJumping.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenJumping.atlas; sourceTree = "<group>"; };
 		84BEC11F1C43ED2400BBC111 /* ThlenIdle.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenIdle.atlas; sourceTree = "<group>"; };
 		84BEC1211C43ED2B00BBC111 /* ThlenLanding.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenLanding.atlas; sourceTree = "<group>"; };
+		84BEC1271C4415C000BBC111 /* Score.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Score.swift; sourceTree = "<group>"; };
 		84CA25D71C3EAB50000AD6BE /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		F406B1341C4116E400C3BF9D /* WatingForPlayers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatingForPlayers.swift; sourceTree = "<group>"; };
 		F406B1371C41170900C3BF9D /* Paused.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Paused.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 				F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */,
 				F4CF9C661C21AD3400C60A32 /* MyUtils.swift */,
 				F4F4C5BF1C396079005481FB /* GridCalculator.swift */,
+				84BEC1271C4415C000BBC111 /* Score.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				F406B13E1C417A6C00C3BF9D /* GameOver.swift in Sources */,
 				F42622D11C3D64640003B409 /* GameState.swift in Sources */,
 				F406B1401C417B9C00C3BF9D /* DisjoinedScreen.swift in Sources */,
+				84BEC1281C4415C000BBC111 /* Score.swift in Sources */,
 				F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */,
 				F4560DDA1C3EA57100A1EF86 /* HomeViewController.swift in Sources */,
 				F406B1421C417BA500C3BF9D /* JoinedScreen.swift in Sources */,
