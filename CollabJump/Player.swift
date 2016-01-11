@@ -15,9 +15,10 @@ let PlayerCategory:UInt32 = 0 << 1
 let PlatformCategory:UInt32 = 1 << 1
 
 class Player: GKEntity {
-    
     override init() {
         super.init()
+        
+        
         
         let spriteComponent = SpriteComponent(texture: SKTexture(imageNamed: "thlem small"))
         
@@ -31,12 +32,14 @@ class Player: GKEntity {
         spriteComponent.node.physicsBody?.collisionBitMask = PlatformCategory
         spriteComponent.node.physicsBody?.contactTestBitMask = PlatformCategory
         
+        
         addComponent(spriteComponent)
+        
+        let animationComponent = AnimationComponent()
+        addComponent(animationComponent)
     }
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
-        
-       
         print("update",seconds)
     }
 }

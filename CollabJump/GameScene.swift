@@ -46,10 +46,20 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var stateMachine: GKStateMachine?
     
     var gameSessionPeers: [MCPeerID]?
+    var scoreManager: Score?
+    var scoreLabel: SKLabelNode?
+    var scoreCount: Int = 0
     
     override func didMoveToView(view: SKView) {
         
+
         stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), Running(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
+        //var scoreLabel: SKLabelNode?
+        scoreLabel = SKLabelNode(fontNamed: "Titillium Web")
+        scoreLabel?.fontSize = 20
+        scoreLabel?.position = CGPoint(x: 50, y: self.size.height - (30))
+        scoreLabel?.text = "Score: \(scoreCount)"
+        self.addChild(scoreLabel!)
        
         self.physicsWorld.gravity = CGVectorMake(0.0, -9.8)
         physicsWorld.contactDelegate = self
@@ -98,6 +108,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         } else {
             backgroundManager.showBackground()
         }
+        
     }
     
     func buttonTriggered(button: ButtonNode) {
@@ -126,6 +137,19 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 let message: SCLSessionMessage = SCLSessionMessage(name: "PauseGame", object: pauseGameMessage)
                 do {
                     pauseGame(pauseGameMessage)
+                    
+                    if let player = entityManager!.getPlayer() {
+                        if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                            animationComponent.stateMachine?.enterState(PlayerStanding.self)
+                        }
+                        var timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "idleFunction", userInfo: nil, repeats: true)
+                        func idleFunction() {
+                            if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                                animationComponent.stateMachine?.enterState(PlayerStanding.self)
+                            }
+                        }
+                    }
+                    
                     try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
                 } catch _ {
                     print("couldnt send message")
@@ -152,9 +176,14 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         return rect
     }
     
-    
+    //landed
     func didBeginContact(contact: SKPhysicsContact) {
-   
+        if let player = entityManager!.getPlayer() {
+            if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                animationComponent.stateMachine?.enterState(PlayerRunning.self)
+            }
+        }
+
 //        let player = entityManager?.getPlayer()
 //        let spriteComponent = player!.componentForClass(SpriteComponent.self)
 //        spriteComponent?.node.physicsBody?.velocity.dx = 60 * physicsWorld.speed
@@ -166,12 +195,13 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
     }
     
+    //jumped
     func didEndContact(contact: SKPhysicsContact) {
 
 //        let player = entityManager?.getPlayer()
 //        let spriteComponent = player!.componentForClass(SpriteComponent.self)
 //        spriteComponent?.node.physicsBody?.velocity.dx = 600 * physicsWorld.speed
-        
+
         pauseMusic()
 
         print("END CONTACT")
@@ -265,7 +295,18 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     }
                 }
                 
+                
                 entityManager!.add(player)
+                
+                entityManager?.update(0)
+                
+                if let player = entityManager!.getPlayer() {
+                    if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                        animationComponent.stateMachine?.enterState(PlayerLanding.self)
+                    }
+                }
+                
+                scoreLabel?.text = "Score: \(scoreCount)"
                 
                 //self.nextScreen = nil
                 self.bgOffsetMasterScreen = nil
@@ -340,6 +381,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         entityManager?.update(deltaTime)
         
         testPlayerHandover()
+        scoreLabel?.text = "Score: \(scoreCount)"
+        //self.addChild(scoreLabel!)
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
         
         
@@ -348,13 +391,22 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 let platform = entityManager!.getPlatform()
                 let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
                 if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
+                    
+                    if let player = entityManager!.getPlayer() {
+                        if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                            animationComponent.stateMachine?.enterState(PlayerJumping.self)
+                        }
+                    }
 
                     
                     spriteNode.physicsBody?.applyImpulse(CGVectorMake(300.0, CGFloat(600.0)))
                     
                     //spriteNode.physicsBody?.velocity.dx = 500.0
+                    
 
                     self.hasJumped = true
+                    scoreCount++
+                    scoreLabel?.text = "Score: \(scoreCount)"
                     print("***JUMP***")
                     spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }
@@ -377,15 +429,14 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 if spriteNode.position.y < -gameOverDistance || spriteNode.position.x > self.size.width + gameOverDistance {
                     
                     if let sessionManager = sessionManager {
-                        print("Sending gameover message")
                         let gameOverMessage = GameOverMessage()
                         let message: SCLSessionMessage = SCLSessionMessage(name: "GameOver", object: gameOverMessage)
                         do {
+                            
                             try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
                             gameOver(gameOverMessage)
                             entityManager!.remove(player)
                         } catch _ {
-                            print("couldnt send message")
                         }
                     }
                 } else if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
