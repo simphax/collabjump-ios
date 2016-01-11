@@ -13,8 +13,6 @@
 		F406B1381C41170900C3BF9D /* Paused.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1371C41170900C3BF9D /* Paused.swift */; };
 		F406B13C1C4178BF00C3BF9D /* GameOverMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B13B1C4178BF00C3BF9D /* GameOverMessage.swift */; };
 		F406B13E1C417A6C00C3BF9D /* GameOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B13D1C417A6C00C3BF9D /* GameOver.swift */; };
-		F406B1401C417B9C00C3BF9D /* DisjoinedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B13F1C417B9C00C3BF9D /* DisjoinedScreen.swift */; };
-		F406B1421C417BA500C3BF9D /* JoinedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1411C417BA500C3BF9D /* JoinedScreen.swift */; };
 		F406B1441C41B9D700C3BF9D /* BgOffsetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1431C41B9D700C3BF9D /* BgOffsetMessage.swift */; };
 		F419DD5D1C15A9C8001C7C92 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5C1C15A9C8001C7C92 /* Player.swift */; };
 		F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */; };
@@ -41,6 +39,7 @@
 		F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */; };
 		F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C661C21AD3400C60A32 /* MyUtils.swift */; };
 		F4CF9C6A1C21B4C700C60A32 /* HandoverMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */; };
+		F4F0A0731C43F58B007668CD /* Running.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F0A0721C43F58B007668CD /* Running.swift */; };
 		F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F4C5BF1C396079005481FB /* GridCalculator.swift */; };
 /* End PBXBuildFile section */
 
@@ -89,8 +88,6 @@
 		F406B1371C41170900C3BF9D /* Paused.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Paused.swift; sourceTree = "<group>"; };
 		F406B13B1C4178BF00C3BF9D /* GameOverMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverMessage.swift; sourceTree = "<group>"; };
 		F406B13D1C417A6C00C3BF9D /* GameOver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOver.swift; sourceTree = "<group>"; };
-		F406B13F1C417B9C00C3BF9D /* DisjoinedScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisjoinedScreen.swift; sourceTree = "<group>"; };
-		F406B1411C417BA500C3BF9D /* JoinedScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinedScreen.swift; sourceTree = "<group>"; };
 		F406B1431C41B9D700C3BF9D /* BgOffsetMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BgOffsetMessage.swift; sourceTree = "<group>"; };
 		F419DD5C1C15A9C8001C7C92 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		F419DD5F1C15AA37001C7C92 /* SpriteComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
@@ -118,6 +115,7 @@
 		F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundManager.swift; sourceTree = "<group>"; };
 		F4CF9C661C21AD3400C60A32 /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
 		F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoverMessage.swift; sourceTree = "<group>"; };
+		F4F0A0721C43F58B007668CD /* Running.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Running.swift; sourceTree = "<group>"; };
 		F4F4C5BF1C396079005481FB /* GridCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridCalculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -160,8 +158,7 @@
 				F406B1341C4116E400C3BF9D /* WatingForPlayers.swift */,
 				F406B1371C41170900C3BF9D /* Paused.swift */,
 				F406B13D1C417A6C00C3BF9D /* GameOver.swift */,
-				F406B13F1C417B9C00C3BF9D /* DisjoinedScreen.swift */,
-				F406B1411C417BA500C3BF9D /* JoinedScreen.swift */,
+				F4F0A0721C43F58B007668CD /* Running.swift */,
 			);
 			name = "Game States";
 			sourceTree = "<group>";
@@ -382,10 +379,9 @@
 				F406B1351C4116E400C3BF9D /* WatingForPlayers.swift in Sources */,
 				F406B13E1C417A6C00C3BF9D /* GameOver.swift in Sources */,
 				F42622D11C3D64640003B409 /* GameState.swift in Sources */,
-				F406B1401C417B9C00C3BF9D /* DisjoinedScreen.swift in Sources */,
+				F4F0A0731C43F58B007668CD /* Running.swift in Sources */,
 				F4F4C5C01C396079005481FB /* GridCalculator.swift in Sources */,
 				F4560DDA1C3EA57100A1EF86 /* HomeViewController.swift in Sources */,
-				F406B1421C417BA500C3BF9D /* JoinedScreen.swift in Sources */,
 				F406B1441C41B9D700C3BF9D /* BgOffsetMessage.swift in Sources */,
 				F419DD601C15AA37001C7C92 /* SpriteComponent.swift in Sources */,
 				F419DD621C15AAF1001C7C92 /* EntityManager.swift in Sources */,

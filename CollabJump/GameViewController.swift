@@ -72,8 +72,6 @@ class GameViewController: SCLPinchViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        layoutManager.gestureRecognizer.cancelsTouchesInView = false
-
         self.sessionManager.startPeerInvitationsWithServiceType(hostingGameId, errorHandler: { (error) -> Void in
             print("invitations failed with error: \(error)")
         })
@@ -134,34 +132,54 @@ class GameViewController: SCLPinchViewController {
     // screen layout changed
     override func layoutDidChangeForScreens(affectedScreens: [AnyObject]!) {
         print("layoutDidChangeForScreens-----------------------------")
-        print("\(affectedScreens)")
+        print("Affected screens: \(affectedScreens)")
         
         let localScreen = SCLScreen.mainScreen()
-        if (localScreen.layout != nil) {
-            if let screens = localScreen.layout.screens as? [SCLScreen] {
-                var i = 0
-                var closestScreen: SCLScreen?
-                var minOffset: CGPoint?
-                for screen in screens {
-                    let offset = localScreen.layout.convertPoint(CGPointZero, fromScreen: localScreen, toScreen: screen)
-                    if(offset != CGPointZero) {
-                        if(minOffset == nil || (abs(offset.x) + abs(offset.y)) < (abs(minOffset!.x) + abs(minOffset!.y))) {
-                            minOffset = offset
-                            closestScreen = screen
-                        }
-                    }
-                    
-                    print("Offset to \(i): \(offset)")
-                    i++
-                }
-                
-                if(closestScreen != nil && minOffset != nil) {
-                    //minOffset!.y += localScreen.bounds.height
-                    //var sceneSpaceOffset = gameScene!.convertPointFromView(minOffset!)
-                    //sceneSpaceOffset.y *= -1
-                    gameScene?.joinedWithScreen(closestScreen!)
+        var localScreenAffected = false
+        if let screens = affectedScreens as? [SCLScreen] {
+            for screen in screens {
+                if localScreen == screen {
+                    localScreenAffected = true
                 }
             }
+        }
+        if localScreenAffected {
+            if (localScreen.layout != nil) {
+                if let screens = localScreen.layout.screens as? [SCLScreen] {
+                    print("screens: \(screens)")
+                    gameScene?.joinedWithScreens(screens)
+                    /*
+                    var i = 0
+                    var closestScreen: SCLScreen?
+                    var minOffset: CGPoint?
+                    for screen in screens {
+                        let offset = localScreen.layout.convertPoint(CGPointZero, fromScreen: localScreen, toScreen: screen)
+                        if(offset != CGPointZero) {
+                            if(minOffset == nil || (abs(offset.x) + abs(offset.y)) < (abs(minOffset!.x) + abs(minOffset!.y))) {
+                                minOffset = offset
+                                closestScreen = screen
+                            }
+                        }
+                        
+                        print("Offset to \(i): \(offset)")
+                        i++
+                    }
+                    
+                    if(closestScreen != nil && minOffset != nil) {
+                        //minOffset!.y += localScreen.bounds.height
+                        //var sceneSpaceOffset = gameScene!.convertPointFromView(minOffset!)
+                        //sceneSpaceOffset.y *= -1
+                        for screen in screens {
+                            gameScene?.joinedWithScreen(screen, closest: screen == closestScreen)
+                        }
+                    }
+                    */
+                }
+            } else {
+                print("there's no layout!")
+            }
+        } else {
+            print("local screen is not affected")
         }
         print("-----------------------------")
     }

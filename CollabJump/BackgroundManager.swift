@@ -94,31 +94,34 @@ class BackgroundManager {
     }
     
     func hideBackground() {
-        hidden = true
-        let fadeIn = SKAction.fadeInWithDuration(0.3)
-        blackOverlay?.runAction(fadeIn)
-        
+        if !hidden {
+            hidden = true
+            let fadeIn = SKAction.fadeInWithDuration(0.3)
+            blackOverlay?.runAction(fadeIn)
+        }
     }
     
     func showBackground() {
-        hidden = false
-        let fadeOut = SKAction.fadeOutWithDuration(0.3)
-        blackOverlay?.runAction(fadeOut)
-        
-        for backgroundNode in backgroundNodes {
-            let scale: CGFloat = 0.6
-            let scaleStart = SKAction.scaleTo(scale, duration: 0)
-            var startPosition = backgroundNode.position
-            //If the scale is c and the anchor is (a,b), then the new point is (cx+(1-c)a,cy+(1-c)b)
-            startPosition.x = scale * startPosition.x + (1 - scale) * (self.scene.size.width/2)
-            startPosition.y = scale * startPosition.y + (1 - scale) * (self.scene.size.height/2)
-            let moveStart = SKAction.moveTo(startPosition, duration: 0)
-            let endPosition = backgroundNode.position
-            let scaleUp = SKAction.scaleTo(1.0, duration: 0.3)
-            let moveEnd = SKAction.moveTo(endPosition, duration: 0.3)
-            let group = SKAction.group([scaleUp,moveEnd])
-            let sequence = SKAction.sequence([scaleStart, moveStart, group])
-            backgroundNode.runAction(sequence)
+        if hidden {
+            hidden = false
+            let fadeOut = SKAction.fadeOutWithDuration(0.3)
+            blackOverlay?.runAction(fadeOut)
+            
+            for backgroundNode in backgroundNodes {
+                let scale: CGFloat = 0.6
+                let scaleStart = SKAction.scaleTo(scale, duration: 0)
+                var startPosition = backgroundNode.position
+                //If the scale is c and the anchor is (a,b), then the new point is (cx+(1-c)a,cy+(1-c)b)
+                startPosition.x = scale * startPosition.x + (1 - scale) * (self.scene.size.width/2)
+                startPosition.y = scale * startPosition.y + (1 - scale) * (self.scene.size.height/2)
+                let moveStart = SKAction.moveTo(startPosition, duration: 0)
+                let endPosition = backgroundNode.position
+                let scaleUp = SKAction.scaleTo(1.0, duration: 0.3)
+                let moveEnd = SKAction.moveTo(endPosition, duration: 0.3)
+                let group = SKAction.group([scaleUp,moveEnd])
+                let sequence = SKAction.sequence([scaleStart, moveStart, group])
+                backgroundNode.runAction(sequence)
+            }
         }
     }
     
