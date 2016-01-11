@@ -21,9 +21,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
     
-    // For the collisionbitmasks
-    let PlayerCategory:UInt32 = 0 << 1
-    let PlatformCategory:UInt32 = 1 << 1
+
     
     var pauseButton: ButtonNode!
     
@@ -61,12 +59,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
                         y: (platformNode?.position.y)! + 100 )
-                spriteComponent.node.physicsBody?.categoryBitMask = PlayerCategory
-                spriteComponent.node.physicsBody?.collisionBitMask = PlatformCategory
-                spriteComponent.node.physicsBody?.contactTestBitMask = PlatformCategory
-                platformNode!.physicsBody?.categoryBitMask = PlatformCategory
-                platformNode!.physicsBody?.collisionBitMask = PlayerCategory
-                platformNode!.physicsBody?.contactTestBitMask = PlayerCategory
                 
             }
             
@@ -159,6 +151,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
 //        spriteComponent?.node.physicsBody?.velocity.dx = 60 * physicsWorld.speed
         
         playMusic()
+        hasJumped = false
 
         print("CONTACT")
         
@@ -248,10 +241,17 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             let localScreen = SCLScreen.mainScreen()
             let localLocation = convertPointFromView(localScreen.layout.convertPoint(message.playerPosition, fromScreen: joinedScreen, toScreen: localScreen))
             
+            print("localLocation: \(localLocation)")
+            print("velocity: \(message.playerVelocity)")
+            
             let player: Player = Player()
+            hasJumped = true
             
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = localLocation
+                if let physicsBody = spriteComponent.node.physicsBody {
+                    physicsBody.velocity = message.playerVelocity
+                }
             }
             
             entityManager!.add(player)
@@ -324,7 +324,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
 
                     
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(200.0, CGFloat(600.0)))
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(300.0, CGFloat(600.0)))
                     
                     //spriteNode.physicsBody?.velocity.dx = 500.0
 
@@ -333,11 +333,10 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }
 
-                if hasJumped == true {
+                if hasJumped {
                     // do nothing to affect speed in x
-                }
-                else {
-                spriteNode.physicsBody!.velocity.dx = 50 * physicsWorld.speed
+                } else {
+                    spriteNode.physicsBody!.velocity.dx = 50 * physicsWorld.speed
                 }
             }
         }
@@ -411,7 +410,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     if let joinedScreen = joinedScreen {
                         if let sessionManager = sessionManager {
                             print("Sending handover message")
-                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position)))
+                            //Warning: will crash if physicsbody is null
+                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position), playerVelocity: spriteNode.physicsBody!.velocity))
                             do {
                                 try sessionManager.sendMessage(message, toPeers: [joinedScreen.peerID], withMode: .Reliable)
                                 pauseMusic()
