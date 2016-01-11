@@ -16,7 +16,7 @@ class BackgroundManager {
     
     private var backgroundName: String?
     
-    private var backgroundNodes: [SKNode]
+    private var backgroundNodes: [SKSpriteNode]
     
     private var blackOverlay: SKShapeNode?
     
@@ -30,6 +30,8 @@ class BackgroundManager {
     
     private var gridCalculator: GridCalculator?
     
+    private var hidden = true
+    
     init(scene: GameScene) {
         self.scene = scene
         backgroundNodes = []
@@ -38,6 +40,13 @@ class BackgroundManager {
     func setBackground(name: String, sliceCols: Int, sliceRows: Int, sliceSize: Int) {
         backgroundName = name
         self.gridCalculator = GridCalculator(cellSize: sliceSize, gridCols: sliceCols, gridRows: sliceRows)
+        
+        blackOverlay = SKShapeNode(rect: CGRectMake(0, 0, self.scene.size.width, self.scene.size.height))
+        blackOverlay?.fillColor = UIColor.blackColor()
+        blackOverlay?.zPosition = -5
+        var fadeIn = SKAction.fadeInWithDuration(0.0)
+        blackOverlay?.runAction(fadeIn)
+        scene.addChild(blackOverlay!)
     }
     
     func setBackgroundOffset(offset: CGPoint, angle: CGFloat) {
@@ -85,13 +94,35 @@ class BackgroundManager {
     }
     
     func hideBackground() {
-        blackOverlay = SKShapeNode(rect: CGRectMake(0, 0, self.scene.size.width, self.scene.size.height))
-        blackOverlay?.fillColor = UIColor.blackColor()
-        blackOverlay?.zPosition = -5
-        scene.addChild(blackOverlay!)
+        hidden = true
+        let fadeIn = SKAction.fadeInWithDuration(0.3)
+        blackOverlay?.runAction(fadeIn)
+        
     }
     
     func showBackground() {
-        blackOverlay?.removeFromParent()
+        hidden = false
+        let fadeOut = SKAction.fadeOutWithDuration(0.3)
+        blackOverlay?.runAction(fadeOut)
+        
+        for backgroundNode in backgroundNodes {
+            let scale: CGFloat = 0.6
+            let scaleStart = SKAction.scaleTo(scale, duration: 0)
+            var startPosition = backgroundNode.position
+            //If the scale is c and the anchor is (a,b), then the new point is (cx+(1-c)a,cy+(1-c)b)
+            startPosition.x = scale * startPosition.x + (1 - scale) * (self.scene.size.width/2)
+            startPosition.y = scale * startPosition.y + (1 - scale) * (self.scene.size.height/2)
+            let moveStart = SKAction.moveTo(startPosition, duration: 0)
+            let endPosition = backgroundNode.position
+            let scaleUp = SKAction.scaleTo(1.0, duration: 0.3)
+            let moveEnd = SKAction.moveTo(endPosition, duration: 0.3)
+            let group = SKAction.group([scaleUp,moveEnd])
+            let sequence = SKAction.sequence([scaleStart, moveStart, group])
+            backgroundNode.runAction(sequence)
+        }
+    }
+    
+    func isHidden() -> Bool {
+        return hidden
     }
 }

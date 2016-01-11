@@ -26,8 +26,11 @@ class Platform: GKEntity {
         spriteComponent.node.physicsBody?.allowsRotation = false
         spriteComponent.node.physicsBody?.dynamic = false
         spriteComponent.node.physicsBody?.mass = 20
-        spriteComponent.node.physicsBody?.affectedByGravity = false
         spriteComponent.node.physicsBody?.restitution = 0
+        spriteComponent.node.physicsBody?.affectedByGravity = false
+        spriteComponent.node.physicsBody?.categoryBitMask = PlatformCategory
+        spriteComponent.node.physicsBody?.collisionBitMask = PlayerCategory
+        spriteComponent.node.physicsBody?.contactTestBitMask = PlayerCategory
         addComponent(spriteComponent)
     }
     

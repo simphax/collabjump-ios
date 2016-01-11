@@ -19,7 +19,7 @@ class GameViewController: SCLPinchViewController {
     var gameScene: GameScene?
     
     var hostingGame = false
-    var hostingGameId = "collabjump"
+    var hostingGameId = "collabjumpAlex"
     
     override func viewDidLoad() {
         super.viewDidLoad()

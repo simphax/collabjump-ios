@@ -12,17 +12,21 @@ import SpriteKit
 class HandoverMessage: NSObject, NSSecureCoding {
     
     var playerPosition: CGPoint
+    var playerVelocity: CGVector
     
-    init(playerPosition: CGPoint) {
+    init(playerPosition: CGPoint, playerVelocity: CGVector) {
         self.playerPosition = playerPosition
+        self.playerVelocity = playerVelocity
     }
     
     required init?(coder aDecoder: NSCoder) {
         playerPosition = aDecoder.decodeCGPointForKey("playerPosition")
+        playerVelocity = aDecoder.decodeCGVectorForKey("playerVelocity")
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeCGPoint(playerPosition, forKey: "playerPosition")
+        aCoder.encodeCGVector(playerVelocity, forKey: "playerVelocity")
     }
     
     static func supportsSecureCoding() -> Bool {

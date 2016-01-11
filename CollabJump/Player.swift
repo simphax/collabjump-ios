@@ -10,6 +10,10 @@ import Foundation
 import GameplayKit
 import SpriteKit
 
+// For the collisionbitmasks
+let PlayerCategory:UInt32 = 0 << 1
+let PlatformCategory:UInt32 = 1 << 1
+
 class Player: GKEntity {
     override init() {
         super.init()
@@ -22,11 +26,11 @@ class Player: GKEntity {
         spriteComponent.node.physicsBody?.allowsRotation = false
         spriteComponent.node.physicsBody?.dynamic = true
         spriteComponent.node.physicsBody?.mass = 1
-        spriteComponent.node.physicsBody?.affectedByGravity = true
         spriteComponent.node.physicsBody?.restitution = 0
-        
-//        let physicsComponent = PhysicsComponent()
-//        addComponent(physicsComponent)
+        spriteComponent.node.physicsBody?.affectedByGravity = true
+        spriteComponent.node.physicsBody?.categoryBitMask = PlayerCategory
+        spriteComponent.node.physicsBody?.collisionBitMask = PlatformCategory
+        spriteComponent.node.physicsBody?.contactTestBitMask = PlatformCategory
         
         
         addComponent(spriteComponent)

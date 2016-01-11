@@ -21,16 +21,13 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
     
-
-    // For the collisionbitmasks
-    let PlayerCategory:UInt32 = 0 << 1
-    let PlatformCategory:UInt32 = 1 << 1
-    
     var pauseButton: ButtonNode!
     
     var offsetFromLastPhone: CGPoint?
+    var bgOffset: CGPoint = CGPoint(x: -200,y: 200)
     
     var joinedScreen: SCLScreen?
+    var bgOffsetJoinedScreen: CGPoint?
     
     var lockBackground: Bool = false
     var hostingGame: Bool = false
@@ -60,12 +57,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
                         y: (platformNode?.position.y)! + 100 )
-                spriteComponent.node.physicsBody?.categoryBitMask = PlayerCategory
-                spriteComponent.node.physicsBody?.collisionBitMask = PlatformCategory
-                spriteComponent.node.physicsBody?.contactTestBitMask = PlatformCategory
-                platformNode!.physicsBody?.categoryBitMask = PlatformCategory
-                platformNode!.physicsBody?.collisionBitMask = PlayerCategory
-                platformNode!.physicsBody?.contactTestBitMask = PlayerCategory
                 
             }
             
@@ -82,7 +73,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         backgroundManager = BackgroundManager(scene: self)
         backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
 
-        backgroundManager?.setBackgroundOffset(CGPoint(x: 0,y: 0), angle: 0.0)
+        backgroundManager?.setBackgroundOffset(bgOffset, angle: 0.0)
         bgMusic = SKAudioNode(fileNamed: "music")
         bgMusic.autoplayLooped = true
         //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
@@ -93,12 +84,15 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     
         if !hostingGame {
             backgroundManager?.hideBackground()
+        } else {
+            backgroundManager.showBackground()
         }
     }
     
     func buttonTriggered(button: ButtonNode) {
         print("button triggered")
         if button.buttonIdentifier == .Start {
+            backgroundManager?.showBackground()
             print("Start!")
             if let sessionManager = sessionManager {
                 print("Sending start game message")
@@ -173,6 +167,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
 //        spriteComponent?.node.physicsBody?.velocity.dx = 60 * physicsWorld.speed
         
         playMusic()
+        hasJumped = false
 
         print("CONTACT")
         
@@ -232,6 +227,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 if let message = message.object as? GameOverMessage {
                     gameOver(message)
                 }
+                if let message = message.object as? BgOffsetMessage {
+                    bgOffsetMessage(message)
+                }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
                 print(" got a message from \(peerId)")
@@ -260,16 +258,24 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             let localScreen = SCLScreen.mainScreen()
             let localLocation = convertPointFromView(localScreen.layout.convertPoint(message.playerPosition, fromScreen: joinedScreen, toScreen: localScreen))
             
+            print("localLocation: \(localLocation)")
+            print("velocity: \(message.playerVelocity)")
+            
             let player: Player = Player()
+            hasJumped = true
             
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = localLocation
+                if let physicsBody = spriteComponent.node.physicsBody {
+                    physicsBody.velocity = message.playerVelocity
+                }
             }
             
             
             entityManager!.add(player)
             
             self.joinedScreen = nil
+            self.bgOffsetJoinedScreen = nil
             self.lockBackground = true
             stateMachine?.enterState(DisjoinedScreen.self)
             
@@ -302,10 +308,15 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         stateMachine?.enterState(Paused.self)
         print("pause game")
     }
+    
     func gameOver(message: GameOverMessage) {
         stateMachine?.enterState(GameOver.self)
     }
-   
+    
+    func bgOffsetMessage(message: BgOffsetMessage) {
+        bgOffsetJoinedScreen = message.offset
+        
+    }
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
@@ -346,7 +357,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     }
 
                     
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(200.0, CGFloat(600.0)))
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(300.0, CGFloat(600.0)))
                     
                     //spriteNode.physicsBody?.velocity.dx = 500.0
                     
@@ -356,12 +367,57 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }
 
-                if hasJumped == true {
+                if hasJumped {
                     // do nothing to affect speed in x
+                } else {
+                    spriteNode.physicsBody!.velocity.dx = 50 * physicsWorld.speed
                 }
-                else {
-                spriteNode.physicsBody!.velocity.dx = 50 * physicsWorld.speed
-                }
+            }
+        }
+        
+        if !lockBackground && backgroundManager != nil && joinedScreen != nil && bgOffsetJoinedScreen != nil {
+            if joinedScreen!.layout != nil {
+                let localScreen = SCLScreen.mainScreen()
+                var bgOffsetJoinedScreenView : CGPoint = bgOffsetJoinedScreen!
+                //bgOffsetJoinedScreenView.y -= joinedScreen!.bounds.height
+                bgOffsetJoinedScreenView.y *= -1
+                
+                print("bgOffsetJoinedScreenView : \(bgOffsetJoinedScreenView)")
+                let joinedScreenOffset = localScreen.layout.convertPoint(bgOffsetJoinedScreenView, fromScreen: joinedScreen, toScreen: localScreen)
+                var viewBgOffset = joinedScreenOffset
+                let joinedScreenRect = localScreen.rectForScreen(joinedScreen)
+                print("joinedScreenOffset : \(joinedScreenOffset)")
+                print("Other phone rect : \(joinedScreenRect)")
+                print("SKView size : \(self.view?.bounds.size)")
+                print("Self size : \(self.size)")
+                print("Screen size : \(localScreen.bounds.size)")
+                print("Anchor point : \(self.anchorPoint)")
+                print("Self frame : \(self.frame)")
+                print("Self position : \(self.position)")
+                let angle = joinedScreen!.convertAngle(0.0, toCoordinateSpace: self.view)
+                print("Angle : \(angle)")
+                //bgOffset.y *= -1
+                
+                offsetFromLastPhone = joinedScreenOffset
+                
+                let sceneRect = self.visibleSpaceRect()
+                
+                viewBgOffset.x *= sceneRect.size.width / localScreen.bounds.width
+                viewBgOffset.y *= sceneRect.size.height / localScreen.bounds.height
+                
+                var sceneBgOffset = viewBgOffset//self.pointInVisibleSpace(bgOffset)
+                //sceneBgOffset.x -= sceneRect.origin.x
+                sceneBgOffset.y *= -1
+                print("Scene offset : \(sceneBgOffset)")
+                
+                bgOffset = sceneBgOffset
+                backgroundManager?.setBackgroundOffset(bgOffset, angle: -angle)
+                
+                backgroundManager?.showBackground()
+                
+                bgOffsetJoinedScreen = nil
+            } else {
+                backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
             }
         }
     }
@@ -387,13 +443,15 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     if let joinedScreen = joinedScreen {
                         if let sessionManager = sessionManager {
                             print("Sending handover message")
-                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position)))
+                            //Warning: will crash if physicsbody is null
+                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position), playerVelocity: spriteNode.physicsBody!.velocity))
                             do {
                                 try sessionManager.sendMessage(message, toPeers: [joinedScreen.peerID], withMode: .Reliable)
                                 pauseMusic()
                                 entityManager!.remove(player)
                                 lockBackground = false
                                 self.joinedScreen = nil
+                                self.bgOffsetJoinedScreen = nil
                                 self.lockBackground = false
                                 stateMachine?.enterState(DisjoinedScreen.self)
                             } catch _ {
@@ -407,46 +465,22 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         }
     }
     
+    func shouldLockBackground() -> Bool {
+        return entityManager?.getPlayer() != nil
+    }
+    
     func joinedWithScreen(screen: SCLScreen) {
         joinedScreen = screen
         
-        if let layout = screen.layout {
-            let localScreen = SCLScreen.mainScreen()
-            let joinedScreenOffset = localScreen.layout.convertPoint(CGPointZero, fromScreen: screen, toScreen: localScreen)
-            var bgOffset = joinedScreenOffset
-            let joinedScreenRect = localScreen.rectForScreen(screen)
-            print("Background offset : \(bgOffset)")
-            print("Other phone rect : \(joinedScreenRect)")
-            print("SKView size : \(self.view?.bounds.size)")
-            print("Self size : \(self.size)")
-            print("Screen size : \(localScreen.bounds.size)")
-            print("Anchor point : \(self.anchorPoint)")
-            print("Self frame : \(self.frame)")
-            print("Self position : \(self.position)")
-            let angle = screen.convertAngle(0.0, toCoordinateSpace: self.view)
-            print("Angle : \(angle)")
-            //bgOffset.y *= -1
-            
-            offsetFromLastPhone = joinedScreenOffset
-            
-            let sceneRect = self.visibleSpaceRect()
-            
-            bgOffset.x *= sceneRect.size.width / localScreen.bounds.width
-            bgOffset.y *= sceneRect.size.height / localScreen.bounds.height
-            
-            var sceneBgOffset = bgOffset//self.pointInVisibleSpace(bgOffset)
-            //sceneBgOffset.x -= sceneRect.origin.x
-            sceneBgOffset.y *= -1
-            print("Scene offset : \(sceneBgOffset)")
-            if(!lockBackground) {
-                backgroundManager?.setBackgroundOffset(sceneBgOffset, angle: -angle)
-            } else {
-                backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
+        if let sessionManager = sessionManager {
+            print("Sending bg offset message")
+            let bgOffsetMessage = BgOffsetMessage(offset: bgOffset)
+            let message: SCLSessionMessage = SCLSessionMessage(name: "BgOffset", object: bgOffsetMessage)
+            do {
+                try sessionManager.sendMessage(message, toPeers: [screen.peerID], withMode: .Reliable)
+            } catch _ {
+                print("couldnt send message")
             }
-            backgroundManager?.showBackground()
-            
-        } else {
-            backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
         }
         
         testPlayerHandover()
