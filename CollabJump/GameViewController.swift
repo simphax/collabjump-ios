@@ -176,6 +176,7 @@ class GameViewController: SCLPinchViewController {
                     */
                 }
             } else {
+                gameScene?.backgroundManager.hideBackground()
                 print("there's no layout!")
             }
         } else {
