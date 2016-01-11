@@ -13,6 +13,8 @@
 		84BEC1111C43B14100BBC111 /* ThlenRunning.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC1101C43B14100BBC111 /* ThlenRunning.atlas */; };
 		84BEC11C1C43B50A00BBC111 /* ThlenStanding.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC11B1C43B50A00BBC111 /* ThlenStanding.atlas */; };
 		84BEC11E1C43B73A00BBC111 /* ThlenJumping.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC11D1C43B73A00BBC111 /* ThlenJumping.atlas */; };
+		84BEC1201C43ED2400BBC111 /* ThlenIdle.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC11F1C43ED2400BBC111 /* ThlenIdle.atlas */; };
+		84BEC1221C43ED2B00BBC111 /* ThlenLanding.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 84BEC1211C43ED2B00BBC111 /* ThlenLanding.atlas */; };
 		84CA25D81C3EAB50000AD6BE /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CA25D71C3EAB50000AD6BE /* Platform.swift */; };
 		F406B1351C4116E400C3BF9D /* WatingForPlayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1341C4116E400C3BF9D /* WatingForPlayers.swift */; };
 		F406B1381C41170900C3BF9D /* Paused.swift in Sources */ = {isa = PBXBuildFile; fileRef = F406B1371C41170900C3BF9D /* Paused.swift */; };
@@ -93,6 +95,8 @@
 		84BEC1101C43B14100BBC111 /* ThlenRunning.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenRunning.atlas; sourceTree = "<group>"; };
 		84BEC11B1C43B50A00BBC111 /* ThlenStanding.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenStanding.atlas; sourceTree = "<group>"; };
 		84BEC11D1C43B73A00BBC111 /* ThlenJumping.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenJumping.atlas; sourceTree = "<group>"; };
+		84BEC11F1C43ED2400BBC111 /* ThlenIdle.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenIdle.atlas; sourceTree = "<group>"; };
+		84BEC1211C43ED2B00BBC111 /* ThlenLanding.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = ThlenLanding.atlas; sourceTree = "<group>"; };
 		84CA25D71C3EAB50000AD6BE /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		F406B1341C4116E400C3BF9D /* WatingForPlayers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatingForPlayers.swift; sourceTree = "<group>"; };
 		F406B1371C41170900C3BF9D /* Paused.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Paused.swift; sourceTree = "<group>"; };
@@ -144,6 +148,8 @@
 		F419DD5B1C15A99C001C7C92 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				84BEC1211C43ED2B00BBC111 /* ThlenLanding.atlas */,
+				84BEC11F1C43ED2400BBC111 /* ThlenIdle.atlas */,
 				84BEC11D1C43B73A00BBC111 /* ThlenJumping.atlas */,
 				84BEC11B1C43B50A00BBC111 /* ThlenStanding.atlas */,
 				84BEC1101C43B14100BBC111 /* ThlenRunning.atlas */,
@@ -368,6 +374,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84BEC1201C43ED2400BBC111 /* ThlenIdle.atlas in Resources */,
 				84BEC11E1C43B73A00BBC111 /* ThlenJumping.atlas in Resources */,
 				F42DFBC01C1B1A4000067F80 /* jump.wav in Resources */,
 				84BEC1111C43B14100BBC111 /* ThlenRunning.atlas in Resources */,
@@ -376,6 +383,7 @@
 				F43B8F451C3E688000686B90 /* TitilliumWeb-Bold.ttf in Resources */,
 				F42962BA1C0D10600090E280 /* LaunchScreen.storyboard in Resources */,
 				F42962B71C0D10600090E280 /* Assets.xcassets in Resources */,
+				84BEC1221C43ED2B00BBC111 /* ThlenLanding.atlas in Resources */,
 				84BEC11C1C43B50A00BBC111 /* ThlenStanding.atlas in Resources */,
 				F42962B51C0D10600090E280 /* Main.storyboard in Resources */,
 			);

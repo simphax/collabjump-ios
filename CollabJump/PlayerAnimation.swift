@@ -116,40 +116,66 @@ class PlayerJumping : GKState {
     }
 }
 
-class PlayerFalling : GKState {
+class PlayerLanding : GKState {
     var sprite: SKSpriteNode
     var fFrames: [SKTexture]!
     init(sprite: SKSpriteNode) {
         self.sprite = sprite
         
-        let playerFallingAnimation = SKTextureAtlas(named: "PlayerFalling")
+        let playerLandingAnimation = SKTextureAtlas(named: "ThlenLanding")
         var fallingFrames = [SKTexture]()
         
-        let numImages = playerFallingAnimation.textureNames.count
+        let numImages = playerLandingAnimation.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
-            fallingFrames.append(playerFallingAnimation.textureNamed(playerFallingAnimation.textureNames[i]))
+            fallingFrames.append(playerLandingAnimation.textureNamed(playerLandingAnimation.textureNames[i]))
         }
         
         fFrames = fallingFrames
     }
     
     override func didEnterWithPreviousState(previousState: GKState?) {
-        print("We're falling! :(((")
+        print("We're landing... or falling to our death! :(((")
         print(fFrames)
         sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
             fFrames,
             timePerFrame: 0.1,
             resize: false,
             restore: true)),
-            withKey:"FallingInPlaceThlen")
+            withKey:"LandingInPlaceThlen")
     }
     
     override func willExitWithNextState(nextState: GKState?) {
-        sprite.removeActionForKey("FallingInPlaceThlen")
+        sprite.removeActionForKey("LandingInPlaceThlen")
     }
 }
 
 class PlayerIdle : GKState {
-    let playerIdleAnimation = SKTextureAtlas(named: "ThlenIdle")
+    var sprite: SKSpriteNode
+    var iFrames: [SKTexture]!
+    init (sprite: SKSpriteNode) {
+        self.sprite = sprite
+        let playerIdleAnimation = SKTextureAtlas(named: "ThlenIdle")
+        var idleFrames = [SKTexture]()
+        let numImages = playerIdleAnimation.textureNames.count
+        for var i=0; i<numImages; i++ {
+            idleFrames.append(playerIdleAnimation.textureNamed(playerIdleAnimation.textureNames[i]))
+        }
+        iFrames = idleFrames
+    }
+    
+    override func didEnterWithPreviousState(previousState: GKState?) {
+        print("We're chilling bra")
+        print(iFrames)
+        sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
+            iFrames,
+            timePerFrame: 0.1,
+            resize: false,
+            restore: true)),
+            withKey: "IdleInPlaceThlen")
+    }
+    
+    override func willExitWithNextState(nextState: GKState?) {
+        sprite.removeActionForKey("IdleInPlaceThlen")
+    }
 }

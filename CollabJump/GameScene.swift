@@ -126,6 +126,12 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                         if let animationComponent = player.componentForClass(AnimationComponent.self) {
                             animationComponent.stateMachine?.enterState(PlayerStanding.self)
                         }
+                        var timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "idleFunction", userInfo: nil, repeats: true)
+                        func idleFunction() {
+                            if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                                animationComponent.stateMachine?.enterState(PlayerStanding.self)
+                            }
+                        }
                     }
                     
                     try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
@@ -260,11 +266,21 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 spriteComponent.node.position = localLocation
             }
             
+            
             entityManager!.add(player)
             
             self.joinedScreen = nil
             self.lockBackground = true
             stateMachine?.enterState(DisjoinedScreen.self)
+            
+            entityManager?.update(0)
+            
+            if let player = entityManager!.getPlayer() {
+                if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                    animationComponent.stateMachine?.enterState(PlayerLanding.self)
+                }
+            }
+            
         } else {
             print("NO joinedScreen")
         }
@@ -360,6 +376,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                         let gameOverMessage = GameOverMessage()
                         let message: SCLSessionMessage = SCLSessionMessage(name: "GameOver", object: gameOverMessage)
                         do {
+                            
                             try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
                             gameOver(gameOverMessage)
                             entityManager!.remove(player)
@@ -372,13 +389,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                             print("Sending handover message")
                             let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position)))
                             do {
-                                
-                                if let player = entityManager!.getPlayer() {
-                                    if let animationComponent = player.componentForClass(AnimationComponent.self) {
-                                        animationComponent.stateMachine?.enterState(PlayerFalling.self)
-                                    }
-                                }
-                                
                                 try sessionManager.sendMessage(message, toPeers: [joinedScreen.peerID], withMode: .Reliable)
                                 pauseMusic()
                                 entityManager!.remove(player)

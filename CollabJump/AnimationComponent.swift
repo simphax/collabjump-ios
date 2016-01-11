@@ -23,7 +23,7 @@ class AnimationComponent: GKComponent {
         
         if stateMachine == nil {
             if let spriteNode = self.entity?.componentForClass(SpriteComponent.self)?.node {
-                stateMachine = GKStateMachine(states: [PlayerStanding(sprite: spriteNode), PlayerRunning(sprite: spriteNode), PlayerJumping(sprite: spriteNode), PlayerFalling(sprite: spriteNode), PlayerIdle()])
+                stateMachine = GKStateMachine(states: [PlayerStanding(sprite: spriteNode), PlayerRunning(sprite: spriteNode), PlayerJumping(sprite: spriteNode), PlayerLanding(sprite: spriteNode), PlayerIdle(sprite: spriteNode)])
             }
         }
         
