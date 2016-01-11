@@ -451,25 +451,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         }
         
         testPlayerHandover()
-        
-        /*
-        print("Joined screens! -- offset: \(offset)")
-
-        if(offset.x > 0) {
-            let player: Player = Player()
-            
-            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                spriteComponent.node.position = CGPoint(x: 100, y: 100)
-            }
-            
-            entityManager!.add(player)
-            playMusic()
-        }
-        if(offset.x < 0) {
-            offsetFromLastPhone = offset
-            
-        }
-        */
     }
     
     func peerDisconnected(peerID: MCPeerID) {
