@@ -23,7 +23,8 @@ class Player: GKEntity {
         spriteComponent.node.physicsBody?.dynamic = true
         spriteComponent.node.physicsBody?.mass = 1
         spriteComponent.node.physicsBody?.affectedByGravity = true
-
+        spriteComponent.node.physicsBody?.restitution = 0
+        
 //        let physicsComponent = PhysicsComponent()
 //        addComponent(physicsComponent)
         

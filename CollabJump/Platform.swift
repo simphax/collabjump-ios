@@ -27,6 +27,7 @@ class Platform: GKEntity {
         spriteComponent.node.physicsBody?.dynamic = false
         spriteComponent.node.physicsBody?.mass = 20
         spriteComponent.node.physicsBody?.affectedByGravity = false
+        spriteComponent.node.physicsBody?.restitution = 0
         addComponent(spriteComponent)
     }
     

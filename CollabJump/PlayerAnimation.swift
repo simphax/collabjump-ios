@@ -16,32 +16,32 @@ class PlayerAnimation: GKEntity {
 
 class PlayerStanding : GKState {
     var sprite: SKSpriteNode
-    var frames: [SKTexture]!
+    var sFrames: [SKTexture]!
     init(sprite: SKSpriteNode) {
         self.sprite = sprite
-        
-        let thlenAnimatedAtlas = SKTextureAtlas(named: "ThlenStanding")
-        var runningFrames = [SKTexture]()
-        
-        let numImages = thlenAnimatedAtlas.textureNames.count
-        print("THLEN IS STANDING")
+        let standingAnimatedAtlas = SKTextureAtlas(named: "ThlenStanding")
+        var standingFrames = [SKTexture]()
+        let numImages = standingAnimatedAtlas.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
-            print("ThlenStanding_\(i)")
-            runningFrames.append(thlenAnimatedAtlas.textureNamed(thlenAnimatedAtlas.textureNames[i]))
-            print(runningFrames)
+            standingFrames.append(standingAnimatedAtlas.textureNamed(standingAnimatedAtlas.textureNames[i]))
         }
-        
-        frames = runningFrames
+        sFrames = standingFrames
     }
     
     override func didEnterWithPreviousState(previousState: GKState?) {
+        print("We're standing")
+        print(sFrames)
         sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
-            frames,
+            sFrames,
             timePerFrame: 0.1,
             resize: false,
             restore: true)),
             withKey:"StandingInPlaceThlen")
+    }
+    
+    override func willExitWithNextState(nextState: GKState?) {
+        sprite.removeActionForKey("StandingInPlaceThlen")
     }
 }
 
@@ -52,23 +52,22 @@ class PlayerRunning : GKState {
     init(sprite: SKSpriteNode) {
         self.sprite = sprite
         
-        let thlenAnimatedAtlas = SKTextureAtlas(named: "ThlenRunning")
+        let runningAnimatedAtlas = SKTextureAtlas(named: "ThlenRunning")
         var runningFrames = [SKTexture]()
         
-        let numImages = thlenAnimatedAtlas.textureNames.count
-        print("THLEN IS RUNNING")
+        let numImages = runningAnimatedAtlas.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
             //let thlenTextureName = "ThlenRunning_\(i)"
-            print("ThlenRunning_\(i)")
-            runningFrames.append(thlenAnimatedAtlas.textureNamed(thlenAnimatedAtlas.textureNames[i]))
-            print(runningFrames)
+            runningFrames.append(runningAnimatedAtlas.textureNamed(runningAnimatedAtlas.textureNames[i]))
         }
         
         thlenRunningFrames = runningFrames
     }
     
     override func didEnterWithPreviousState(previousState: GKState?) {
+        print("We're running")
+        print(thlenRunningFrames)
             sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
                     thlenRunningFrames,
                     timePerFrame: 0.1,
@@ -76,43 +75,79 @@ class PlayerRunning : GKState {
                     restore: true)),
                     withKey:"runningInPlaceThlen")
     }
+    
+    override func willExitWithNextState(nextState: GKState?) {
+        sprite.removeActionForKey("runningInPlaceThlen")
+    }
 }
 
 
 class PlayerJumping : GKState {
     var sprite: SKSpriteNode
-    var frames: [SKTexture]!
+    var jFrames: [SKTexture]!
     init(sprite: SKSpriteNode) {
         self.sprite = sprite
         
-        let thlenAnimatedAtlas = SKTextureAtlas(named: "ThlenJumping")
-        var runningFrames = [SKTexture]()
+        let jumpingAnimatedAtlas = SKTextureAtlas(named: "ThlenJumping")
+        var jumpingFrames = [SKTexture]()
         
-        let numImages = thlenAnimatedAtlas.textureNames.count
-        print("THLEN IS JUMPING")
+        let numImages = jumpingAnimatedAtlas.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
-            print("ThlenJumping_\(i)")
-            runningFrames.append(thlenAnimatedAtlas.textureNamed(thlenAnimatedAtlas.textureNames[i]))
-            print(runningFrames)
+            jumpingFrames.append(jumpingAnimatedAtlas.textureNamed(jumpingAnimatedAtlas.textureNames[i]))
         }
         
-        frames = runningFrames
+        jFrames = jumpingFrames
     }
     
     override func didEnterWithPreviousState(previousState: GKState?) {
+        print("We're jumping!")
+        print(jFrames)
         sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
-            frames,
+            jFrames,
             timePerFrame: 0.1,
             resize: false,
             restore: true)),
-            withKey:"StandingInPlaceThlen")
+            withKey:"JumpingInPlaceThlen")
+    }
+    
+    override func willExitWithNextState(nextState: GKState?) {
+        sprite.removeActionForKey("JumpingInPlaceThlen")
     }
 }
 
 class PlayerFalling : GKState {
-    let playerFallingAnimation = SKTextureAtlas(named: "ThlenFalling")
-    //play landingSong
+    var sprite: SKSpriteNode
+    var fFrames: [SKTexture]!
+    init(sprite: SKSpriteNode) {
+        self.sprite = sprite
+        
+        let playerFallingAnimation = SKTextureAtlas(named: "PlayerFalling")
+        var fallingFrames = [SKTexture]()
+        
+        let numImages = playerFallingAnimation.textureNames.count
+        //remove the 2
+        for var i=0; i<numImages; i++ {
+            fallingFrames.append(playerFallingAnimation.textureNamed(playerFallingAnimation.textureNames[i]))
+        }
+        
+        fFrames = fallingFrames
+    }
+    
+    override func didEnterWithPreviousState(previousState: GKState?) {
+        print("We're falling! :(((")
+        print(fFrames)
+        sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
+            fFrames,
+            timePerFrame: 0.1,
+            resize: false,
+            restore: true)),
+            withKey:"FallingInPlaceThlen")
+    }
+    
+    override func willExitWithNextState(nextState: GKState?) {
+        sprite.removeActionForKey("FallingInPlaceThlen")
+    }
 }
 
 class PlayerIdle : GKState {
