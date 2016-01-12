@@ -34,7 +34,7 @@ class PlayerStanding : GKState {
         print(sFrames)
         sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
             sFrames,
-            timePerFrame: 0.1,
+            timePerFrame: 0.03,
             resize: false,
             restore: true)),
             withKey:"StandingInPlaceThlen")
@@ -70,7 +70,7 @@ class PlayerRunning : GKState {
         print(thlenRunningFrames)
             sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
                     thlenRunningFrames,
-                    timePerFrame: 0.1,
+                    timePerFrame: 0.03,
                     resize: false,
                     restore: true)),
                     withKey:"runningInPlaceThlen")
@@ -139,7 +139,7 @@ class PlayerLanding : GKState {
         print(fFrames)
         sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
             fFrames,
-            timePerFrame: 0.1,
+            timePerFrame: 0.03,
             resize: false,
             restore: true)),
             withKey:"LandingInPlaceThlen")
@@ -169,7 +169,7 @@ class PlayerIdle : GKState {
         print(iFrames)
         sprite.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
             iFrames,
-            timePerFrame: 0.1,
+            timePerFrame: 0.03,
             resize: false,
             restore: true)),
             withKey: "IdleInPlaceThlen")

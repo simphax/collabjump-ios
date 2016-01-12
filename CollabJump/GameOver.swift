@@ -14,6 +14,7 @@ class GameOver : GameState {
     
     var label: SKLabelNode?
     var button: ButtonNode?
+    var redBg: SKShapeNode?
     
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
@@ -22,11 +23,26 @@ class GameOver : GameState {
         gameScene.lockBackground = true
         gameScene.pauseMusic()
         
+        redBg = SKShapeNode(rect: CGRect(origin: CGPointZero,size: gameScene.size))
+        redBg?.strokeColor = UIColor.redColor()
+        redBg?.fillColor = UIColor.redColor()
+        redBg?.zPosition = 5
+        
+        gameScene.addChild(redBg!)
+        
+        let hide = SKAction.fadeOutWithDuration(0)
+        let fadeIn = SKAction.fadeInWithDuration(2)
+        let sequence = SKAction.sequence([hide,fadeIn])
+        redBg?.runAction(sequence)
+        
+        
         if(gameScene.hostingGame) {
-            button = ButtonNode(color: UIColor.whiteColor(), size: CGSize(width: 200, height: 40))
-            button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2 - 80)
+            button = ButtonNode(imageNamed: "restartbtn")
+            button?.size = CGSize(width: 187, height: 60)
+            button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2 - 70)
             button?.buttonIdentifier = .Restart
             button?.userInteractionEnabled = true
+            button?.zPosition = 10
             
             gameScene.addChild(button!)
         }
@@ -35,11 +51,13 @@ class GameOver : GameState {
         label?.fontSize = 20
         label?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2)
         label?.text = "GAME OVER"
+        label?.zPosition = 10
         gameScene.addChild(label!)
     }
     
     override func willExitWithNextState(nextState: GKState) {
         label?.removeFromParent()
         button?.removeFromParent()
+        redBg?.removeFromParent()
     }
 }

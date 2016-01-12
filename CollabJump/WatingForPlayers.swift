@@ -27,15 +27,18 @@ class WaitingForPlayers : GameState {
         tutorialAnimationStarted = false
         tutorialAnimationRemoved = false
         
+        gameScene.scoreLabel?.hidden = true
+        
         label = SKLabelNode(fontNamed: "Titillium Web")
         label?.fontSize = 20
-        label?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2)
+        label?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height - 40)
         updateLabelText()
         gameScene.addChild(label!)
         
         if(gameScene.hostingGame) {
-            button = ButtonNode(color: UIColor.whiteColor(), size: CGSize(width: 200, height: 40))
-            button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2 - 80)
+            button = ButtonNode(imageNamed: "startbtn")
+            button?.size = CGSize(width: 187, height: 60)
+            button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2)
             button?.buttonIdentifier = .Start
             button?.userInteractionEnabled = true
             
@@ -124,6 +127,8 @@ class WaitingForPlayers : GameState {
         button?.removeFromParent()
         tutorialNode?.removeFromParent()
         tutorialAnimationFrames = []
+        
+        gameScene.scoreLabel?.hidden = false
         
         if let platform = gameScene.entityManager?.getPlatform() {
             if let platformSprite = platform.componentForClass(SpriteComponent.self) {

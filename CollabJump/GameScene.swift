@@ -35,7 +35,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var pauseButton: ButtonNode!
     
     var offsetFromLastPhone: CGPoint?
-    var bgOffset: CGPoint = CGPoint(x: -200,y: 400)
+    var bgOffset: CGPoint = CGPoint(x: -200,y: 200)
     
     var bgOffsetMasterScreen: CGPoint?
     var bgMasterPeer: MCPeerID?
@@ -101,14 +101,15 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     func addPlayerAbovePlatform() {
         
         let platform = entityManager!.getPlatform()
-        let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
         
         let player: Player = Player()
         
         // Player
-        if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-            spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
-                y: (platformNode?.position.y)! + 100 )
+        if let platformNode = z.componentForClass(SpriteComponent.self)?.node {
+            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = CGPoint(x: platformNode.position.x - platformNode.size.width/2 ,
+                    y: platformNode.position.y + platformNode.size.height/2 + spriteComponent.node.size.height/2)
+            }
         }
         
         entityManager!.add(player)
@@ -391,7 +392,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
         randomPlatform()
         
-        bgOffset = CGPoint(x: -200,y: 400)
+        bgOffset = CGPoint(x: -200,y: 200)
         backgroundManager?.setBackgroundOffset(bgOffset, angle: 0.0)
         
         if !hostingGame {
@@ -462,29 +463,29 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
-                let platform = entityManager!.getPlatform()
-                let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
-                if hasJumped == false && spriteNode.position.x > platformNode!.position.x + (platformNode?.size.width)!/2 - (spriteNode.size.width)/2{
-                    
-                    if let player = entityManager!.getPlayer() {
-                        if let animationComponent = player.componentForClass(AnimationComponent.self) {
-                            animationComponent.stateMachine?.enterState(PlayerJumping.self)
+                if let platform = entityManager?.getPlatform() {
+                    if let platformNode = platform.componentForClass(SpriteComponent.self)?.node {
+                        if hasJumped == false && spriteNode.position.x > platformNode.position.x + platformNode.size.width/2 - spriteNode.size.width/2{
+                            
+                            if let player = entityManager!.getPlayer() {
+                                if let animationComponent = player.componentForClass(AnimationComponent.self) {
+                                    animationComponent.stateMachine?.enterState(PlayerJumping.self)
+                                }
+                            }
+
+                            
+                            spriteNode.physicsBody?.applyImpulse(CGVectorMake(230.0, CGFloat(600.0)))
+                            
+                            //spriteNode.physicsBody?.velocity.dx = 500.0
+
+                            self.hasJumped = true
+                            
+                            
+                            print("***JUMP***")
+                            spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                         }
                     }
-
-                    
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(230.0, CGFloat(600.0)))
-                    
-                    //spriteNode.physicsBody?.velocity.dx = 500.0
-                    
-
-                    self.hasJumped = true
-                    
-                    
-                    print("***JUMP***")
-                    spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }
-
                 if hasJumped {
                     // do nothing to affect speed in x
                 } else {
