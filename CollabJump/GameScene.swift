@@ -95,9 +95,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         backgroundManager?.setBackground("background", sliceCols: 10, sliceRows: 10, sliceSize: 553)
 
         backgroundManager?.setBackgroundOffset(bgOffset, angle: 0.0)
-        bgMusic = SKAudioNode(fileNamed: "music")
+        bgMusic = SKAudioNode(fileNamed: "bgmusic")
         bgMusic.autoplayLooped = true
-        //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+        bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
         
         print("Scale factor : \(scaleFactor())")
 
@@ -282,6 +282,11 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 //master screen only updates when join screen
                 let localLocation = convertPointFromView(lastLayout!.convertPoint(message.playerPosition, fromScreen: masterScreen, toScreen: localScreen))
                 
+                if localLocation.y < 0 || localLocation.x > self.size.width {
+                    sendGameOverMessage()
+                    return
+                }
+                    
                 print("localLocation: \(localLocation)")
                 print("velocity: \(message.playerVelocity)")
                 
@@ -308,24 +313,23 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 
                 scoreLabel?.text = "Score: \(scoreCount)"
                 
-                //self.nextScreen = nil
                 self.bgOffsetMasterScreen = nil
                 self.bgMasterPeer = nil
                 self.lockBackground = true
-                stateMachine?.enterState(Running.self)
                 
-                if lockBackground {
-                    if let sessionManager = sessionManager {
-                        print("Sending bg offset message")
-                        let bgOffsetMessage = BgOffsetMessage(offset: bgOffset, peer: sessionManager.session!.myPeerID)
-                        let message: SCLSessionMessage = SCLSessionMessage(name: "BgOffset", object: bgOffsetMessage)
-                        do {
-                            try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
-                        } catch _ {
-                            print("couldnt send bg offset message")
-                        }
+                //We are new master
+                if let sessionManager = sessionManager {
+                    print("Sending bg offset message")
+                    let bgOffsetMessage = BgOffsetMessage(offset: bgOffset, peer: sessionManager.session!.myPeerID)
+                    let message: SCLSessionMessage = SCLSessionMessage(name: "BgOffset", object: bgOffsetMessage)
+                    do {
+                        try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                    } catch _ {
+                        print("couldnt send bg offset message")
                     }
                 }
+                
+                
             } else {
                 print("NO joinedScreen")
             }
@@ -422,23 +426,31 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
     }
     
+    func sendGameOverMessage() -> Bool {
+        if let sessionManager = sessionManager {
+            let gameOverMessage = GameOverMessage()
+            let message: SCLSessionMessage = SCLSessionMessage(name: "GameOver", object: gameOverMessage)
+            do {
+                try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                gameOver(gameOverMessage)
+                return true
+            } catch _ {
+                return false
+            }
+        }
+        return false
+    }
+    
     func testPlayerHandover() {
         //print("Shall we hand over player the the next phone?")
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
                 if spriteNode.position.y < -gameOverDistance || spriteNode.position.x > self.size.width + gameOverDistance {
                     
-                    if let sessionManager = sessionManager {
-                        let gameOverMessage = GameOverMessage()
-                        let message: SCLSessionMessage = SCLSessionMessage(name: "GameOver", object: gameOverMessage)
-                        do {
-                            
-                            try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
-                            gameOver(gameOverMessage)
-                            entityManager!.remove(player)
-                        } catch _ {
-                        }
+                    if sendGameOverMessage() {
+                        entityManager!.remove(player)
                     }
+                    
                 } else if spriteNode.position.y < 0 || spriteNode.position.x > self.size.width { //self.position.y + self.size.height
                     
                     var nextScreen: SCLScreen?

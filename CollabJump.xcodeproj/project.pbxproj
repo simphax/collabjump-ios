@@ -40,10 +40,10 @@
 		F4560DDA1C3EA57100A1EF86 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4560DD91C3EA57100A1EF86 /* HomeViewController.swift */; };
 		F4560DDC1C3EB0F700A1EF86 /* StartGameMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4560DDB1C3EB0F700A1EF86 /* StartGameMessage.swift */; };
 		F4560DDE1C3EC15000A1EF86 /* PauseGameMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4560DDD1C3EC15000A1EF86 /* PauseGameMessage.swift */; };
-		F45B24271C1EE16E005C9BC5 /* music.wav in Resources */ = {isa = PBXBuildFile; fileRef = F45B24261C1EE16E005C9BC5 /* music.wav */; };
 		F45B242F1C1F0A0B005C9BC5 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */; };
 		F4B3BE711C1843ED0009DFDD /* ScreenLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; };
 		F4B3BE721C1843ED0009DFDD /* ScreenLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4B3BE681C18431E0009DFDD /* ScreenLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F4C0B7671C45332A00B20F7A /* bgmusic.wav in Resources */ = {isa = PBXBuildFile; fileRef = F4C0B7661C45332A00B20F7A /* bgmusic.wav */; };
 		F4CF9C651C216D6900C60A32 /* BackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */; };
 		F4CF9C671C21AD3400C60A32 /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C661C21AD3400C60A32 /* MyUtils.swift */; };
 		F4CF9C6A1C21B4C700C60A32 /* HandoverMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */; };
@@ -125,9 +125,9 @@
 		F4560DD91C3EA57100A1EF86 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F4560DDB1C3EB0F700A1EF86 /* StartGameMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartGameMessage.swift; sourceTree = "<group>"; };
 		F4560DDD1C3EC15000A1EF86 /* PauseGameMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PauseGameMessage.swift; sourceTree = "<group>"; };
-		F45B24261C1EE16E005C9BC5 /* music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = music.wav; sourceTree = "<group>"; };
 		F45B242E1C1F0A0B005C9BC5 /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		F4B3BE621C18431E0009DFDD /* ScreenLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ScreenLayout.xcodeproj; path = ScreenLayout/ScreenLayout.xcodeproj; sourceTree = "<group>"; };
+		F4C0B7661C45332A00B20F7A /* bgmusic.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bgmusic.wav; sourceTree = "<group>"; };
 		F4CF9C631C21625F00C60A32 /* BackgroundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundManager.swift; sourceTree = "<group>"; };
 		F4CF9C661C21AD3400C60A32 /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
 		F4CF9C691C21B4C700C60A32 /* HandoverMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoverMessage.swift; sourceTree = "<group>"; };
@@ -239,7 +239,7 @@
 		F42DFBBE1C1B1A3300067F80 /* Sfx */ = {
 			isa = PBXGroup;
 			children = (
-				F45B24261C1EE16E005C9BC5 /* music.wav */,
+				F4C0B7661C45332A00B20F7A /* bgmusic.wav */,
 				F42DFBBF1C1B1A4000067F80 /* jump.wav */,
 			);
 			name = Sfx;
@@ -380,9 +380,9 @@
 				84BEC1201C43ED2400BBC111 /* ThlenIdle.atlas in Resources */,
 				84BEC11E1C43B73A00BBC111 /* ThlenJumping.atlas in Resources */,
 				F42DFBC01C1B1A4000067F80 /* jump.wav in Resources */,
+				F4C0B7671C45332A00B20F7A /* bgmusic.wav in Resources */,
 				84BEC1111C43B14100BBC111 /* ThlenRunning.atlas in Resources */,
 				F42962AE1C0D10600090E280 /* GameScene.sks in Resources */,
-				F45B24271C1EE16E005C9BC5 /* music.wav in Resources */,
 				F43B8F451C3E688000686B90 /* TitilliumWeb-Bold.ttf in Resources */,
 				F42962BA1C0D10600090E280 /* LaunchScreen.storyboard in Resources */,
 				F42962B71C0D10600090E280 /* Assets.xcassets in Resources */,
