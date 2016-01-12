@@ -51,8 +51,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var scoreCount: Int = 0
     
     override func didMoveToView(view: SKView) {
-        
-
         stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), Running(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
         //var scoreLabel: SKLabelNode?
         scoreLabel = SKLabelNode(fontNamed: "Titillium Web")
@@ -78,7 +76,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
                         y: (platformNode?.position.y)! + 100 )
-                
             }
             
             entityManager!.add(player)
@@ -406,7 +403,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     }
 
                     
-                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(300.0, CGFloat(600.0)))
+                    spriteNode.physicsBody?.applyImpulse(CGVectorMake(230.0, CGFloat(600.0)))
                     
                     //spriteNode.physicsBody?.velocity.dx = 500.0
                     
