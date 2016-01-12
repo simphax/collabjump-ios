@@ -47,6 +47,7 @@ class BackgroundManager {
         
         blackOverlay = SKShapeNode(rect: CGRectMake(0, 0, self.scene.size.width, self.scene.size.height))
         blackOverlay?.fillColor = UIColor.blackColor()
+        blackOverlay?.strokeColor = UIColor.blackColor()
         blackOverlay?.zPosition = -5
         let fadeIn = SKAction.fadeInWithDuration(0.0)
         blackOverlay?.runAction(fadeIn)
