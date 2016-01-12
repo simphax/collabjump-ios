@@ -24,7 +24,7 @@ class PlayerStanding : GKState {
         let numImages = standingAnimatedAtlas.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
-            standingFrames.append(standingAnimatedAtlas.textureNamed(standingAnimatedAtlas.textureNames[i]))
+            standingFrames.append(standingAnimatedAtlas.textureNamed("ThlenStanding_\(i).png"))
         }
         sFrames = standingFrames
     }
@@ -58,8 +58,8 @@ class PlayerRunning : GKState {
         let numImages = runningAnimatedAtlas.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
-            //let thlenTextureName = "ThlenRunning_\(i)"
-            runningFrames.append(runningAnimatedAtlas.textureNamed(runningAnimatedAtlas.textureNames[i]))
+            //let thlenRunningAnimated = "ThlenRunning_\(i)"
+            runningFrames.append(runningAnimatedAtlas.textureNamed("ThlenRunning_\(i).png"))
         }
         
         thlenRunningFrames = runningFrames
@@ -94,7 +94,7 @@ class PlayerJumping : GKState {
         let numImages = jumpingAnimatedAtlas.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
-            jumpingFrames.append(jumpingAnimatedAtlas.textureNamed(jumpingAnimatedAtlas.textureNames[i]))
+            jumpingFrames.append(jumpingAnimatedAtlas.textureNamed("ThlenJumping_\(i).png"))
         }
         
         jFrames = jumpingFrames
@@ -128,7 +128,7 @@ class PlayerLanding : GKState {
         let numImages = playerLandingAnimation.textureNames.count
         //remove the 2
         for var i=0; i<numImages; i++ {
-            fallingFrames.append(playerLandingAnimation.textureNamed(playerLandingAnimation.textureNames[i]))
+            fallingFrames.append(playerLandingAnimation.textureNamed("ThlenLanding_\(i).png"))
         }
         
         fFrames = fallingFrames
@@ -159,7 +159,7 @@ class PlayerIdle : GKState {
         var idleFrames = [SKTexture]()
         let numImages = playerIdleAnimation.textureNames.count
         for var i=0; i<numImages; i++ {
-            idleFrames.append(playerIdleAnimation.textureNamed(playerIdleAnimation.textureNames[i]))
+            idleFrames.append(playerIdleAnimation.textureNamed("ThlenIdle_\(i).png"))
         }
         iFrames = idleFrames
     }

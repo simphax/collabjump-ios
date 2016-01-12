@@ -48,16 +48,18 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var gameSessionPeers: [MCPeerID]?
     var scoreManager: Score?
     var scoreLabel: SKLabelNode?
-    var scoreCount: Int = 0
+    var scoreCount: Int = -1
     
     override func didMoveToView(view: SKView) {
         stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), Running(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
-        //var scoreLabel: SKLabelNode?
+        
         scoreLabel = SKLabelNode(fontNamed: "Titillium Web")
         scoreLabel?.fontSize = 20
         scoreLabel?.position = CGPoint(x: 50, y: self.size.height - (30))
-        scoreLabel?.text = "Score: \(scoreCount)"
+        scoreLabel?.text = "Score: 0"
+        
         self.addChild(scoreLabel!)
+        
        
         self.physicsWorld.gravity = CGVectorMake(0.0, -9.8)
         physicsWorld.contactDelegate = self
@@ -67,6 +69,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         randomPlatform()
         let platform = entityManager!.getPlatform()
         let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
+        
         
         
         if hostingGame {
@@ -187,6 +190,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
         playMusic()
         hasJumped = false
+        
+        sendScoreMessage()
+        scoreLabel?.text = "Score: \(scoreCount)"
 
         print("CONTACT")
         
@@ -248,6 +254,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 }
                 if let message = message.object as? BgOffsetMessage {
                     bgOffsetMessage(message)
+                }
+                if let message = message.object as? ScoreMessage {
+                    scoreMessage(message)
                 }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
@@ -311,8 +320,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                         animationComponent.stateMachine?.enterState(PlayerLanding.self)
                     }
                 }
-                
-                scoreLabel?.text = "Score: \(scoreCount)"
                 
                 self.bgOffsetMasterScreen = nil
                 self.bgMasterPeer = nil
@@ -386,8 +393,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         entityManager?.update(deltaTime)
         
         testPlayerHandover()
-        scoreLabel?.text = "Score: \(scoreCount)"
-        //self.addChild(scoreLabel!)
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
         
         if let player = entityManager!.getPlayer() {
@@ -409,8 +414,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     
 
                     self.hasJumped = true
-                    scoreCount++
-                    scoreLabel?.text = "Score: \(scoreCount)"
+                    
+                    
                     print("***JUMP***")
                     spriteNode.runAction(SoundManager.sharedInstance.soundJump)
                 }
@@ -574,6 +579,29 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         }
         
         testPlayerHandover()
+    }
+    
+    func scoreMessage(message: ScoreMessage) {
+        scoreCount++
+        scoreLabel?.text = "Score: \(scoreCount)"
+        //scoreLabel?.text = "Score: \(scoreCount)"
+    }
+    
+    func sendScoreMessage () {
+        if stateMachine?.currentState is Running {
+            if let gameSessionPeers = gameSessionPeers {
+                if let sessionManager = sessionManager {
+                        let scoreMessageLabler = ScoreMessage()
+                        let message: SCLSessionMessage = SCLSessionMessage(name: "ScoreMessage", object: scoreMessageLabler)
+                        do{
+                            scoreMessage(scoreMessageLabler)
+                            try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                        } catch _ {
+                            print("Could not add the score message")
+                        }
+                    }
+            }
+        }
     }
     
     func peerDisconnected(peerID: MCPeerID) {
