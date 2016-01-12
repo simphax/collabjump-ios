@@ -18,6 +18,8 @@ class Paused : GameState {
     override func didEnterWithPreviousState(previousState: GKState?) {
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinDisableMessageKey, object: self)
         
+        gameScene.pauseMusic()
+        
         label = SKLabelNode(fontNamed: "Titillium Web")
         label?.fontSize = 25
         label?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2)
