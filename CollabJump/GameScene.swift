@@ -513,50 +513,51 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
         for screen in screens {
             if !lockBackground && backgroundManager != nil && bgOffsetMasterScreen != nil && bgMasterPeer != nil && bgMasterPeer == screen.peerID {
-                    let localScreen = SCLScreen.mainScreen()
+                let localScreen = SCLScreen.mainScreen()
+                
+                if let layout = localScreen.layout {
+                    var bgOffsetMasterScreenView : CGPoint = bgOffsetMasterScreen!
+                    //bgOffsetJoinedScreenView.y -= joinedScreen!.bounds.height
+                    bgOffsetMasterScreenView.y *= -1
                     
-                    if let layout = localScreen.layout {
-                        var bgOffsetMasterScreenView : CGPoint = bgOffsetMasterScreen!
-                        //bgOffsetJoinedScreenView.y -= joinedScreen!.bounds.height
-                        bgOffsetMasterScreenView.y *= -1
-                        
-                        print("bgOffsetMasterScreenView : \(bgOffsetMasterScreenView)")
-                        let masterScreenOffset = layout.convertPoint(bgOffsetMasterScreenView, fromScreen: screen, toScreen: localScreen)
-                        var viewBgOffset = masterScreenOffset
-                        let masterScreenRect = localScreen.rectForScreen(screen)
-                        print("masterScreenOffset : \(masterScreenOffset)")
-                        print("Other phone rect : \(masterScreenRect)")
-                        print("SKView size : \(self.view?.bounds.size)")
-                        print("Self size : \(self.size)")
-                        print("Screen size : \(localScreen.bounds.size)")
-                        print("Anchor point : \(self.anchorPoint)")
-                        print("Self frame : \(self.frame)")
-                        print("Self position : \(self.position)")
-                        let angle = screen.convertAngle(0.0, toCoordinateSpace: self.view)
-                        print("Angle : \(angle)")
-                        //bgOffset.y *= -1
-                        
-                        offsetFromLastPhone = masterScreenOffset
-                        
-                        let sceneRect = self.visibleSpaceRect()
-                        
-                        viewBgOffset.x *= sceneRect.size.width / localScreen.bounds.width
-                        viewBgOffset.y *= sceneRect.size.height / localScreen.bounds.height
-                        
-                        var sceneBgOffset = viewBgOffset//self.pointInVisibleSpace(bgOffset)
-                        //sceneBgOffset.x -= sceneRect.origin.x
-                        sceneBgOffset.y *= -1
-                        print("Scene offset : \(sceneBgOffset)")
-                        
+                    print("bgOffsetMasterScreenView : \(bgOffsetMasterScreenView)")
+                    let masterScreenOffset = layout.convertPoint(bgOffsetMasterScreenView, fromScreen: screen, toScreen: localScreen)
+                    var viewBgOffset = masterScreenOffset
+                    let masterScreenRect = localScreen.rectForScreen(screen)
+                    print("masterScreenOffset : \(masterScreenOffset)")
+                    print("Other phone rect : \(masterScreenRect)")
+                    print("SKView size : \(self.view?.bounds.size)")
+                    print("Self size : \(self.size)")
+                    print("Screen size : \(localScreen.bounds.size)")
+                    print("Anchor point : \(self.anchorPoint)")
+                    print("Self frame : \(self.frame)")
+                    print("Self position : \(self.position)")
+                    let angle = screen.convertAngle(0.0, toCoordinateSpace: self.view)
+                    print("Angle : \(angle)")
+                    //bgOffset.y *= -1
+                    
+                    offsetFromLastPhone = masterScreenOffset
+                    
+                    let sceneRect = self.visibleSpaceRect()
+                    
+                    viewBgOffset.x *= sceneRect.size.width / localScreen.bounds.width
+                    viewBgOffset.y *= sceneRect.size.height / localScreen.bounds.height
+                    
+                    var sceneBgOffset = viewBgOffset//self.pointInVisibleSpace(bgOffset)
+                    //sceneBgOffset.x -= sceneRect.origin.x
+                    sceneBgOffset.y *= -1
+                    print("Scene offset : \(sceneBgOffset)")
+                    print("Old bg offset : \(bgOffset)")
+                    if !((fabs(bgOffset.x - sceneBgOffset.x) < 0.1) && (fabs(bgOffset.y - sceneBgOffset.y) < 0.1)) {
                         bgOffset = sceneBgOffset
                         backgroundManager?.setBackgroundOffset(bgOffset, angle: -angle)
                         
                         backgroundManager?.showBackground()
-                        
-                    } else {
-                        backgroundManager?.setBackgroundOffset(CGPointZero, angle: 0.0)
-                        backgroundManager?.showBackground()
                     }
+                }
+            }
+            if lockBackground {
+                backgroundManager?.showBackground()
             }
         }
     
