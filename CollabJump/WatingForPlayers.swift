@@ -21,7 +21,11 @@ class WaitingForPlayers : GameState {
     var tutorialAnimationFrames : [SKTexture] = []
     
     override func didEnterWithPreviousState(previousState: GKState?) {
+        print("waiting for players state")
         NSNotificationCenter.defaultCenter().postNotificationName(screenJoinEnableMessageKey, object: self)
+        
+        tutorialAnimationStarted = false
+        tutorialAnimationRemoved = false
         
         label = SKLabelNode(fontNamed: "Titillium Web")
         label?.fontSize = 20
@@ -42,20 +46,20 @@ class WaitingForPlayers : GameState {
         
         gameScene.physicsWorld.speed = 0.0
         
-        let animationAtlas = SKTextureAtlas(named: "Tutorial")
         
-        let numImages = animationAtlas.textureNames.count
-        
-        for var i=0; i<numImages; i++ {
-            print(animationAtlas.textureNames[i])
-            print("tutorial\(i).png")
-            tutorialAnimationFrames.append(animationAtlas.textureNamed("tutorial\(i).png"))
-        }
         if !gameScene.hostingGame {
+            print("Create tutorial animation")
+            let animationAtlas = SKTextureAtlas(named: "Tutorial")
+            
+            let numImages = animationAtlas.textureNames.count
+            
+            for var i=0; i<numImages; i++ {
+                tutorialAnimationFrames.append(animationAtlas.textureNamed("tutorial\(i).png"))
+            }
             tutorialNode = SKSpriteNode(texture: tutorialAnimationFrames[0])
             tutorialNode!.position.x = gameScene.size.width / 2
             tutorialNode!.position.y = gameScene.size.height / 2
-            var ratio = tutorialNode!.size.width/tutorialNode!.size.height
+            let ratio = tutorialNode!.size.width / tutorialNode!.size.height
             tutorialNode!.size.width = gameScene.size.width
             tutorialNode!.size.height = gameScene.size.width / ratio
             
@@ -82,16 +86,6 @@ class WaitingForPlayers : GameState {
                     label.text = "Connecting animation..."
                 } else {
                     label.text = ""
-                    if !tutorialAnimationStarted {
-                        tutorialAnimationStarted = true
-                        
-                        tutorialNode?.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
-                            tutorialAnimationFrames,
-                            timePerFrame: 0.04,
-                            resize: false,
-                            restore: true)),
-                            withKey:"TutorialAnimation")
-                    }
                 }
             }
         }
@@ -99,7 +93,19 @@ class WaitingForPlayers : GameState {
     
     override func updateWithDeltaTime(seconds: NSTimeInterval) {
         updateLabelText()
-        
+        let connectedCount = gameScene.sessionManager?.session.connectedPeers.count
+        if !gameScene.hostingGame && connectedCount > 0 && !tutorialAnimationStarted && tutorialAnimationFrames.count > 0 {
+            if let tutorialNode = tutorialNode {
+                tutorialAnimationStarted = true
+                print("Start tutorial animation")
+                tutorialNode.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(
+                    tutorialAnimationFrames,
+                    timePerFrame: 0.04,
+                    resize: false,
+                    restore: true)),
+                    withKey:"TutorialAnimation")
+            }
+        }
         if tutorialAnimationStarted && gameScene.joinedScreens.count > 0 && !tutorialAnimationRemoved {
             tutorialAnimationRemoved = true
             tutorialNode?.removeFromParent()
@@ -117,6 +123,7 @@ class WaitingForPlayers : GameState {
         label?.removeFromParent()
         button?.removeFromParent()
         tutorialNode?.removeFromParent()
+        tutorialAnimationFrames = []
         
         if let platform = gameScene.entityManager?.getPlatform() {
             if let platformSprite = platform.componentForClass(SpriteComponent.self) {

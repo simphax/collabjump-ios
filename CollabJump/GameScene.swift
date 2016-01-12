@@ -60,28 +60,15 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
         self.addChild(scoreLabel!)
         
-       
         self.physicsWorld.gravity = CGVectorMake(0.0, -9.8)
         physicsWorld.contactDelegate = self
         physicsWorld.speed = 0
         
         entityManager = EntityManager(scene: self)
         randomPlatform()
-        let platform = entityManager!.getPlatform()
-        let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
-        
-        
         
         if hostingGame {
-            let player: Player = Player()
-            
-            // Player
-            if let spriteComponent = player.componentForClass(SpriteComponent.self) {
-                spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
-                        y: (platformNode?.position.y)! + 100 )
-            }
-            
-            entityManager!.add(player)
+            addPlayerAbovePlatform()
         }
         
         pauseButton = ButtonNode(color: UIColor.whiteColor(), size: CGSizeMake(30, 30))
@@ -109,6 +96,22 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             backgroundManager.showBackground()
         }
         
+    }
+    
+    func addPlayerAbovePlatform() {
+        
+        let platform = entityManager!.getPlatform()
+        let platformNode = platform!.componentForClass(SpriteComponent.self)?.node
+        
+        let player: Player = Player()
+        
+        // Player
+        if let spriteComponent = player.componentForClass(SpriteComponent.self) {
+            spriteComponent.node.position = CGPoint(x: (platformNode?.position.x)! - (platformNode?.size.width)!/2 ,
+                y: (platformNode?.position.y)! + 100 )
+        }
+        
+        entityManager!.add(player)
     }
     
     func buttonTriggered(button: ButtonNode) {
@@ -151,6 +154,22 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                     }
                     
                     try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                } catch _ {
+                    print("couldnt send message")
+                }
+            }
+        }
+        
+        if button.buttonIdentifier == .Restart {
+            print("Restart!")
+            if let sessionManager = sessionManager {
+                print("Sending restart game message")
+                let restartGameMessage = RestartGameMessage()
+                let message: SCLSessionMessage = SCLSessionMessage(name: "RestartGame", object: restartGameMessage)
+                do {
+                    try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                    
+                    restartGame(restartGameMessage)
                 } catch _ {
                     print("couldnt send message")
                 }
@@ -258,6 +277,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 if let message = message.object as? ScoreMessage {
                     scoreMessage(message)
                 }
+                if let message = message.object as? RestartGameMessage {
+                    restartGame(message)
+                }
             }
             if let peerId = dict[SCLSessionManagerPeerIDUserInfoKey] as? MCPeerID {
                 print(" got a message from \(peerId)")
@@ -266,7 +288,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     }
     //Calls on Platform and gets the size height and width, then gets a random position for the platform which gets placed.
     func randomPlatform () {
-        if scoreCount > 0 && scoreCount % 5 == 0 { // Every 5th is without a platform
+        if scoreCount > 0 && scoreCount % 3 == 0 { // Every 5th is without a platform
             
         } else {
             let platform: Platform = Platform()
@@ -353,6 +375,49 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         if let sessionManager = sessionManager {
             gameSessionPeers = sessionManager.session.connectedPeers
         }
+    }
+    
+    func restartGame(message: RestartGameMessage) {
+        entityManager?.remove(entityManager?.getPlayer())
+        entityManager?.remove(entityManager?.getPlatform())
+        
+        bgMasterPeer = nil
+        lockBackground = false
+        hasJumped = false
+        scoreCount = 0
+        
+        lastLayout = nil
+        joinedScreens = []
+        
+        randomPlatform()
+        
+        bgOffset = CGPoint(x: -200,y: 400)
+        backgroundManager?.setBackgroundOffset(bgOffset, angle: 0.0)
+        
+        if !hostingGame {
+            backgroundManager?.hideBackground()
+        } else {
+            backgroundManager.showBackground()
+        }
+        
+        if hostingGame {
+            self.lockBackground = true
+
+            addPlayerAbovePlatform()
+            
+            if let sessionManager = sessionManager {
+                print("Sending bg offset message")
+                let bgOffsetMessage = BgOffsetMessage(offset: bgOffset, peer: sessionManager.session!.myPeerID)
+                let message: SCLSessionMessage = SCLSessionMessage(name: "BgOffset", object: bgOffsetMessage)
+                do {
+                    try sessionManager.sendMessage(message, toPeers: gameSessionPeers, withMode: .Reliable)
+                } catch _ {
+                    print("couldnt send message")
+                }
+            }
+        }
+        
+        stateMachine?.enterState(WaitingForPlayers.self)
     }
     
     func pauseGame(message: PauseGameMessage) {

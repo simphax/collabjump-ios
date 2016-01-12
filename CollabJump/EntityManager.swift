@@ -37,13 +37,15 @@ class EntityManager {
         }
     }
     
-    func remove(entity: GKEntity) {
-        if let spriteNode = entity.componentForClass(SpriteComponent.self)?.node {
-            spriteNode.removeFromParent()
+    func remove(entity: GKEntity?) {
+        if let entity = entity {
+            if let spriteNode = entity.componentForClass(SpriteComponent.self)?.node {
+                spriteNode.removeFromParent()
+            }
+            
+            entities.remove(entity)
+            toRemove.insert(entity)
         }
-        
-        entities.remove(entity)
-        toRemove.insert(entity)
     }
     
     func update(deltaTime: CFTimeInterval) {
