@@ -260,7 +260,9 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     }
     //Calls on Platform and gets the size height and width, then gets a random position for the platform which gets placed.
     func randomPlatform () {
-        if scoreCount % 5 != 0 { // Every 5th is without a platform
+        if scoreCount > 0 && scoreCount % 5 == 0 { // Every 5th is without a platform
+            
+        } else {
             let platform: Platform = Platform()
             let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
             let platformHeight = platformSpriteComponent!.node.size.height
