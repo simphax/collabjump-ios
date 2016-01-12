@@ -393,7 +393,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         //self.addChild(scoreLabel!)
         //backgroundManager?.backgroundOffset? += CGPoint(x: -deltaTime*100, y: deltaTime*100)
         
-        
         if let player = entityManager!.getPlayer() {
             if let spriteNode = player.componentForClass(SpriteComponent.self)?.node {
                 let platform = entityManager!.getPlatform()
@@ -422,7 +421,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 if hasJumped {
                     // do nothing to affect speed in x
                 } else {
-                    spriteNode.physicsBody!.velocity.dx = 70 * physicsWorld.speed
+                    spriteNode.physicsBody!.velocity.dx = 140 * physicsWorld.speed
                 }
             }
         }
@@ -576,7 +575,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 backgroundManager?.showBackground()
             }
         }
-    
         
         testPlayerHandover()
     }
