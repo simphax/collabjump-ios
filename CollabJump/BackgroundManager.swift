@@ -28,6 +28,8 @@ class BackgroundManager {
     private var backgroundOffset: CGPoint?
     private var backgroundAngle: CGFloat?
     
+    private var sliceSize: CGFloat?
+    
     private var gridCalculator: GridCalculator?
     
     private var hidden = true
@@ -41,10 +43,12 @@ class BackgroundManager {
         backgroundName = name
         self.gridCalculator = GridCalculator(cellSize: sliceSize, gridCols: sliceCols, gridRows: sliceRows)
         
+        self.sliceSize = CGFloat(sliceSize)
+        
         blackOverlay = SKShapeNode(rect: CGRectMake(0, 0, self.scene.size.width, self.scene.size.height))
         blackOverlay?.fillColor = UIColor.blackColor()
         blackOverlay?.zPosition = -5
-        var fadeIn = SKAction.fadeInWithDuration(0.0)
+        let fadeIn = SKAction.fadeInWithDuration(0.0)
         blackOverlay?.runAction(fadeIn)
         scene.addChild(blackOverlay!)
     }
@@ -78,7 +82,9 @@ class BackgroundManager {
                     
                     let scenePoint = background.rect.origin
                     print("Scene point \(scenePoint)")
-                    node.position = scenePoint;
+                    node.position = scenePoint
+                    node.size.width = sliceSize!
+                    node.size.height = sliceSize!
                     
                     node.zPosition = -10
                     

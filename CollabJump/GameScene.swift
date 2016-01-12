@@ -35,7 +35,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var pauseButton: ButtonNode!
     
     var offsetFromLastPhone: CGPoint?
-    var bgOffset: CGPoint = CGPoint(x: -200,y: 200)
+    var bgOffset: CGPoint = CGPoint(x: -200,y: 400)
     
     var bgOffsetMasterScreen: CGPoint?
     var bgMasterPeer: MCPeerID?
@@ -92,7 +92,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "sessionMessage:", name:SCLSessionManagerDidReceiveMessageNotification, object: nil)
         backgroundManager = BackgroundManager(scene: self)
-        backgroundManager?.setBackground("background", sliceCols: 6, sliceRows: 5, sliceSize: 1024)
+        backgroundManager?.setBackground("background", sliceCols: 10, sliceRows: 10, sliceSize: 553)
 
         backgroundManager?.setBackgroundOffset(bgOffset, angle: 0.0)
         bgMusic = SKAudioNode(fileNamed: "music")
