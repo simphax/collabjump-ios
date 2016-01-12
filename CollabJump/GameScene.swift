@@ -97,7 +97,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         backgroundManager?.setBackgroundOffset(bgOffset, angle: 0.0)
         bgMusic = SKAudioNode(fileNamed: "bgmusic")
         bgMusic.autoplayLooped = true
-        bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+        //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
         
         print("Scale factor : \(scaleFactor())")
 
@@ -260,18 +260,20 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     }
     //Calls on Platform and gets the size height and width, then gets a random position for the platform which gets placed.
     func randomPlatform () {
-        let platform: Platform = Platform()
-        let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
-        let platformHeight = platformSpriteComponent!.node.size.height
-        let platformWidth = platformSpriteComponent!.node.size.width
-        let rpc = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
-        
-        if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
-            spriteComponent.node.position = rpc.generateAtRandomPosition()
-            print(spriteComponent.node.position)
-            //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
+        if scoreCount % 5 != 0 { // Every 5th is without a platform
+            let platform: Platform = Platform()
+            let platformSpriteComponent = platform.componentForClass(SpriteComponent.self)
+            let platformHeight = platformSpriteComponent!.node.size.height
+            let platformWidth = platformSpriteComponent!.node.size.width
+            let rpc = RandomPositionComponent(height: platformHeight, width: platformWidth, visibleSpace: self.visibleSpaceRect())
+            
+            if let spriteComponent = platform.componentForClass(SpriteComponent.self) {
+                spriteComponent.node.position = rpc.generateAtRandomPosition()
+                print(spriteComponent.node.position)
+                //CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame))
+            }
+            entityManager!.add(platform)
         }
-        entityManager!.add(platform)
     }
     
     func handoverMessage(message: HandoverMessage) {
