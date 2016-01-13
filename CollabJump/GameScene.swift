@@ -9,6 +9,7 @@
 import SpriteKit
 import ScreenLayout
 import GameKit
+import AVFoundation
 
 class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     
@@ -18,7 +19,6 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var entityManager: EntityManager?
     var backgroundManager: BackgroundManager!
     var sessionManager: SCLSessionManager?
-    var bgMusic: SKAudioNode!
     var bgImage: SKSpriteNode!
     
     var lastLayout: SCLLayout?
@@ -49,6 +49,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     var scoreManager: Score?
     var scoreLabel: SKLabelNode?
     var scoreCount: Int = -1
+    
+    var bgMusicPlayer: AVAudioPlayer?
     
     override func didMoveToView(view: SKView) {
         stateMachine = GKStateMachine(states: [WaitingForPlayers(gameScene: self), Running(gameScene: self), Paused(gameScene: self), GameOver(gameScene: self)])
@@ -82,9 +84,17 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         backgroundManager?.setBackground("background", sliceCols: 10, sliceRows: 10, sliceSize: 553)
 
         backgroundManager?.setBackgroundOffset(bgOffset, angle: 0.0)
-        bgMusic = SKAudioNode(fileNamed: "bgmusic")
-        bgMusic.autoplayLooped = true
-        //bgMusic.avAudioNode?.engine?.mainMixerNode.volume = 0.5
+        
+        if let url = NSBundle.mainBundle().URLForResource("bgmusic", withExtension: "wav") {
+            print("url \(url)")
+            do {
+                try bgMusicPlayer = AVAudioPlayer(contentsOfURL:url)
+            } catch _ {
+                print("couldnt create avaudioplayer")
+            }
+        }
+        bgMusicPlayer?.numberOfLoops = -1
+        bgMusicPlayer?.currentTime = 0
         
         print("Scale factor : \(scaleFactor())")
 
@@ -246,13 +256,11 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
     }
     
     func playMusic() {
-        if(bgMusic.parent == nil) {
-            addChild(bgMusic)
-        }
+        bgMusicPlayer?.play()
     }
     
     func pauseMusic() {
-        bgMusic.removeFromParent()
+        bgMusicPlayer?.pause()
     }
     
     func sessionMessage(notif: NSNotification) {
@@ -323,6 +331,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                 print("localLocation: \(localLocation)")
                 print("velocity: \(message.playerVelocity)")
                 
+                bgMusicPlayer?.currentTime = message.musicTime
+                
                 let player: Player = Player()
                 hasJumped = true
                 
@@ -386,6 +396,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         lockBackground = false
         hasJumped = false
         scoreCount = 0
+        
+        bgMusicPlayer?.currentTime = 0
         
         lastLayout = nil
         joinedScreens = []
@@ -556,7 +568,11 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
                         if let sessionManager = sessionManager {
                             print("Sending handover message")
                             //Warning: will crash if physicsbody is null
-                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position), playerVelocity: spriteNode.physicsBody!.velocity))
+                            var musicTime: Double = 0
+                            if let currentMusicTime = bgMusicPlayer?.currentTime {
+                                musicTime = Double(currentMusicTime)
+                            }
+                            let message: SCLSessionMessage = SCLSessionMessage(name: "Handover", object: HandoverMessage(playerPosition: convertPointToView(spriteNode.position), playerVelocity: spriteNode.physicsBody!.velocity, musicTime: musicTime))
                             do {
                                 try sessionManager.sendMessage(message, toPeers: [nextScreen.peerID], withMode: .Reliable)
                                 pauseMusic()
