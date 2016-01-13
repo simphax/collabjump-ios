@@ -105,7 +105,7 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
         let player: Player = Player()
         
         // Player
-        if let platformNode = z.componentForClass(SpriteComponent.self)?.node {
+        if let platformNode = platform?.componentForClass(SpriteComponent.self)?.node {
             if let spriteComponent = player.componentForClass(SpriteComponent.self) {
                 spriteComponent.node.position = CGPoint(x: platformNode.position.x - platformNode.size.width/2 ,
                     y: platformNode.position.y + platformNode.size.height/2 + spriteComponent.node.size.height/2)
