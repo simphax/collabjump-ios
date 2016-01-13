@@ -37,7 +37,6 @@ class WaitingForPlayers : GameState {
         
         if(gameScene.hostingGame) {
             button = ButtonNode(imageNamed: "startbtn")
-            button?.size = CGSize(width: 187, height: 60)
             button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2)
             button?.buttonIdentifier = .Start
             button?.userInteractionEnabled = true

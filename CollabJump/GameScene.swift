@@ -71,8 +71,8 @@ class GameScene: SKScene, ButtonNodeResponderType, SKPhysicsContactDelegate {
             addPlayerAbovePlatform()
         }
         
-        pauseButton = ButtonNode(color: UIColor.whiteColor(), size: CGSizeMake(30, 30))
-        pauseButton.position = CGPoint(x: self.size.width - 40, y: self.size.height - 40)
+        pauseButton = ButtonNode(imageNamed: "pausebtn")
+        pauseButton.position = CGPoint(x: self.size.width - 25, y: self.size.height - 25)
         pauseButton.buttonIdentifier = .Pause
         pauseButton.userInteractionEnabled = true
         addChild(pauseButton)

@@ -38,7 +38,6 @@ class GameOver : GameState {
         
         if(gameScene.hostingGame) {
             button = ButtonNode(imageNamed: "restartbtn")
-            button?.size = CGSize(width: 187, height: 60)
             button?.position = CGPoint(x: gameScene.size.width/2, y: gameScene.size.height/2 - 70)
             button?.buttonIdentifier = .Restart
             button?.userInteractionEnabled = true
