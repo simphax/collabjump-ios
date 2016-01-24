@@ -1,0 +1,3 @@
+[submodule "ScreenLayout"]
+	path = ScreenLayout
+	url = https://github.com/simphax/pinchcanvas.git
